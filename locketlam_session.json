@@ -1,0 +1,24 @@
+{
+  "uid": "Vt3J8DIl09Z7szrUosm3LoMhfx33",
+  "email": "tranvannguyen991@gmail.com",
+  "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkwNGIwZjkxYmU2ZWIwODY3ZGFiYmFhYjU4N2RmYzJlMzNmMDBhMjQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTmdoxKkgSVQgxJHhu5VpIHTDqm7wn6W0IiwicGljdHVyZSI6Imh0dHBzOi8vZmlyZWJhc2VzdG9yYWdlLmdvb2dsZWFwaXMuY29tOjQ0My92MC9iL2xvY2tldC1pbWcvby91c2VycyUyRlZ0M0o4RElsMDlaN3N6clVvc20zTG9NaGZ4MzMlMkZwdWJsaWMlMkZwcm9maWxlX3BpYy53ZWJwP2FsdD1tZWRpYSZ0b2tlbj1hNjNhYWVhNS1kODIzLTQ3MjYtOWJhZi1iMWRkZjc1ZjE1ZmIiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbG9ja2V0LTQyNTJhIiwiYXVkIjoibG9ja2V0LTQyNTJhIiwiYXV0aF90aW1lIjoxNzkzNzYzNzc5LCJ1c2VyX2lkIjoiVnQzSjhESWwwOVo3c3pyVW9zbTNMb01oZngzMyIsInN1YiI6IlZ0M0o4RElsMDlaN3N6clVvc20zTG9NaGZ4MzMiLCJpYXQiOjE3OTM3NjM3NzksImV4cCI6MTc5Mzc2NzM3OSwiZW1haWwiOiJ0cmFudmFubmd1eWVuOTkxQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ0cmFudmFubmd1eWVuOTkxQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.ASCikQYLUw0D4BKqntKVa1_iG_LLhTNdTHuo4_S7rVowQYCs5hoF9jFwzGd9Ij99nf8CC3TBQwdNmh5-kTQZ6GRHvIk5qJ5QskexUhYc2iIAvbaYLEBXVWvHicJxpkM1C0boStYE0z3zgFfgam5FTuGnEYsRIxro_NlcRV5et6IrLeasDHLqWOkrWbacXmlKU7geeYu1SSVAGVfm_p9QjhfYwrMeDgytNKBEfhwpMXS1J9hK-frJXwxp_PBnfrgRK-5SkI1csEAB2VHG_pQYTdPgO0V6YI7Bh_LQiKMoYBmkuuAmyJwgjy8dOKjy4LpZaXB25ypNJMEczPuPsK4XmA",
+  "refreshToken": "AMf-vBw9PCp_t4NyngyFO1xYNbp45DkWQU5_4btlo_pHzmVerHVRA42XOi_Lr54TvInU-SG8ZyU0NNTXTMzc8dtSKvMoSb0rJ-TJLT4X0n44cTtx7pR4CNQUtGCa-yZNhT-GnWs_jtyIzHYDh0HMTUVYT0zxUqNNqhlwkHCYGua4oKTzfXrT_6kaVpX4jGVKgkP30Fo1Q5BQZZVsRLT7k-K7rB-D8jE_pBE9fputUAmtTTkHP5fK14_3wOEw2YzoY8MT9NAKxbrP",
+  "expiresAt": 1793767380988,
+  "device": {
+    "auto_emulate": true,
+    "installation_id": "03c5bfec7b6542dd9549bc",
+    "bundle_id": "com.locket.Locket",
+    "app_version": "2.68.0",
+    "build_number": "2523",
+    "model_info": {
+      "name": "iPhone 14 Pro Max",
+      "model": "iPhone15,3",
+      "hw": "hw/iPhone15,3",
+      "ios": "18.0.1"
+    },
+    "custom_user_agent": null,
+    "custom_analytics": null,
+    "appcheck_token": null,
+    "instance_id_token": null
+  }
+}
