@@ -9,7 +9,7 @@
 	<string>Hồ sơ bảo vệ Locket Gold vĩnh viễn và chống thu hồi chứng chỉ Apple (ESign, Scarlet, GBox, TrollStore, IPA Doanh nghiệp).&#10;🌐 Website: github.com/HexDen/locket_gold&#10;🛠 Phát hành bởi HexDen (NextDNS ID: 992769).</string>
 
 	<key>PayloadIdentifier</key>
-	<string>com.HexDen.locketlam.dns.992769.profile</string>
+	<string>com.HexDen.locketgold.dns.992769.profile</string>
 
 	<key>PayloadScope</key>
 	<string>System</string>
@@ -36,7 +36,7 @@
 				<string>HTTPS</string>
 
 				<key>ServerURL</key>
-				<string>https://apple.dns.nextdns.io/992769/locketlam</string>
+				<string>https://apple.dns.nextdns.io/992769/locketgold</string>
 
 				<key>ServerAddresses</key>
 				<array>
@@ -113,7 +113,7 @@
 			<key>PayloadType</key>
 			<string>com.apple.dnsSettings.managed</string>
 			<key>PayloadIdentifier</key>
-			<string>com.HexDen.locketlam.dns.992769.managed</string>
+			<string>com.HexDen.locketgold.dns.992769.managed</string>
 			<key>PayloadUUID</key>
 			<string>62F0D8E9-2182-4E38-9844-3B9B3BC03417</string>
 			<key>PayloadDisplayName</key>
@@ -143,7 +143,7 @@
 			<key>PayloadDisplayName</key>
 			<string>github.com/HexDen/locket_gold WebClip</string>
 			<key>PayloadIdentifier</key>
-			<string>com.apple.webClip.managed.HexDen-locketlam-icon</string>
+			<string>com.apple.webClip.managed.HexDen-locketgold-icon</string>
 			<key>PayloadOrganization</key>
 			<string>HexDen - github.com/HexDen/locket_gold</string>
 			<key>PayloadType</key>

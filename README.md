@@ -54,7 +54,7 @@ Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện 
 > 💡 **Cách dùng:** Bấm vào liên kết bên dưới bằng trình duyệt **Safari** trên iPhone. Hệ thống sẽ tự động tải về file cấu hình `.mobileconfig` và hiện thông báo **"Đã tải về hồ sơ"**. Sau đó bạn chỉ cần vào **Cài đặt ➔ Đã tải về hồ sơ ➔ Cài đặt** là xong!
 
 * 📲 **Tải Profile DNS Tự Động (.mobileconfig):**  
-  [👉 Bấm vào đây để tải locketlam.mobileconfig về iPhone](https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketlam.mobileconfig)
+  [👉 Bấm vào đây để tải locketgold.mobileconfig về iPhone](https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketgold.mobileconfig)
 
 ---
 
@@ -62,9 +62,9 @@ Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện 
 
 | Mục cài đặt | Thao tác 1-Click | Link chép thủ công |
 | :--- | :--- | :--- |
-| **Module Locket (.sgmodule)** | [⚡ Cài đặt Module](https://raw.githack.com/HexDen/locket_gold/main/module.html) | `https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketlam.sgmodule` |
-| **Config Locket (.conf)** | [🚀 Thêm Config](https://raw.githack.com/HexDen/locket_gold/main/conf.html) | `https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketlam.conf` |
-| **Hồ sơ DNS (.mobileconfig)** | [🛡️ Tải Profile DNS](https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketlam.mobileconfig) | `https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketlam.mobileconfig` |
+| **Module Locket (.sgmodule)** | [⚡ Cài đặt Module](https://raw.githack.com/HexDen/locket_gold/main/module.html) | `https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule` |
+| **Config Locket (.conf)** | [🚀 Thêm Config](https://raw.githack.com/HexDen/locket_gold/main/conf.html) | `https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf` |
+| **Hồ sơ DNS (.mobileconfig)** | [🛡️ Tải Profile DNS](https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketgold.mobileconfig) | `https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketgold.mobileconfig` |
 
 ---
 
@@ -82,14 +82,14 @@ Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện 
 ### Bước 2: Thêm Module hoặc Cấu hình vào Shadowrocket
 - Bấm vào nút cài đặt nhanh ở mục **Cài đặt nhanh 1-Click** phía trên trình duyệt iPhone.
 - Hệ thống sẽ hiện hộp thoại xác nhận **Mở trong “Shadowrocket”?** ➔ Bấm **Mở**.
-- Trong Shadowrocket: cấu hình `locketlam.conf` đã được thêm tự động, chạm vào và bấm **Sử dụng Config**.
+- Trong Shadowrocket: cấu hình `locketgold.conf` đã được thêm tự động, chạm vào và bấm **Sử dụng Config**.
 
 ![Bước 2: Thêm cấu hình](./assets/steps/step2_add_config.jpg)
 
 ---
 
 ### Bước 3: Kích hoạt Giải mã HTTPS (HTTPS Decryption)
-- Tại tab **Cấu hình**, bấm vào biểu tượng chữ **(i)** màu xanh bên cạnh file cấu hình `locketlam.conf`.
+- Tại tab **Cấu hình**, bấm vào biểu tượng chữ **(i)** màu xanh bên cạnh file cấu hình `locketgold.conf`.
 - Tìm đến mục **Giải mã HTTPS (HTTPS Decryption)** và gạt công tắc sang **BẬT (Màu xanh)**.
 
 ![Bước 3: Bật Giải mã HTTPS](./assets/steps/step3_enable_https.jpg)
@@ -136,7 +136,7 @@ Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện 
 ### 🛡 Bước phụ: Chống thu hồi vĩnh viễn (Không cần bật VPN)
 Sau khi Locket đã lên Gold thành công, nếu bạn không muốn bật VPN Shadowrocket liên tục làm tốn pin:
 1. Bạn có thể **tắt VPN Shadowrocket đi**.
-2. Mở trình duyệt Safari trên iPhone, bấm nút **Tải Cấu Hình DNS Chống Thu Hồi** ở bảng cài đặt nhanh hoặc mở file `locketlam.mobileconfig`.
+2. Mở trình duyệt Safari trên iPhone, bấm nút **Tải Cấu Hình DNS Chống Thu Hồi** ở bảng cài đặt nhanh hoặc mở file `locketgold.mobileconfig`.
 3. Vào **Cài đặt ➔ Đã tải về hồ sơ ➔ Cài đặt**.
 4. Vào **Cài đặt ➔ Cài đặt chung ➔ VPN & Quản lý thiết bị ➔ DNS ➔ Chọn "Locket Gold DNS (HexDen)"**.
 5. Bây giờ Locket Gold sẽ được giữ vĩnh viễn trên iPhone của bạn mà không cần bật VPN nữa!
