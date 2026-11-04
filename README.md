@@ -1,20 +1,20 @@
 <p align="center">
-  <img src="./assets/banner.png" alt="Nâng Locket Gold bằng Shadowrocket - LAMDev" width="100%">
+  <img src="./assets/banner.png" alt="Nâng Locket Gold bằng Shadowrocket - HexDen" width="100%">
 </p>
 
-# 💛 Locket Gold VIP - LAMDev
+# 💛 Locket Gold VIP - HexDen
 
 > **Bộ công cụ chuyên biệt mở khóa Locket Gold VIP vĩnh viễn & Chống thu hồi**  
-> 🌐 Website: [dalymmo.com](https://dalymmo.com) | 📢 Kênh hỗ trợ: [Telegram @dalymmocom](https://t.me/dalymmocom)  
-> 📦 Repository: [leanhminh2104/locketlam](https://github.com/leanhminh2104/locketlam/tree/shadowrocket) | 🌿 Nhánh: `shadowrocket`
+> 🌐 Website: [github.com/HexDen/locket_gold](https://github.com/HexDen/locket_gold) | 📢 Kênh hỗ trợ: [Telegram @HexDen](https://github.com/HexDen/locket_gold)  
+> 📦 Repository: [HexDen/locket_gold](https://github.com/HexDen/locket_gold) | 🌿 Nhánh: `shadowrocket`
 
 ---
 
 ## 🌟 Giới thiệu
 
-**LocketLAM** là bộ giải pháp mở khóa Locket Gold chuyên nghiệp do **LAMDev** phát triển, tinh gọn **100% dành riêng cho ứng dụng Locket**, loại bỏ toàn bộ các thành phần dư thừa của các ứng dụng khác giúp hệ thống hoạt động nhẹ nhất, mượt nhất và ổn định nhất.
+**Locket Gold VIP** là bộ giải pháp mở khóa Locket Gold chuyên nghiệp do **HexDen** phát triển, tinh gọn **100% dành riêng cho ứng dụng Locket**, loại bỏ toàn bộ các thành phần dư thừa của các ứng dụng khác giúp hệ thống hoạt động nhẹ nhất, mượt nhất và ổn định nhất.
 
-Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện từ giao diện, camera, dung lượng bộ nhớ cho tới các quyền hạn cao cấp trên hệ thống. Kèm theo đó là giải pháp **DNS Chống thu hồi độc quyền từ DalyMMO** giúp bạn giữ trạng thái Gold vĩnh viễn mà không cần phải bật VPN liên tục.
+Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện từ giao diện, camera, dung lượng bộ nhớ cho tới các quyền hạn cao cấp trên hệ thống. Kèm theo đó là giải pháp **DNS Chống thu hồi độc quyền từ HexDen** giúp bạn giữ trạng thái Gold vĩnh viễn mà không cần phải bật VPN liên tục.
 
 ---
 
@@ -38,14 +38,14 @@ Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện 
 
 > 💡 **Mẹo:** Trên Safari iPhone, bấm trực tiếp vào liên kết **1-Click** bên dưới để thiết bị tự động chuyển hướng và mở ứng dụng **Shadowrocket** nạp cấu hình ngay lập tức!
 > 
-> 🌐 Hoặc mở giao diện cài đặt nhanh chuyên biệt tại: **[👉 Mở Trang Web Cài Đặt (Web Installer)](https://raw.githack.com/leanhminh2104/locketlam/shadowrocket/index.html)**
+> 🌐 Hoặc mở giao diện cài đặt nhanh chuyên biệt tại: **[👉 Mở Trang Web Cài Đặt (Web Installer)](https://raw.githack.com/HexDen/locket_gold/main/index.html)**
 
 ### 📲 1-Click Mở Ngay Trong Shadowrocket:
 
 * ⚡ **Cài đặt Module (Khuyên dùng):**  
-  [👉 Bấm vào đây để cài Module Locket Gold](https://raw.githack.com/leanhminh2104/locketlam/shadowrocket/module.html)
+  [👉 Bấm vào đây để cài Module Locket Gold](https://raw.githack.com/HexDen/locket_gold/main/module.html)
 * 🚀 **Thêm Cấu hình Config:**  
-  [👉 Bấm vào đây để thêm Config Locket](https://raw.githack.com/leanhminh2104/locketlam/shadowrocket/conf.html)
+  [👉 Bấm vào đây để thêm Config Locket](https://raw.githack.com/HexDen/locket_gold/main/conf.html)
 
 ---
 
@@ -54,7 +54,7 @@ Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện 
 > 💡 **Cách dùng:** Bấm vào liên kết bên dưới bằng trình duyệt **Safari** trên iPhone. Hệ thống sẽ tự động tải về file cấu hình `.mobileconfig` và hiện thông báo **"Đã tải về hồ sơ"**. Sau đó bạn chỉ cần vào **Cài đặt ➔ Đã tải về hồ sơ ➔ Cài đặt** là xong!
 
 * 📲 **Tải Profile DNS Tự Động (.mobileconfig):**  
-  [👉 Bấm vào đây để tải locketlam.mobileconfig về iPhone](https://cdn.jsdelivr.net/gh/leanhminh2104/locketlam@shadowrocket/locketlam.mobileconfig)
+  [👉 Bấm vào đây để tải locketlam.mobileconfig về iPhone](https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketlam.mobileconfig)
 
 ---
 
@@ -62,9 +62,9 @@ Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện 
 
 | Mục cài đặt | Thao tác 1-Click | Link chép thủ công |
 | :--- | :--- | :--- |
-| **Module Locket (.sgmodule)** | [⚡ Cài đặt Module](https://raw.githack.com/leanhminh2104/locketlam/shadowrocket/module.html) | `https://raw.githubusercontent.com/leanhminh2104/locketlam/refs/heads/shadowrocket/locketlam.sgmodule` |
-| **Config Locket (.conf)** | [🚀 Thêm Config](https://raw.githack.com/leanhminh2104/locketlam/shadowrocket/conf.html) | `https://raw.githubusercontent.com/leanhminh2104/locketlam/refs/heads/shadowrocket/locketlam.conf` |
-| **Hồ sơ DNS (.mobileconfig)** | [🛡️ Tải Profile DNS](https://cdn.jsdelivr.net/gh/leanhminh2104/locketlam@shadowrocket/locketlam.mobileconfig) | `https://cdn.jsdelivr.net/gh/leanhminh2104/locketlam@shadowrocket/locketlam.mobileconfig` |
+| **Module Locket (.sgmodule)** | [⚡ Cài đặt Module](https://raw.githack.com/HexDen/locket_gold/main/module.html) | `https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketlam.sgmodule` |
+| **Config Locket (.conf)** | [🚀 Thêm Config](https://raw.githack.com/HexDen/locket_gold/main/conf.html) | `https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketlam.conf` |
+| **Hồ sơ DNS (.mobileconfig)** | [🛡️ Tải Profile DNS](https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketlam.mobileconfig) | `https://cdn.jsdelivr.net/gh/HexDen/locket_gold@main/locketlam.mobileconfig` |
 
 ---
 
@@ -138,7 +138,7 @@ Sau khi Locket đã lên Gold thành công, nếu bạn không muốn bật VPN 
 1. Bạn có thể **tắt VPN Shadowrocket đi**.
 2. Mở trình duyệt Safari trên iPhone, bấm nút **Tải Cấu Hình DNS Chống Thu Hồi** ở bảng cài đặt nhanh hoặc mở file `locketlam.mobileconfig`.
 3. Vào **Cài đặt ➔ Đã tải về hồ sơ ➔ Cài đặt**.
-4. Vào **Cài đặt ➔ Cài đặt chung ➔ VPN & Quản lý thiết bị ➔ DNS ➔ Chọn "Locket Gold DNS (LAMDev)"**.
+4. Vào **Cài đặt ➔ Cài đặt chung ➔ VPN & Quản lý thiết bị ➔ DNS ➔ Chọn "Locket Gold DNS (HexDen)"**.
 5. Bây giờ Locket Gold sẽ được giữ vĩnh viễn trên iPhone của bạn mà không cần bật VPN nữa!
 
 ---
@@ -154,20 +154,20 @@ Sau khi Locket đã lên Gold thành công, nếu bạn không muốn bật VPN 
 
 <details>
 <summary><b>2. Dùng DNS chống thu hồi này mạng có bị chậm hay lag không?</b></summary>
-Hoàn toàn không! Cấu hình sử dụng công nghệ <b>Split DNS</b>, chỉ định tuyến duy nhất các yêu cầu kiểm tra của Locket về server chống thu hồi của DalyMMO (ID: <code>992769</code>), còn toàn bộ mạng lướt web, Facebook, TikTok, YouTube... vẫn dùng 100% mạng gốc tốc độ cao.
+Hoàn toàn không! Cấu hình sử dụng công nghệ <b>Split DNS</b>, chỉ định tuyến duy nhất các yêu cầu kiểm tra của Locket về server chống thu hồi của HexDen (ID: <code>992769</code>), còn toàn bộ mạng lướt web, Facebook, TikTok, YouTube... vẫn dùng 100% mạng gốc tốc độ cao.
 </details>
 
 <details>
 <summary><b>3. Tôi có thể chia sẻ cho bạn bè dùng cùng không?</b></summary>
-Có! Cấu hình này được tối ưu sẵn trên máy chủ NextDNS cá nhân của LAMDev, bạn có thể gửi link này cho bất kỳ ai sử dụng hoàn toàn miễn phí.
+Có! Cấu hình này được tối ưu sẵn trên máy chủ NextDNS cá nhân của HexDen, bạn có thể gửi link này cho bất kỳ ai sử dụng hoàn toàn miễn phí.
 </details>
 
 ---
 
 ## 👨‍💻 Thông tin phát triển
 
-- **Bản quyền & Phát triển:** [LAMDev](https://dalymmo.com)
+- **Bản quyền & Phát triển:** [HexDen](https://github.com/HexDen/locket_gold)
 - **Mã Nguồn Gốc:** [duyvinh09](https://github.com/duyvinh09/Module_IOS/)
-- **Website chính thức:** [dalymmo.com](https://dalymmo.com)
-- **Kênh thông báo & Hỗ trợ:** [Telegram @dalymmocom](https://t.me/dalymmocom)
+- **Website chính thức:** [github.com/HexDen/locket_gold](https://github.com/HexDen/locket_gold)
+- **Kênh thông báo & Hỗ trợ:** [Telegram @HexDen](https://github.com/HexDen/locket_gold)
 - **Giấy phép:** Được phát hành miễn phí cho cộng đồng người dùng iOS. Nghiêm cấm mọi hành vi sao chép nhằm mục đích thương mại.

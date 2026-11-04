@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>PayloadDisplayName</key>
-	<string>Locket Gold &amp; Anti-Revoke VIP (LAMDev)</string>
+	<string>Locket Gold &amp; Anti-Revoke VIP (HexDen)</string>
 
 	<key>PayloadDescription</key>
-	<string>Hồ sơ bảo vệ Locket Gold vĩnh viễn và chống thu hồi chứng chỉ Apple (ESign, Scarlet, GBox, TrollStore, IPA Doanh nghiệp).&#10;🌐 Website: dalymmo.com&#10;🛠 Phát hành bởi LAMDev (NextDNS ID: 992769).</string>
+	<string>Hồ sơ bảo vệ Locket Gold vĩnh viễn và chống thu hồi chứng chỉ Apple (ESign, Scarlet, GBox, TrollStore, IPA Doanh nghiệp).&#10;🌐 Website: github.com/HexDen/locket_gold&#10;🛠 Phát hành bởi HexDen (NextDNS ID: 992769).</string>
 
 	<key>PayloadIdentifier</key>
-	<string>com.dalymmo.locketlam.dns.992769.profile</string>
+	<string>com.HexDen.locketlam.dns.992769.profile</string>
 
 	<key>PayloadScope</key>
 	<string>System</string>
@@ -24,7 +24,7 @@
 	<integer>1</integer>
 
 	<key>PayloadOrganization</key>
-	<string>LAMDev - dalymmo.com</string>
+	<string>HexDen - github.com/HexDen/locket_gold</string>
 
 	<key>PayloadContent</key>
 	<array>
@@ -70,7 +70,7 @@
 					<string>ppq.apple.com</string>
 					<string>iadsdk.apple.com</string>
 
-					<!-- Chống thu hồi Locket Gold VIP (LAMDev) -->
+					<!-- Chống thu hồi Locket Gold VIP (HexDen) -->
 					<string>api.revenuecat.com</string>
 					<string>app.revenuecat.com</string>
 					<string>in.appcenter.ms</string>
@@ -113,7 +113,7 @@
 			<key>PayloadType</key>
 			<string>com.apple.dnsSettings.managed</string>
 			<key>PayloadIdentifier</key>
-			<string>com.dalymmo.locketlam.dns.992769.managed</string>
+			<string>com.HexDen.locketlam.dns.992769.managed</string>
 			<key>PayloadUUID</key>
 			<string>62F0D8E9-2182-4E38-9844-3B9B3BC03417</string>
 			<key>PayloadDisplayName</key>
@@ -121,12 +121,12 @@
 			<key>PayloadDescription</key>
 			<string>Cấu hình DNS-over-HTTPS (DoH) bảo vệ Locket Gold và chống thu hồi chứng chỉ Apple vĩnh viễn.</string>
 			<key>PayloadOrganization</key>
-			<string>LAMDev - dalymmo.com</string>
+			<string>HexDen - github.com/HexDen/locket_gold</string>
 			<key>PayloadVersion</key>
 			<integer>1</integer>
 		</dict>
 
-		<!-- 2. WEB CLIP ICON TRÊN MÀN HÌNH CHÍNH (LAMDev Locket Gold) -->
+		<!-- 2. WEB CLIP ICON TRÊN MÀN HÌNH CHÍNH (HexDen Locket Gold) -->
 		<dict>
 			<key>FullScreen</key>
 			<true/>
@@ -139,13 +139,13 @@
 			<key>IsRemovable</key>
 			<true/>
 			<key>Label</key>
-			<string>dalymmo.com</string>
+			<string>github.com/HexDen/locket_gold</string>
 			<key>PayloadDisplayName</key>
-			<string>dalymmo.com WebClip</string>
+			<string>github.com/HexDen/locket_gold WebClip</string>
 			<key>PayloadIdentifier</key>
-			<string>com.apple.webClip.managed.dalymmo-locketlam-icon</string>
+			<string>com.apple.webClip.managed.HexDen-locketlam-icon</string>
 			<key>PayloadOrganization</key>
-			<string>LAMDev - dalymmo.com</string>
+			<string>HexDen - github.com/HexDen/locket_gold</string>
 			<key>PayloadType</key>
 			<string>com.apple.webClip.managed</string>
 			<key>PayloadUUID</key>
@@ -155,7 +155,7 @@
 			<key>Precomposed</key>
 			<true/>
 			<key>URL</key>
-			<string>https://dalymmo.com</string>
+			<string>https://github.com/HexDen/locket_gold</string>
 		</dict>
 
 		<!-- 3. QUYỀN TRỢ NĂNG DOANH NGHIỆP (CHO PHÉP TIN CẬY & CÀI APP NGOÀI APP STORE) -->
@@ -179,7 +179,7 @@
 			<key>PayloadDisplayName</key>
 			<string>Enterprise App Restrictions</string>
 			<key>PayloadIdentifier</key>
-			<string>com.dalymmo.enterprise.restrictions</string>
+			<string>com.HexDen.enterprise.restrictions</string>
 			<key>PayloadType</key>
 			<string>com.apple.applicationaccess</string>
 			<key>PayloadUUID</key>

@@ -9,3 +9,19 @@ node_modules/
 *.log
 khoindvn.mobileconfig
 scratch/
+
+# Sensitive files
+locketlam_session.json
+my_moments_*.json
+chat_history_*.json
+*.mp4
+
+# Python build & cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+tests/
+locketlam/modules/
