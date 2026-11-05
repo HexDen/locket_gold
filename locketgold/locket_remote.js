@@ -43,9 +43,10 @@ const popupConfig = {
 // (Mỗi dòng là 1 nhãn, bạn có thể thêm mới, xóa bớt hoặc đảo vị trí nhãn)
 // =============================================================================
 const overlayDynamicCaptions = [
-  "hexden_vip",
-  "hexden_gold",
-  "hexden_quote",
+  "hexden_vip",      // Nút 1: Tên cá nhân / Admin
+  "hexden_web",      // Nút 2: Website / Kênh (Trước đây là DaLyMMo.COM)
+  "hexden_gold",     // Nút 3: Locket Gold (Trước đây là LocketLAM)
+  "hexden_quote",    // Nút 4: Slogan / Quote (Bug là tính năng)
   "standard",
   "poll",
   "color_palette",
@@ -75,6 +76,9 @@ const overlayItems = [
   {
     "section": "👑 Độc Quyền HexDen ( Văn Nguyên )",
     "items": [
+      // -----------------------------------------------------------------------
+      // 👑 NÚT 1: TÊN BẠN / ADMIN
+      // -----------------------------------------------------------------------
       {
         "overlay_id": "caption:hexden_vip",
         "source": "remote",
@@ -100,6 +104,37 @@ const overlayItems = [
           "type": "static_content"
         }
       },
+      // -----------------------------------------------------------------------
+      // 🌐 NÚT 2: ĐÂY CHÍNH LÀ NÚT "DaLyMMo.COM" (Bạn sửa tên ở 'vn' và 'text')
+      // -----------------------------------------------------------------------
+      {
+        "overlay_id": "caption:hexden_web",
+        "source": "remote",
+        "caption": {
+          "background": {
+            "colors": [
+              "#0F2027",
+              "#203A43",
+              "#2C5364"
+            ]
+          },
+          "icon": {
+            "data": "🌐",
+            "type": "emoji"
+          },
+          "max_lines": 1,
+          "text": "DaLyMMo.COM",
+          "localized_text": {
+            "en": "DaLyMMo.COM",
+            "vn": "DaLyMMo.COM"
+          },
+          "text_color": "#00E5FF",
+          "type": "static_content"
+        }
+      },
+      // -----------------------------------------------------------------------
+      // 💛 NÚT 3: ĐÂY CHÍNH LÀ NÚT "LocketLAM" (Bạn sửa tên ở 'vn' và 'text')
+      // -----------------------------------------------------------------------
       {
         "overlay_id": "caption:hexden_gold",
         "source": "remote",
@@ -115,15 +150,18 @@ const overlayItems = [
             "type": "emoji"
           },
           "max_lines": 1,
-          "text": "LocketGold VIP",
+          "text": "LocketLAM",
           "localized_text": {
-            "en": "LocketGold VIP",
-            "vn": "LocketGold VIP"
+            "en": "LocketLAM",
+            "vn": "LocketLAM"
           },
           "text_color": "#1A1A1A",
           "type": "static_content"
         }
       },
+      // -----------------------------------------------------------------------
+      // 🐳 NÚT 4: SLOGAN / QUOTE (Bug là tính năng)
+      // -----------------------------------------------------------------------
       {
         "overlay_id": "caption:hexden_quote",
         "source": "remote",
@@ -524,7 +562,7 @@ const overlayItems = [
     ]
   },
   {
-    "section": "🎨 Decorative by Duy Vinh",
+    "section": "🎨 Decorative by Văn Nguyên",
     "items": [
       {
         "overlay_id": "caption:lamdev",
