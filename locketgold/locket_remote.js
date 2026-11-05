@@ -123,10 +123,10 @@ const overlayItems = [
             "type": "emoji"
           },
           "max_lines": 1,
-          "text": "DaLyMMo.COM",
+          "text": "FB: Văn Nguyên (Đen)",
           "localized_text": {
-            "en": "DaLyMMo.COM",
-            "vn": "DaLyMMo.COM"
+            "en": "FB: Văn Nguyên (Đen)",
+            "vn": "FB: Văn Nguyên (Đen)"
           },
           "text_color": "#00E5FF",
           "type": "static_content"
@@ -150,10 +150,10 @@ const overlayItems = [
             "type": "emoji"
           },
           "max_lines": 1,
-          "text": "LocketLAM",
+          "text": "LocketGOLD",
           "localized_text": {
-            "en": "LocketLAM",
-            "vn": "LocketLAM"
+            "en": "LocketGOLD",
+            "vn": "LocketGOLD"
           },
           "text_color": "#1A1A1A",
           "type": "static_content"
