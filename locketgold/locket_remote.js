@@ -126,7 +126,7 @@ const overlayItems = [
           "text": "FB: Văn Nguyên (Đen)",
           "localized_text": {
             "en": "FB: Văn Nguyên (Đen)",
-            "vn": "FB: Văn Nguyên (Đen)"
+            "vn": "FB: Van Nguyen (Den)"
           },
           "text_color": "#00E5FF",
           "type": "static_content"
