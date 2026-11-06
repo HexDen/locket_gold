@@ -235,5 +235,8 @@ async def process_image(
     return Response(content=output_io.getvalue(), media_type="image/jpeg")
 
 if __name__ == "__main__":
+    import os
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+    port = int(os.environ.get("PORT", 7860))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
