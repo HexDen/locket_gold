@@ -19,3 +19,4 @@ Máy chủ xử lý bộ lọc ảnh AI và hiệu ứng **"Đang Rửa Ảnh"**
 
 ## Cách dùng với Shadowrocket:
 Gửi ảnh qua phương thức `POST /process?filter=vintage_film` (Body dạng binary JPEG).
+

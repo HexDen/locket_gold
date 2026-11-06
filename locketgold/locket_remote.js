@@ -2531,13 +2531,11 @@ const overlayItems = [
 // ⚡ PHẦN 4: TOÀN BỘ CẤU HÌNH HỆ THỐNG MỞ KHÓA TÍNH NĂNG GOLD
 // =============================================================================
 const remoteEntries = {
-  "feature_gates": "{\"camera_filter\":\"enabled\",\"camera_filters\":\"enabled\",\"filters\":\"enabled\",\"camera_filter_sheet\":\"enabled\",\"camera_filters_sheet\":\"enabled\",\"app_icon_picker\":\"enabled\",\"camera_roll\":\"enabled\",\"camera_theme\":\"enabled\",\"locket_views\":\"enabled\",\"long_captions\":\"enabled\",\"longer_video\":\"enabled\",\"unlimited_friends\":\"enabled\",\"priority_support\":\"enabled\",\"profile_badge\":\"enabled\",\"remove_ads\":\"enabled\",\"video\":\"enabled\",\"custom_widget_frames\":\"enabled\",\"streak_recovery\":\"enabled\"}",
-  "upsell_features": "{\"camera_filter\":true,\"camera_filters\":true,\"filters\":true,\"app_icon_picker\":true,\"camera_roll\":true,\"camera_theme\":true,\"locket_views\":true,\"remove_ads\":true,\"custom_widget_frames\":true}",
+  "feature_gates": "{\"app_icon_picker\":\"enabled\",\"camera_roll\":\"enabled\",\"camera_theme\":\"enabled\",\"locket_views\":\"enabled\",\"long_captions\":\"enabled\",\"longer_video\":\"enabled\",\"unlimited_friends\":\"enabled\",\"priority_support\":\"enabled\",\"profile_badge\":\"enabled\",\"remove_ads\":\"enabled\",\"video\":\"enabled\",\"custom_widget_frames\":\"enabled\",\"streak_recovery\":\"enabled\"}",
+  "upsell_features": "{\"app_icon_picker\":true,\"camera_roll\":true,\"camera_theme\":true,\"locket_views\":true,\"remove_ads\":true,\"custom_widget_frames\":true}",
   "paywall_presentation_config": "{\"uid\":\"paywall_testflight\",\"onboarding\":false,\"after_sent_moment\":false,\"on_foreground\":false,\"interval\":2592000,\"profile_banner\":false}",
   "profile_badge_visible": "true",
   "beta_features_enabled": "true",
-  "camera_filters_enabled": "true",
-  "camera_filter_enabled": "true",
   "link_caption_link_enabled": "true",
   "music_caption_enabled": "true",
   "music_caption_song_preview_enabled": "true",
