@@ -3,40 +3,46 @@
 <plist version="1.0">
 <dict>
 	<key>PayloadDisplayName</key>
-	<string>Locket Gold DNS Chống Thu Hồi (HexDen)</string>
-
+	<string>Locket Gold &amp; Anti-Revoke Toàn Diện (HexDen)</string>
 	<key>PayloadDescription</key>
-	<string>Cấu hình Split DNS duy trì Locket Gold vĩnh viễn không cần VPN, bảo vệ bản quyền và chống thu hồi chứng chỉ Apple.</string>
-
+	<string>Bảo vệ toàn diện: Duy trì Locket Gold vĩnh viễn, chống thu hồi video 60s &amp; bộ lọc, và chống thu hồi chứng chỉ Apple (không cần bật VPN).</string>
 	<key>PayloadIdentifier</key>
-	<string>com.HexDen.locketgold.dns.a2dd89.profile</string>
-
+	<string>com.HexDen.locketgold.dns.allshield.profile</string>
 	<key>PayloadScope</key>
 	<string>System</string>
-
 	<key>PayloadType</key>
 	<string>Configuration</string>
-
 	<key>PayloadUUID</key>
 	<string>3C6C2652-9FA8-4D48-9F55-52B19F0D24B1</string>
-
 	<key>PayloadVersion</key>
 	<integer>1</integer>
-
 	<key>PayloadOrganization</key>
 	<string>HexDen (Văn Nguyên)</string>
 
 	<key>PayloadContent</key>
 	<array>
+		<!-- 🛡️ BẢO VỆ 1: Duy trì Locket Gold VIP & Video 60 Giây & Toàn bộ bộ lọc Remote Config -->
 		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.dnsSettings.managed</string>
+			<key>PayloadIdentifier</key>
+			<string>com.HexDen.locketgold.dns.locket.managed</string>
+			<key>PayloadUUID</key>
+			<string>62F0D8E9-2182-4E38-9844-3B9B3BC03417</string>
+			<key>PayloadDisplayName</key>
+			<string>Locket Gold &amp; 60s Video Shield</string>
+			<key>PayloadDescription</key>
+			<string>Chống thu hồi bản quyền Locket Gold, video 60s và toàn bộ bộ lọc camera</string>
+			<key>PayloadOrganization</key>
+			<string>HexDen (Văn Nguyên)</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
 			<key>DNSSettings</key>
 			<dict>
 				<key>DNSProtocol</key>
 				<string>HTTPS</string>
-
 				<key>ServerURL</key>
 				<string>https://apple.dns.nextdns.io/a2dd89/locketgold</string>
-
 				<key>ServerAddresses</key>
 				<array>
 					<string>45.90.28.0</string>
@@ -44,15 +50,56 @@
 					<string>2a07:a8c0::a2:dd89</string>
 					<string>2a07:a8c1::a2:dd89</string>
 				</array>
-
 				<key>SupplementalMatchDomains</key>
 				<array>
-					<!-- Duy trì Locket Gold vĩnh viễn không cần VPN (Chặn RevenueCat kiểm tra gói mua) -->
+					<!-- Chặn máy chủ xác minh gói mua RevenueCat của Locket -->
 					<string>api.revenuecat.com</string>
 					<string>app.revenuecat.com</string>
 					<string>revenuecat.com</string>
+					<!-- Chặn máy chủ Remote Config để giữ vĩnh viễn quyền quay 60s, upload 60s và bộ lọc camera -->
+					<string>firebaseremoteconfig.googleapis.com</string>
+				</array>
+			</dict>
+			<key>OnDemandRules</key>
+			<array>
+				<dict>
+					<key>Action</key>
+					<string>Connect</string>
+				</dict>
+			</array>
+		</dict>
 
-					<!-- Chống thu hồi chứng chỉ Apple (ESign, Scarlet, GBox, TrollStore, IPA Doanh Nghiệp) -->
+		<!-- 🛡️ BẢO VỆ 2: Chống thu hồi chứng chỉ Apple (ESign, Scarlet, GBox, TrollStore, IPA Doanh Nghiệp) -->
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.dnsSettings.managed</string>
+			<key>PayloadIdentifier</key>
+			<string>com.HexDen.locketgold.dns.antirevoke.managed</string>
+			<key>PayloadUUID</key>
+			<string>98A1B2C3-4D5E-6F70-8192-A3B4C5D6E7F8</string>
+			<key>PayloadDisplayName</key>
+			<string>Apple Certificate Anti-Revoke Shield</string>
+			<key>PayloadDescription</key>
+			<string>Chặn máy chủ thu hồi chứng chỉ Apple, bảo vệ vĩnh viễn ứng dụng cài ngoài</string>
+			<key>PayloadOrganization</key>
+			<string>HexDen (Văn Nguyên)</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>DNSSettings</key>
+			<dict>
+				<key>DNSProtocol</key>
+				<string>HTTPS</string>
+				<key>ServerURL</key>
+				<string>https://apple.dns.nextdns.io/ffbac8/antirevoke</string>
+				<key>ServerAddresses</key>
+				<array>
+					<string>45.90.28.0</string>
+					<string>45.90.30.0</string>
+					<string>2a07:a8c0::ff:bac8</string>
+					<string>2a07:a8c1::ff:bac8</string>
+				</array>
+				<key>SupplementalMatchDomains</key>
+				<array>
 					<string>certs.apple.com</string>
 					<string>certs.apple.com.edgekey.net</string>
 					<string>crl.apple.com</string>
@@ -75,50 +122,13 @@
 					<string>iadsdk.apple.com</string>
 				</array>
 			</dict>
-
 			<key>OnDemandRules</key>
 			<array>
-				<dict>
-					<key>Action</key>
-					<string>EvaluateConnection</string>
-					<key>ActionParameters</key>
-					<array>
-						<dict>
-							<key>DomainAction</key>
-							<string>NeverConnect</string>
-							<key>Domains</key>
-							<array>
-								<string>captive.apple.com</string>
-								<string>3gppnetwork.org</string>
-								<string>dav.orange.fr</string>
-								<string>vvm.mobistar.be</string>
-								<string>vvm.mstore.msg.t-mobile.com</string>
-								<string>tma.vvm.mone.pan-net.eu</string>
-								<string>vvm.ee.co.uk</string>
-							</array>
-						</dict>
-					</array>
-				</dict>
 				<dict>
 					<key>Action</key>
 					<string>Connect</string>
 				</dict>
 			</array>
-
-			<key>PayloadType</key>
-			<string>com.apple.dnsSettings.managed</string>
-			<key>PayloadIdentifier</key>
-			<string>com.HexDen.locketgold.dns.a2dd89.managed</string>
-			<key>PayloadUUID</key>
-			<string>62F0D8E9-2182-4E38-9844-3B9B3BC03417</string>
-			<key>PayloadDisplayName</key>
-			<string>Locket Gold DNS Chống Thu Hồi (HexDen)</string>
-			<key>PayloadDescription</key>
-			<string>Cấu hình DNS-over-HTTPS (DoH) bảo vệ Locket Gold và chống thu hồi chứng chỉ Apple vĩnh viễn.</string>
-			<key>PayloadOrganization</key>
-			<string>HexDen (Văn Nguyên)</string>
-			<key>PayloadVersion</key>
-			<integer>1</integer>
 		</dict>
 	</array>
 
