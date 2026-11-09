@@ -62,6 +62,7 @@ obj.subscriber.entitlements = obj.subscriber.entitlements || {};
 // Mở khóa toàn bộ các mã gói sản phẩm của Locket
 const products = [
   "locket_1600_1y",
+  "locket_399_1m_only",
   "locket_gold_yearly",
   "locket_gold_monthly",
   "locket_gold",
