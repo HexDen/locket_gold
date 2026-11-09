@@ -6,7 +6,7 @@
 	<string>Locket Gold &amp; Anti-Revoke VIP (HexDen)</string>
 
 	<key>PayloadDescription</key>
-	<string>Hồ sơ bảo vệ Locket Gold vĩnh viễn và chống thu hồi chứng chỉ Apple (ESign, Scarlet, GBox, TrollStore, IPA Doanh nghiệp).&#10;🌐 Website: github.com/HexDen/locket_gold&#10;🛠 Phát hành bởi HexDen (NextDNS ID: 992769).</string>
+	<string>Hồ sơ bảo vệ Locket Gold vĩnh viễn và chống thu hồi chứng chỉ Apple (ESign, Scarlet, GBox, TrollStore, IPA Doanh nghiệp).&#10;🌐 Hỗ trợ: facebook.com/van.nguyen.407297&#10;🛠 Phát hành bởi HexDen (Văn Nguyên).</string>
 
 	<key>PayloadIdentifier</key>
 	<string>com.HexDen.locketgold.dns.992769.profile</string>
@@ -24,7 +24,7 @@
 	<integer>1</integer>
 
 	<key>PayloadOrganization</key>
-	<string>HexDen - github.com/HexDen/locket_gold</string>
+	<string>HexDen (Văn Nguyên)</string>
 
 	<key>PayloadContent</key>
 	<array>
@@ -121,7 +121,7 @@
 			<key>PayloadDescription</key>
 			<string>Cấu hình DNS-over-HTTPS (DoH) bảo vệ Locket Gold và chống thu hồi chứng chỉ Apple vĩnh viễn.</string>
 			<key>PayloadOrganization</key>
-			<string>HexDen - github.com/HexDen/locket_gold</string>
+			<string>HexDen (Văn Nguyên)</string>
 			<key>PayloadVersion</key>
 			<integer>1</integer>
 		</dict>
@@ -139,13 +139,13 @@
 			<key>IsRemovable</key>
 			<true/>
 			<key>Label</key>
-			<string>github.com/HexDen/locket_gold</string>
+			<string>Locket Gold VIP - Hỗ Trợ</string>
 			<key>PayloadDisplayName</key>
-			<string>github.com/HexDen/locket_gold WebClip</string>
+			<string>Locket Gold VIP - Hỗ Trợ</string>
 			<key>PayloadIdentifier</key>
 			<string>com.apple.webClip.managed.HexDen-locketgold-icon</string>
 			<key>PayloadOrganization</key>
-			<string>HexDen - github.com/HexDen/locket_gold</string>
+			<string>HexDen (Văn Nguyên)</string>
 			<key>PayloadType</key>
 			<string>com.apple.webClip.managed</string>
 			<key>PayloadUUID</key>
@@ -155,7 +155,7 @@
 			<key>Precomposed</key>
 			<true/>
 			<key>URL</key>
-			<string>https://github.com/HexDen/locket_gold</string>
+			<string>https://www.facebook.com/van.nguyen.407297</string>
 		</dict>
 
 		<!-- 3. QUYỀN TRỢ NĂNG DOANH NGHIỆP (CHO PHÉP TIN CẬY & CÀI APP NGOÀI APP STORE) -->

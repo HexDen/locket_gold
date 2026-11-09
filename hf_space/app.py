@@ -8,6 +8,7 @@ Hỗ trợ: Hugging Face Spaces (Chạy 24/7 hoàn toàn miễn phí)
 """
 
 import io
+import os
 import math
 import random
 import numpy as np
@@ -233,6 +234,33 @@ async def process_image(
     output_io.seek(0)
     
     return Response(content=output_io.getvalue(), media_type="image/jpeg")
+
+@app.get("/locketgold.mobileconfig")
+@app.get("/dns")
+async def download_dns():
+    """
+    Phân phối Hồ sơ Cấu hình DNS Chống Thu Hồi (.mobileconfig) chuẩn Apple.
+    Bắt buộc phải trả về header Content-Type: application/x-apple-aspen-config
+    để iOS Safari tự động mở trình cài đặt trong Cài đặt iPhone thay vì tải file thường.
+    """
+    config_path = os.path.join(os.path.dirname(__file__), "locketgold.mobileconfig")
+    if not os.path.exists(config_path):
+        config_path = "locketgold.mobileconfig"
+    
+    if not os.path.exists(config_path):
+        return Response(content="Profile not found", status_code=404)
+        
+    with open(config_path, "rb") as f:
+        content = f.read()
+        
+    return Response(
+        content=content,
+        media_type="application/x-apple-aspen-config",
+        headers={
+            "Content-Disposition": 'inline; filename="locketgold.mobileconfig"',
+            "Cache-Control": "no-cache, no-store, must-revalidate"
+        }
+    )
 
 if __name__ == "__main__":
     import os
