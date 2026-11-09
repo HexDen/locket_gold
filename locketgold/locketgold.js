@@ -92,7 +92,14 @@ const entitlements = [
   "camera_themes",
   "Holiday",
   "holidays",
-  "filters"
+  "holiday_filters",
+  "camera_filters_holiday",
+  "easter",
+  "christmas",
+  "filters",
+  "all",
+  "custom_filters",
+  "camera_effects"
 ];
 entitlements.forEach(e => {
   obj.subscriber.entitlements[e] = entitlementInfo;
