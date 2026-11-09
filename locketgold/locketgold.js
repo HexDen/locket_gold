@@ -59,9 +59,43 @@ obj.subscriber.management_url = "https://apps.apple.com/account/subscriptions";
 obj.subscriber.subscriptions = obj.subscriber.subscriptions || {};
 obj.subscriber.entitlements = obj.subscriber.entitlements || {};
 
-obj.subscriber.subscriptions["locket_1600_1y"] = subInfo;
-obj.subscriber.entitlements["Gold"] = entitlementInfo;
-obj.subscriber.entitlements["pro"] = entitlementInfo;
-obj.subscriber.entitlements["vip"] = entitlementInfo;
+// Mở khóa toàn bộ các mã gói sản phẩm của Locket
+const products = [
+  "locket_1600_1y",
+  "locket_gold_yearly",
+  "locket_gold_monthly",
+  "locket_gold",
+  "locket_3600_1y",
+  "locket_4900_1m",
+  "gold_yearly",
+  "gold_monthly"
+];
+products.forEach(p => {
+  obj.subscriber.subscriptions[p] = subInfo;
+});
+
+// Mở khóa toàn bộ các Entitlements để không bị dính Paywall "Mở khóa bằng Locket Gold"
+const entitlements = [
+  "Gold",
+  "gold",
+  "Locket Gold",
+  "locket_gold",
+  "pro",
+  "Pro",
+  "vip",
+  "VIP",
+  "premium",
+  "Premium",
+  "camera_filter",
+  "camera_filters",
+  "camera_theme",
+  "camera_themes",
+  "Holiday",
+  "holidays",
+  "filters"
+];
+entitlements.forEach(e => {
+  obj.subscriber.entitlements[e] = entitlementInfo;
+});
 
 $done({ body: JSON.stringify(obj) });

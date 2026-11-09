@@ -28,6 +28,7 @@ locketlam/modules/
 inspect_keys.py
 crop_*.jpg
 picker_*.jpg
+step_*.jpg
 video_contact_sheet.jpg
 video_frames/
 real_firebase_entries.json
