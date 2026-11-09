@@ -25,3 +25,8 @@ build/
 .venv/
 tests/
 locketlam/modules/
+inspect_keys.py
+crop_*.jpg
+picker_*.jpg
+video_contact_sheet.jpg
+video_frames/
