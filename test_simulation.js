@@ -89,6 +89,7 @@ try {
 // 3. TEST KẾT NỐI MÁY CHỦ AI RENDER
 console.log('\n📌 3. KIỂM THỬ KẾT NỐI MÁY CHỦ AI RENDER...');
 const req = https.get('https://locket-gold-m1xo.onrender.com', (res) => {
+  res.resume(); // Tiêu thụ hết response body để tránh đóng kết nối đột ngột
   console.log('   ✅ MÁY CHỦ AI RENDER:', res.statusCode === 200 ? 'ONLINE 24/7 (200 OK)' : `Status ${res.statusCode}`);
   console.log('\n================================================================');
   console.log('🎉 TOÀN BỘ CÁC SCRIPT VÀ MÁY CHỦ ĐÃ HOẠT ĐỘNG HOÀN HẢO TRÊN PC!');
