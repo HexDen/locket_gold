@@ -2,7 +2,7 @@
  * =============================================================================
  *   🚀 LOCKET GOLD VIP - REVENUECAT SUBSCRIPTION MODIFIER
  *   Tác giả: HexDen ( Văn Nguyên )
- *   Repository: https://github.com/HexDen/locket_gold
+ *   Hỗ trợ: https://www.facebook.com/van.nguyen.407297
  * =============================================================================
  */
 

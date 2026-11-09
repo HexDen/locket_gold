@@ -2,7 +2,7 @@
 =============================================================================
 👑 HEXDEN LOCKET AI SERVER - BACKEND XỬ LÝ FILTER AI MIỄN PHÍ
 Tác giả: HexDen (Văn Nguyên)
-Repository: https://github.com/HexDen/locket_gold
+Hỗ trợ: https://www.facebook.com/van.nguyen.407297
 Hỗ trợ: Hugging Face Spaces (Chạy 24/7 hoàn toàn miễn phí)
 =============================================================================
 """

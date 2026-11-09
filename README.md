@@ -5,8 +5,8 @@
 # 💛 Locket Gold VIP - HexDen
 
 > **Bộ công cụ chuyên biệt mở khóa Locket Gold VIP vĩnh viễn & Chống thu hồi**  
-> 🌐 Website: [github.com/HexDen/locket_gold](https://github.com/HexDen/locket_gold) | 📢 Kênh hỗ trợ: [Telegram @HexDen](https://github.com/HexDen/locket_gold)  
-> 📦 Repository: [HexDen/locket_gold](https://github.com/HexDen/locket_gold) | 🌿 Nhánh: `shadowrocket`
+> 🌐 Kênh hỗ trợ: [Facebook Văn Nguyên](https://www.facebook.com/van.nguyen.407297)  
+> 👑 Bản quyền phát triển bởi: **Văn Nguyên (HexDen)**
 
 ---
 
@@ -154,7 +154,7 @@ Sau khi Locket đã lên Gold thành công, nếu bạn không muốn bật VPN 
 
 <details>
 <summary><b>2. Dùng DNS chống thu hồi này mạng có bị chậm hay lag không?</b></summary>
-Hoàn toàn không! Cấu hình sử dụng công nghệ <b>Split DNS</b>, chỉ định tuyến duy nhất các yêu cầu kiểm tra của Locket về server chống thu hồi của HexDen (ID: <code>992769</code>), còn toàn bộ mạng lướt web, Facebook, TikTok, YouTube... vẫn dùng 100% mạng gốc tốc độ cao.
+Hoàn toàn không! Cấu hình sử dụng công nghệ <b>Split DNS</b>, chỉ định tuyến duy nhất các yêu cầu kiểm tra của Locket về server chống thu hồi của HexDen (ID: <code>a2dd89</code>), còn toàn bộ mạng lướt web, Facebook, TikTok, YouTube... vẫn dùng 100% mạng gốc tốc độ cao.
 </details>
 
 <details>
@@ -166,8 +166,6 @@ Có! Cấu hình này được tối ưu sẵn trên máy chủ NextDNS cá nhâ
 
 ## 👨‍💻 Thông tin phát triển
 
-- **Bản quyền & Phát triển:** [HexDen](https://github.com/HexDen/locket_gold)
-- **Mã Nguồn Gốc:** [duyvinh09](https://github.com/duyvinh09/Module_IOS/)
-- **Website chính thức:** [github.com/HexDen/locket_gold](https://github.com/HexDen/locket_gold)
-- **Kênh thông báo & Hỗ trợ:** [Telegram @HexDen](https://github.com/HexDen/locket_gold)
+- **Bản quyền & Phát triển:** Văn Nguyên (HexDen)
+- **Kênh thông báo & Hỗ trợ:** [Facebook Văn Nguyên](https://www.facebook.com/van.nguyen.407297)
 - **Giấy phép:** Được phát hành miễn phí cho cộng đồng người dùng iOS. Nghiêm cấm mọi hành vi sao chép nhằm mục đích thương mại.

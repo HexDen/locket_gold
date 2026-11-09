@@ -2,7 +2,7 @@
  * =============================================================================
  * 👑 LOCKET GOLD VIP - AI FILTER INTERCEPTOR
  * Tác giả: HexDen ( Văn Nguyên )
- * Repository: https://github.com/HexDen/locket_gold
+ * Hỗ trợ: https://www.facebook.com/van.nguyen.407297
  * Máy chủ AI: https://locket-gold-m1xo.onrender.com (Render Cloud)
  * =============================================================================
  */
