@@ -9,17 +9,17 @@ set -e
 
 echo "🚀 Bắt đầu cài đặt HexDen Locket Gold Server trên VPS..."
 
-# 1. Cập nhật hệ thống và cài đặt Python 3 + Pip
+# 1. Cập nhật hệ thống và cài đặt Python 3 + Pip + Cryptography
 sudo apt update -y
-sudo apt install -y python3 python3-pip python3-venv git curl ufw
+sudo apt install -y python3 python3-pip python3-venv python3-cryptography git curl ufw
 
-# 2. Mở cổng 80 và 443 trên tường lửa (UFW & iptables của Oracle Cloud)
+# 2. Mở cổng 80 và 443 trên tường lửa (UFW & iptables)
 echo "🔓 Đang mở cổng 80 & 443 trên tường lửa..."
 sudo ufw allow 80/tcp || true
 sudo ufw allow 443/tcp || true
-sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 80 -j ACCEPT || true
-sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 443 -j ACCEPT || true
-sudo netfilter-persistent save || true
+sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 80 -j ACCEPT 2>/dev/null || true
+sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 443 -j ACCEPT 2>/dev/null || true
+sudo netfilter-persistent save 2>/dev/null || true
 
 # 3. Lấy địa chỉ IP Public của VPS
 VPS_IP=$(curl -s https://api.ipify.org || curl -s https://ifconfig.me)
@@ -27,7 +27,7 @@ echo "🌐 Địa chỉ IP Public của VPS: $VPS_IP"
 
 # 4. Cài đặt thư viện Python cần thiết
 cd "$(dirname "$0")"
-pip3 install cryptography
+pip3 install cryptography --break-system-packages 2>/dev/null || pip3 install cryptography 2>/dev/null || true
 
 # 5. Sinh chứng chỉ Root CA và File .mobileconfig
 echo "🔑 Đang sinh chứng chỉ HexDen Root CA..."
