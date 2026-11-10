@@ -32,3 +32,7 @@ step_*.jpg
 video_contact_sheet.jpg
 video_frames/
 real_firebase_entries.json
+certs/
+*.key
+*Thư*
+*thu_muc*
