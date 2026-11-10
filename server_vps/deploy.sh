@@ -69,3 +69,4 @@ echo "🎉 CÀI ĐẶT THÀNH CÔNG 100%! SERVER ĐANG CHẠY 24/7!"
 echo "🌐 IP VPS của bạn: $VPS_IP"
 echo "📲 Link tải cấu hình trực tiếp từ iPhone: https://$VPS_IP/LocketGold_Server.mobileconfig"
 echo "============================================================================="
+

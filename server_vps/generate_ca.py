@@ -92,3 +92,4 @@ def generate_root_ca(output_dir="certs", org_name="HexDen LocketGold", common_na
 
 if __name__ == "__main__":
     generate_root_ca()
+

@@ -82,11 +82,21 @@ Hệ thống sẽ tự động 100%:
 
 ## 📱 Bước 5: Cung cấp cho khách hàng hoặc Cài lên iPhone
 
-Sau khi chạy xong, màn hình sẽ in ra đường link:
-$$\text{https://<IP_VPS_CỦA_BẠN>/LocketGold_Server.mobileconfig}$$
+Sau khi chạy xong, màn hình sẽ in ra đường link tải trực tiếp:
+* **Link tải trên Safari (khuyên dùng):** `http://<IP_VPS_CỦA_BẠN>/locketgold.mobileconfig`
+* **Hoặc link trang chủ VPS:** `http://<IP_VPS_CỦA_BẠN>/`
 
-### Thao tác trên iPhone:
+### Cách gắn nút bấm trên Website của bạn:
+Trong file `index.html` của trang web, ở mục **"Tải Hồ Sơ DNS Chống Thu Hồi Về iPhone (.mobileconfig)"** (như trên ảnh giao diện của bạn), bạn chỉ cần đổi đường link thẻ `<a>` thành:
+```html
+<a href="http://<IP_VPS_CỦA_BẠN>/locketgold.mobileconfig" class="btn-glow-gold ...">
+    <span>Tải Hồ Sơ locketgold.mobileconfig Về iPhone</span>
+</a>
+```
+
+### Thao tác trên iPhone của khách hàng:
 1. Mở Safari truy cập đường link trên và bấm **Cho phép tải về**.
 2. Vào **Cài đặt ➔ Đã tải về hồ sơ ➔ Cài đặt**.
 3. Vào **Cài đặt ➔ Cài đặt chung ➔ Giới thiệu ➔ Cài đặt tin cậy chứng nhận** ➔ Bật công tắc xanh cho **HexDen Root CA**.
 4. **Mở app Locket lên: Đã có vương miện vàng Locket Gold VIP, quay video 60s và toàn bộ bộ lọc mà không cần bất kỳ VPN hay Shadowrocket nào!**
+

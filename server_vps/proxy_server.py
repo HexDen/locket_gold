@@ -19,6 +19,7 @@ import json
 import struct
 import socket
 import tempfile
+import threading
 import urllib.request
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from datetime import datetime, timedelta, timezone
@@ -250,7 +251,49 @@ class HexDenProxyHandler(BaseHTTPRequestHandler):
         # RevenueCat receipt post
         self.do_GET()
 
+def start_http_port_80():
+    class Http80Handler(BaseHTTPRequestHandler):
+        def log_message(self, format, *args):
+            pass
+
+        def do_GET(self):
+            # Tải file cấu hình .mobileconfig qua HTTP thông thường
+            clean_path = self.path.split("?")[0].lower()
+            if clean_path.endswith(".mobileconfig") or clean_path in ["/download", "/dns", "/profile"]:
+                mc_path = os.path.join(BASE_DIR, "LocketGold_Server.mobileconfig")
+                if os.path.exists(mc_path):
+                    with open(mc_path, "rb") as f:
+                        data = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/x-apple-aspen-config")
+                    self.send_header("Content-Disposition", 'inline; filename="locketgold.mobileconfig"')
+                    self.send_header("Content-Length", str(len(data)))
+                    self.end_headers()
+                    self.wfile.write(data)
+                    return
+
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>HexDen Locket Gold Server</title></head>
+            <body style="background:#0b1120;color:#fff;font-family:sans-serif;text-align:center;padding:50px;">
+                <h1 style="color:#00f2fe;">👑 HexDen Locket Gold Server Đang Hoạt Động 24/7</h1>
+                <p>Máy chủ tự động mở khóa Locket Gold VIP không cần Shadowrocket hay VPN.</p>
+                <p><a href="/locketgold.mobileconfig" style="background:#f59e0b;color:#000;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:bold;">📲 Tải Hồ Sơ Cấu Hình Về iPhone</a></p>
+            </body></html>"""
+            self.wfile.write(html.encode("utf-8"))
+
+    try:
+        http_80_server = HTTPServer(("0.0.0.0", 80), Http80Handler)
+        print("🌐 HTTP Server port 80 đang phục vụ tải file .mobileconfig...")
+        http_80_server.serve_forever()
+    except Exception as e:
+        print(f"⚠️ Port 80 thông báo: {e}")
+
 def run_server(port=443):
+    # Khởi chạy HTTP port 80 trong luồng nền
+    http_thread = threading.Thread(target=start_http_port_80, daemon=True)
+    http_thread.start()
     if not os.path.exists(CA_CERT_PATH) or not os.path.exists(CA_KEY_PATH):
         from generate_ca import generate_root_ca
         generate_root_ca(output_dir=CERTS_DIR)
@@ -289,3 +332,4 @@ def run_server(port=443):
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 443
     run_server(port=port)
+

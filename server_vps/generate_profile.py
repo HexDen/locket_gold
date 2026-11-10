@@ -118,3 +118,4 @@ if __name__ == "__main__":
     import sys
     host = sys.argv[1] if len(sys.argv) > 1 else "YOUR_VPS_IP_HERE"
     generate_mobileconfig(host)
+
