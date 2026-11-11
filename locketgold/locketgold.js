@@ -100,7 +100,30 @@ const entitlements = [
   "filters",
   "all",
   "custom_filters",
-  "camera_effects"
+  "camera_effects",
+  "custom_widget_frames",
+  "widget_frames",
+  "widget_frame",
+  "frames",
+  "frame",
+  "camera_color",
+  "camera_colors",
+  "camera_theme_sheet",
+  "camera_themes_sheet",
+  "camera_theme_picker",
+  "themes",
+  "theme",
+  "app_icon",
+  "app_icons",
+  "app_icon_picker",
+  "locket_views",
+  "longer_video",
+  "video",
+  "long_captions",
+  "unlimited_friends",
+  "priority_support",
+  "remove_ads",
+  "streak_recovery"
 ];
 entitlements.forEach(e => {
   obj.subscriber.entitlements[e] = entitlementInfo;

@@ -194,7 +194,7 @@ class HexDenProxyHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(GOLD_REVENUECAT_PAYLOAD).encode("utf-8"))
             return
 
-        # 3. Xử lý Firebase Remote Config (Quay 60s & Bộ lọc)
+        # 3. Xử lý Firebase Remote Config (Quay 60s, Bộ lọc, Màu camera, Khung tiện ích)
         if "firebaseremoteconfig" in host:
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -203,9 +203,86 @@ class HexDenProxyHandler(BaseHTTPRequestHandler):
                 "camera_video_recording": json.dumps({"default":{"maximum_duration":60000,"size":1080,"file_type":"mp4","video_codec":"h265"},"gold":{"maximum_duration":60000,"size":1080,"file_type":"mp4","video_codec":"h265"}}),
                 "camera_roll": json.dumps({"gold_max_duration":60,"max_duration":60,"video_max_duration":60}),
                 "camera_filter": "everyone",
+                "camera_filters": "everyone",
                 "holiday_filters": "everyone",
-                "longer_video": "subscriber",
-                "video": "subscriber"
+                "longer_video": "everyone",
+                "video": "everyone",
+                "camera_filters_enabled": "true",
+                "camera_filter_enabled": "true",
+                "camera_filter_sheet_enabled": "true",
+                "camera_filter_picker_enabled": "true",
+                "holiday_filters_enabled": "true",
+                "holiday_filters_free": "true",
+                "allows_custom_filters": "true",
+                "camera_theme_enabled": "true",
+                "camera_themes_enabled": "true",
+                "camera_theme_sheet_enabled": "true",
+                "camera_theme_picker_enabled": "true",
+                "camera_color_enabled": "true",
+                "camera_colors_enabled": "true",
+                "custom_widget_frames_enabled": "true",
+                "widget_frames_enabled": "true",
+                "widget_frame_enabled": "true",
+                "widget_frames": "true",
+                "app_icon_picker_enabled": "true",
+                "app_icons_enabled": "true",
+                "feature_gates": json.dumps({
+                    "holiday_filters": "everyone",
+                    "holiday_filter": "everyone",
+                    "camera_filter": "everyone",
+                    "camera_filters": "everyone",
+                    "filters": "everyone",
+                    "camera_filter_sheet": "everyone",
+                    "camera_filters_sheet": "everyone",
+                    "camera_filter_picker": "everyone",
+                    "camera_theme": "everyone",
+                    "camera_themes": "everyone",
+                    "camera_themes_config": "everyone",
+                    "camera_theme_sheet": "everyone",
+                    "camera_themes_sheet": "everyone",
+                    "camera_theme_picker": "everyone",
+                    "camera_color": "everyone",
+                    "camera_colors": "everyone",
+                    "custom_widget_frames": "everyone",
+                    "widget_frames": "everyone",
+                    "widget_frame": "everyone",
+                    "frames": "everyone",
+                    "ai_filter": "everyone",
+                    "ai_filters": "everyone",
+                    "ai_camera_filter": "everyone",
+                    "app_icon_picker": "everyone",
+                    "app_icons": "everyone",
+                    "camera_roll": "everyone",
+                    "locket_views": "everyone",
+                    "long_captions": "everyone",
+                    "longer_video": "everyone",
+                    "unlimited_friends": "everyone",
+                    "priority_support": "everyone",
+                    "profile_badge": "everyone",
+                    "remove_ads": "everyone",
+                    "video": "everyone",
+                    "streak_recovery": "everyone"
+                }),
+                "upsell_features": json.dumps({
+                    "camera_filter": false,
+                    "camera_filters": false,
+                    "filters": false,
+                    "holiday_filter": false,
+                    "holiday_filters": false,
+                    "camera_theme": false,
+                    "camera_themes": false,
+                    "camera_color": false,
+                    "camera_roll": false,
+                    "locket_views": false,
+                    "remove_ads": false,
+                    "custom_widget_frames": false,
+                    "widget_frames": false
+                }),
+                "camera_themes": json.dumps(["gold", "sakura", "snowflake", "sunset", "surfboard", "ootd", "neon", "classic", "minimal"]),
+                "camera_themes_config": json.dumps({"enabled": True, "all_unlocked": True, "themes": ["gold", "sakura", "snowflake", "sunset", "surfboard", "ootd", "neon", "classic", "minimal"]}),
+                "camera_theme_config": json.dumps({"enabled": True, "all_unlocked": True, "themes": ["gold", "sakura", "snowflake", "sunset", "surfboard", "ootd", "neon", "classic", "minimal"]}),
+                "custom_widget_frames_config": json.dumps({"enabled": True, "all_unlocked": True, "frames": ["gold", "classic", "polaroid", "film", "vintage", "neon", "festive", "valentines", "halloween", "christmas"]}),
+                "widget_frames_config": json.dumps({"enabled": True, "all_unlocked": True, "frames": ["gold", "classic", "polaroid", "film", "vintage", "neon", "festive", "valentines", "halloween", "christmas"]})
             }
             resp = {"entries": rc_entries, "state": "UPDATE"}
             self.wfile.write(json.dumps(resp).encode("utf-8"))
