@@ -2605,11 +2605,9 @@ const remoteEntries = {
   "app_icon_picker_enabled": "true",
   "app_icons_enabled": "true",
   "allows_custom_filters": "true",
-  "camera_themes": JSON.stringify(["gold", "sakura", "snowflake", "sunset", "surfboard", "ootd", "neon", "classic", "minimal"]),
-  "camera_themes_config": JSON.stringify({"enabled": true, "all_unlocked": true, "themes": ["gold", "sakura", "snowflake", "sunset", "surfboard", "ootd", "neon", "classic", "minimal"]}),
-  "camera_theme_config": JSON.stringify({"enabled": true, "all_unlocked": true, "themes": ["gold", "sakura", "snowflake", "sunset", "surfboard", "ootd", "neon", "classic", "minimal"]}),
-  "custom_widget_frames_config": JSON.stringify({"enabled": true, "all_unlocked": true, "frames": ["gold", "classic", "polaroid", "film", "vintage", "neon", "festive", "valentines", "halloween", "christmas"]}),
-  "widget_frames_config": JSON.stringify({"enabled": true, "all_unlocked": true, "frames": ["gold", "classic", "polaroid", "film", "vintage", "neon", "festive", "valentines", "halloween", "christmas"]}),
+  "camera_themes": "[\"gold\",\"sakura\",\"snowflake\",\"sunset\",\"surfboard\",\"ootd\"]",
+  "camera_themes_config": "{\"enabled\":true,\"themes\":[\"gold\",\"sakura\",\"snowflake\",\"sunset\",\"surfboard\",\"ootd\"]}",
+  "camera_theme_config": "{\"enabled\":true,\"themes\":[\"gold\",\"sakura\",\"snowflake\",\"sunset\",\"surfboard\",\"ootd\"]}",
   "link_caption_link_enabled": "true",
   "music_caption_enabled": "true",
   "music_caption_song_preview_enabled": "true",
@@ -2790,7 +2788,6 @@ remoteEntries['overlay_items'] = JSON.stringify(overlayItems);
 
 // Gán toàn bộ vào phản hồi trả về cho ứng dụng Locket
 Object.assign(obj.entries, remoteEntries);
-obj['state'] = "UPDATE";
 obj['Attention'] = "Chúc mừng bạn! Bản quyền thuộc về HexDen ( Văn Nguyên ).";
 
 $done({ body: JSON.stringify(obj) });
