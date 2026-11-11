@@ -6,27 +6,67 @@
  * =============================================================================
  */
 
-let obj = {};
-try {
-  obj = JSON.parse($response.body || '{}');
-} catch (e) {
-  obj = {};
+const url = (typeof $request !== 'undefined' && $request && $request.url) ? $request.url : '';
+
+function injectBadge(target) {
+  if (!target || typeof target !== 'object') return;
+  if (
+    'user' in target ||
+    'profile' in target ||
+    'data' in target ||
+    'first_name' in target ||
+    'phone_number' in target ||
+    'uid' in target ||
+    'id' in target
+  ) {
+    target.badge = 'locket_gold';
+    target.badge_tier = 'gold';
+    target.is_gold = true;
+    target.show_badge = true;
+  }
+  for (let key in target) {
+    if (Object.prototype.hasOwnProperty.call(target, key) && typeof target[key] === 'object' && target[key] !== null) {
+      injectBadge(target[key]);
+    }
+  }
 }
 
-if (obj.data) {
-  obj.data.badge = "locket_gold";
-  obj.data.badge_tier = "gold";
-  obj.data.is_gold = true;
-  obj.data.show_badge = true;
+if (url.includes('changeProfileInfo')) {
+  $done({
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({
+        data: {
+          badge: 'locket_gold',
+          badge_tier: 'gold',
+          is_gold: true,
+          success: true
+        },
+        result: {
+          badge: 'locket_gold',
+          badge_tier: 'gold',
+          is_gold: true,
+          success: true
+        }
+      })
+    }
+  });
+} else {
+  let body = (typeof $response !== 'undefined' && $response && $response.body) ? $response.body : null;
+  if (body) {
+    try {
+      let obj = JSON.parse(body);
+      injectBadge(obj);
+      obj.badge = 'locket_gold';
+      obj.badge_tier = 'gold';
+      obj.is_gold = true;
+      obj.show_badge = true;
+      body = JSON.stringify(obj);
+    } catch (e) {}
+  }
+  $done({ body: body });
 }
-if (obj.user) {
-  obj.user.badge = "locket_gold";
-  obj.user.badge_tier = "gold";
-  obj.user.is_gold = true;
-  obj.user.show_badge = true;
-}
-obj.is_gold = true;
-obj.badge = "locket_gold";
-obj.show_badge = true;
-
-$done({ body: JSON.stringify(obj) });
