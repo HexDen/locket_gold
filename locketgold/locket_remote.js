@@ -2789,6 +2789,7 @@ remoteEntries['overlay_items'] = JSON.stringify(overlayItems);
 
 // Gán toàn bộ vào phản hồi trả về cho ứng dụng Locket
 Object.assign(obj.entries, remoteEntries);
+obj['state'] = "UPDATE";
 obj['Attention'] = "Chúc mừng bạn! Bản quyền thuộc về HexDen ( Văn Nguyên ).";
 
 $done({ body: JSON.stringify(obj) });
