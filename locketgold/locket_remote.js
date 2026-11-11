@@ -39,7 +39,20 @@ const popupConfig = {
 };
 
 // =============================================================================
-// 🏷️ PHẦN 2: DANH SÁCH THỨ TỰ CÁC NHÃN CAPTION TRÊN CAMERA (DYNAMIC CAPTIONS)
+// 🖼️ PHẦN 2: CẤU HÌNH KHUNG TIỆN ÍCH WIDGET TỰ CHỌN (WIDGET FRAME)
+// (Bạn có thể thay đổi link ảnh PNG khung viền trong suốt của bạn tại đây)
+// =============================================================================
+const widgetFrameConfig = {
+  "uid": "custom_frame_hexden",
+  "url": "https://i.ibb.co/1Yt1Dzzy/Shin-chan-1.png", // Dán link ảnh khung viền PNG trong suốt vào đây
+  "placement": "below", // "below" (nằm dưới) hoặc "above" (nằm đè lên viền widget)
+  "use_local_time_zone": true,
+  "start_at": "2020-01-01T00:00:00",
+  "end_at": "2099-12-31T23:59:59"
+};
+
+// =============================================================================
+// 🏷️ PHẦN 3: DANH SÁCH THỨ TỰ CÁC NHÃN CAPTION TRÊN CAMERA (DYNAMIC CAPTIONS)
 // (Mỗi dòng là 1 nhãn, bạn có thể thêm mới, xóa bớt hoặc đảo vị trí nhãn)
 // =============================================================================
 const overlayDynamicCaptions = [
@@ -2728,7 +2741,7 @@ const remoteEntries = {
   "widget_stale_state_enabled": "false",
   "widget_last_sent_indicator": "false",
   "widget_sync_token_reload_mode": "clearTokenNever",
-  "widget_frame_event": "{\"uid\":\"midautumn_2026\",\"url\":\"https://i.ibb.co/1Yt1Dzzy/Shin-chan-1.png\",\"use_local_time_zone\":true,\"placement\":\"below\",\"start_at\":\"2020-01-01T00:00:00\",\"end_at\":\"2099-12-31T23:59:59\"}",
+  "widget_frame_event": JSON.stringify(widgetFrameConfig),
   "live_activity_onboarding": "true",
   "live_activity_onboarding_variant": "friending",
   "register_live_activity_push_to_start_token": "true",
