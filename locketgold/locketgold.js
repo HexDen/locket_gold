@@ -91,6 +91,17 @@ const entitlements = [
   "camera_filters",
   "camera_theme",
   "camera_themes",
+  "app_icon",
+  "app_icons",
+  "app_icon_picker",
+  "profile_badge",
+  "custom_widget_frames",
+  "widget_frames",
+  "camera_roll",
+  "longer_video",
+  "locket_views",
+  "remove_ads",
+  "streak_recovery",
   "Holiday",
   "holidays",
   "holiday_filters",
@@ -100,8 +111,7 @@ const entitlements = [
   "filters",
   "all",
   "custom_filters",
-  "camera_effects",
-  "custom_widget_frames"
+  "camera_effects"
 ];
 entitlements.forEach(e => {
   obj.subscriber.entitlements[e] = entitlementInfo;
