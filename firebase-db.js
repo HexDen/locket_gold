@@ -1331,7 +1331,7 @@ async function dbApplyVoucher(code, originalPriceXu) {
     originalPriceXu = Number(originalPriceXu) || 0;
 
     if (!code) {
-        return { valid: false, error: 'Vui lòng nhập mã voucher!' };
+        return { valid: false, error: 'Vui lòng nhập mã voucher!', message: 'Vui lòng nhập mã voucher!' };
     }
 
     var vouchers = await dbGetAllVouchers();
@@ -1340,15 +1340,16 @@ async function dbApplyVoucher(code, originalPriceXu) {
     });
 
     if (!voucher) {
-        return { valid: false, error: 'Mã voucher "' + code + '" không tồn tại hoặc đã bị xóa!' };
+        return { valid: false, error: 'Mã voucher "' + code + '" không tồn tại hoặc đã bị xóa!', message: 'Mã voucher "' + code + '" không tồn tại hoặc đã bị xóa!' };
     }
 
-    if (!voucher.active) {
-        return { valid: false, error: 'Mã voucher "' + code + '" hiện đang tạm ngưng sử dụng!' };
+    var isAct = (voucher.active !== undefined) ? voucher.active : (voucher.isActive !== undefined ? voucher.isActive : true);
+    if (!isAct) {
+        return { valid: false, error: 'Mã voucher "' + code + '" hiện đang tạm ngưng sử dụng!', message: 'Mã voucher "' + code + '" hiện đang tạm ngưng sử dụng!' };
     }
 
     if (voucher.maxUses > 0 && voucher.usedCount >= voucher.maxUses) {
-        return { valid: false, error: 'Mã voucher "' + code + '" đã hết lượt sử dụng (Tối đa ' + voucher.maxUses + ' lượt)!' };
+        return { valid: false, error: 'Mã voucher "' + code + '" đã hết lượt sử dụng (Tối đa ' + voucher.maxUses + ' lượt)!', message: 'Mã voucher "' + code + '" đã hết lượt sử dụng (Tối đa ' + voucher.maxUses + ' lượt)!' };
     }
 
     var discountXu = 0;
@@ -1366,7 +1367,9 @@ async function dbApplyVoucher(code, originalPriceXu) {
         valid: true,
         code: code,
         voucher: voucher,
+        discount: discountXu,
         discountXu: discountXu,
+        finalPrice: finalPriceXu,
         finalPriceXu: finalPriceXu,
         message: 'Áp dụng thành công mã ' + code + ': Giảm -' + discountXu + ' Xu!'
     };

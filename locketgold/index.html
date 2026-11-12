@@ -3215,14 +3215,14 @@
 
                 if (res.valid) {
                     orderState.appliedVoucher = res.voucher;
-                    orderState.discount = res.discount;
-                    orderState.finalPrice = res.finalPrice;
+                    orderState.discount = (res.discount !== undefined) ? res.discount : (res.discountXu || 0);
+                    orderState.finalPrice = (res.finalPrice !== undefined) ? res.finalPrice : (res.finalPriceXu || Math.max(1, orderState.basePrice - orderState.discount));
 
                     feedbackEl.className = 'text-xs text-emerald-600 font-bold mt-1.5 flex items-center gap-1';
                     feedbackEl.innerHTML = `<i data-feather="check-circle" class="w-3.5 h-3.5"></i> ${res.message}`;
                     feedbackEl.classList.remove('hidden');
 
-                    var discountLabel = res.voucher.type === 'percent' ? `Giảm ${res.voucher.value}% (-${res.discount} Xu)` : `Giảm ${res.voucher.value} Xu`;
+                    var discountLabel = res.voucher.type === 'percent' ? `Giảm ${res.voucher.value}% (-${orderState.discount} Xu)` : `Giảm ${orderState.discount} Xu`;
                     appliedBox.innerHTML = `
                         <div class="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs">
                             <div class="flex items-center gap-2">
@@ -3241,7 +3241,7 @@
                     document.getElementById('orderVoucherInput').value = '';
                 } else {
                     feedbackEl.className = 'text-xs text-rose-500 font-bold mt-1.5 flex items-center gap-1';
-                    feedbackEl.innerHTML = `<i data-feather="alert-circle" class="w-3.5 h-3.5"></i> ${res.message}`;
+                    feedbackEl.innerHTML = `<i data-feather="alert-circle" class="w-3.5 h-3.5"></i> ${res.message || res.error || 'Mã không hợp lệ!'}`;
                     feedbackEl.classList.remove('hidden');
                 }
             } catch (err) {
@@ -3311,6 +3311,7 @@
                 confirmBtn.className = 'w-full bg-slate-200 text-slate-400 font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs cursor-not-allowed';
                 confirmBtn.innerHTML = `<span>Số Dư Không Đủ (${currentBalance}/${finalPrice} Xu)</span>`;
             }
+            if (typeof feather !== "undefined") feather.replace();
         }
 
         async function executeOrderPurchase() {
