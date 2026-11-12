@@ -58,50 +58,77 @@ function initFirebase() {
 // 1. TÀI KHOẢN & ĐĂNG NHẬP / ĐĂNG KÝ / QUÊN MẬT KHẨU (USERS & AUTH)
 // =========================================================================
 
+// Tiện ích timeout để không bao giờ bị treo quá 2 giây
+function runWithTimeout(promise, ms) {
+    return new Promise(function(resolve, reject) {
+        var timer = setTimeout(function() {
+            reject(new Error('TIMEOUT'));
+        }, ms || 2000);
+        promise.then(function(res) {
+            clearTimeout(timer);
+            resolve(res);
+        }).catch(function(err) {
+            clearTimeout(timer);
+            reject(err);
+        });
+    });
+}
+
 // Đăng nhập tài khoản
 async function dbLoginUser(email, password) {
+    // 1. Kiểm tra Local Storage trước tiên (Siêu tốc 0.001s)
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    var localUser = localUsers[email];
+    if (localUser && localUser.password && localUser.password === password) {
+        return { success: true, user: localUser };
+    }
+
+    // 2. Thử Firebase Cloud Auth nếu đã cấu hình (có giới hạn timeout 2.5s)
     if (isUsingCloudDB && firebaseAuth) {
         try {
-            var userCredential = await firebaseAuth.signInWithEmailAndPassword(email, password);
+            var userCredential = await runWithTimeout(firebaseAuth.signInWithEmailAndPassword(email, password), 2500);
             var uid = userCredential.user.uid;
-            var userDoc = await firestoreDB.collection('users').doc(uid).get();
-            if (userDoc.exists) {
-                return { success: true, user: userDoc.data() };
-            } else {
-                var defaultData = {
-                    uid: uid,
-                    name: userCredential.user.displayName || email.split('@')[0],
-                    email: email,
-                    balance: 0,
-                    code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
-                    packages: [],
-                    history: [],
-                    createdAt: new Date().toISOString()
-                };
-                await firestoreDB.collection('users').doc(uid).set(defaultData);
-                return { success: true, user: defaultData };
-            }
-        } catch (err) {
-            console.warn("Firebase Auth signIn catch:", err.code, err.message);
-            // Nếu Firebase Auth chưa bật Email/Password (auth/configuration-not-found / auth/operation-not-allowed)
-            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed') {
-                if (firestoreDB) {
-                    try {
-                        var snap = await firestoreDB.collection('users').where('email', '==', email).get();
-                        if (!snap.empty) {
-                            var uDoc = snap.docs[0];
-                            var uData = uDoc.data();
-                            if (uData.password && uData.password !== password) {
-                                return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
-                            }
-                            return { success: true, user: uData };
-                        }
-                    } catch(fsErr) {
-                        console.warn("Firestore query fallback error:", fsErr);
+            
+            var defaultData = {
+                uid: uid,
+                name: userCredential.user.displayName || email.split('@')[0],
+                email: email,
+                balance: 0,
+                code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
+                packages: [],
+                history: [],
+                createdAt: new Date().toISOString()
+            };
+
+            // Lưu local cache
+            localUsers[email] = defaultData;
+            localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+
+            // Thử lấy dữ liệu Firestore không block
+            if (firestoreDB) {
+                firestoreDB.collection('users').doc(uid).get().then(function(doc) {
+                    if (doc.exists) {
+                        var cloudData = doc.data();
+                        localUsers[email] = cloudData;
+                        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+                    } else {
+                        firestoreDB.collection('users').doc(uid).set(defaultData).catch(function(){});
                     }
+                }).catch(function(){});
+            }
+
+            return { success: true, user: defaultData };
+        } catch (err) {
+            console.warn("Firebase Auth signIn catch:", err.code || err.message);
+
+            if (err.message === 'TIMEOUT' || err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed' || err.code === 'auth/network-request-failed') {
+                if (localUser) {
+                    if (localUser.password && localUser.password !== password) {
+                        return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
+                    }
+                    return { success: true, user: localUser };
                 }
-                // Fallback to local
-                return dbLoginUserLocal(email, password);
+                return { success: false, error: 'Tài khoản chưa tồn tại hoặc sai mật khẩu. Vui lòng bấm Đăng ký tài khoản mới!' };
             }
 
             var errMsg = 'Đăng nhập không thành công.';
@@ -118,159 +145,104 @@ async function dbLoginUser(email, password) {
             }
             return { success: false, error: errMsg };
         }
-    } else {
-        return dbLoginUserLocal(email, password);
     }
+
+    if (localUser) {
+        if (localUser.password && localUser.password !== password) {
+            return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
+        }
+        return { success: true, user: localUser };
+    }
+
+    return { success: false, error: 'Tài khoản chưa tồn tại trên hệ thống! Vui lòng bấm tab Đăng Ký để tạo tài khoản mới.' };
 }
 
-// Hàm hỗ trợ đăng nhập Local Storage
-function dbLoginUserLocal(email, password) {
-    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-    var user = localUsers[email];
-    if (!user) {
-        return { success: false, error: 'Tài khoản chưa tồn tại! Vui lòng bấm tab Đăng Ký để tạo tài khoản mới.' };
-    }
-    if (user.password && user.password !== password) {
-        return { success: false, error: 'Mật khẩu không chính xác! Vui lòng thử lại hoặc bấm Quên mật khẩu.' };
-    }
-    return { success: true, user: user };
-}
-
-// Đăng ký tài khoản mới
+// Đăng ký tài khoản mới (Siêu tốc & Chống treo tuyệt đối)
 async function dbRegisterUser(name, email, password) {
+    // 1. Kiểm tra tồn tại trong Local Storage (0.001s)
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    if (localUsers[email]) {
+        return { success: false, error: 'Email này đã được đăng ký! Vui lòng chuyển sang tab Đăng nhập.' };
+    }
+
+    var uid = 'usr_' + Date.now();
+    var newUserData = {
+        uid: uid,
+        name: name || email.split('@')[0],
+        email: email,
+        password: password,
+        balance: 0,
+        code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
+        packages: [],
+        history: [],
+        createdAt: new Date().toISOString()
+    };
+
+    // 2. Nếu có Firebase Auth, thử tạo tài khoản trên Cloud (timeout tối đa 2.5s)
     if (isUsingCloudDB && firebaseAuth) {
         try {
-            var userCredential = await firebaseAuth.createUserWithEmailAndPassword(email, password);
-            var uid = userCredential.user.uid;
-            if (userCredential.user && userCredential.user.updateProfile) {
-                await userCredential.user.updateProfile({ displayName: name });
+            var userCred = await runWithTimeout(firebaseAuth.createUserWithEmailAndPassword(email, password), 2500);
+            newUserData.uid = userCred.user.uid;
+            if (userCred.user && userCred.user.updateProfile) {
+                userCred.user.updateProfile({ displayName: name }).catch(function(){});
             }
-            var newUserData = {
-                uid: uid,
-                name: name || email.split('@')[0],
-                email: email,
-                balance: 0,
-                code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
-                packages: [],
-                history: [],
-                createdAt: new Date().toISOString()
-            };
-            await firestoreDB.collection('users').doc(uid).set(newUserData);
-            return { success: true, user: newUserData };
         } catch (err) {
-            console.warn("Firebase Auth createUser catch:", err.code, err.message);
-            // TỰ ĐỘNG BẢO VỆ: Nếu Firebase Auth chưa cấu hình Email/Password (auth/configuration-not-found / auth/operation-not-allowed)
-            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed') {
-                var uid = 'usr_' + Date.now();
-                var newUserData = {
-                    uid: uid,
-                    name: name || email.split('@')[0],
-                    email: email,
-                    password: password,
-                    balance: 0,
-                    code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
-                    packages: [],
-                    history: [],
-                    createdAt: new Date().toISOString()
-                };
-                if (firestoreDB) {
-                    try {
-                        var snap = await firestoreDB.collection('users').where('email', '==', email).get();
-                        if (!snap.empty) {
-                            return { success: false, error: 'Email này đã được đăng ký! Vui lòng chuyển sang tab Đăng nhập.' };
-                        }
-                        await firestoreDB.collection('users').doc(uid).set(newUserData);
-                    } catch(fsErr) {
-                        console.warn("Direct firestore write error:", fsErr);
-                    }
-                }
-                var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-                localUsers[email] = newUserData;
-                localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-                return { success: true, user: newUserData };
-            }
-
-            var errMsg = err.message;
+            console.warn("Firebase Auth createUser fallback:", err.code || err.message);
             if (err.code === 'auth/email-already-in-use') {
-                errMsg = 'Email này đã được đăng ký! Vui lòng chuyển sang tab Đăng nhập hoặc Quên mật khẩu.';
+                return { success: false, error: 'Email này đã được đăng ký! Vui lòng chuyển sang tab Đăng nhập hoặc Quên mật khẩu.' };
             } else if (err.code === 'auth/weak-password') {
-                errMsg = 'Mật khẩu quá ngắn! Mật khẩu phải có ít nhất 6 ký tự.';
+                return { success: false, error: 'Mật khẩu quá ngắn! Mật khẩu phải có ít nhất 6 ký tự.' };
             } else if (err.code === 'auth/invalid-email') {
-                errMsg = 'Địa chỉ email không đúng định dạng!';
+                return { success: false, error: 'Địa chỉ email không đúng định dạng!' };
             }
-            return { success: false, error: errMsg };
+            // Các lỗi khác (auth/configuration-not-found, TIMEOUT, mạng chậm) -> tự động bypass sang lưu Firestore/Local
         }
-    } else {
-        // Local DB Fallback
-        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-        if (localUsers[email]) {
-            return { success: false, error: 'Email này đã được đăng ký trên hệ thống! Vui lòng chọn Đăng nhập.' };
-        }
-        var newUserData = {
-            uid: 'usr_' + Date.now(),
-            name: name || email.split('@')[0],
-            email: email,
-            password: password,
-            balance: 0,
-            code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
-            packages: [],
-            history: [],
-            createdAt: new Date().toISOString()
-        };
-        localUsers[email] = newUserData;
-        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-        return { success: true, user: newUserData };
     }
+
+    // 3. Ghi vào Cloud Firestore trong nền (Non-blocking - KHÔNG AWAIT để không bị đơ)
+    if (isUsingCloudDB && firestoreDB) {
+        firestoreDB.collection('users').doc(newUserData.uid).set(newUserData).catch(function(e) {
+            console.warn("Firestore background write warn:", e);
+        });
+    }
+
+    // 4. Lưu vào LocalStorage ngay lập tức
+    localUsers[email] = newUserData;
+    localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+
+    return { success: true, user: newUserData };
 }
 
-// Khôi phục / Quên mật khẩu
+// Khôi phục / Quên mật khẩu (Siêu tốc)
 async function dbResetPassword(email) {
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+
     if (isUsingCloudDB && firebaseAuth) {
         try {
-            await firebaseAuth.sendPasswordResetEmail(email);
+            await runWithTimeout(firebaseAuth.sendPasswordResetEmail(email), 2500);
             return { 
                 success: true, 
                 message: 'Đã gửi email khôi phục mật khẩu tới ' + email + '. Vui lòng kiểm tra hộp thư đến (hoặc hòm thư Spam) để đặt lại mật khẩu mới!' 
             };
         } catch (err) {
-            console.warn("Firebase Auth reset catch:", err.code, err.message);
-            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed') {
-                // Fallback reset password to 123456
-                var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-                if (localUsers[email]) {
-                    localUsers[email].password = '123456';
-                    localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-                }
-                if (firestoreDB) {
-                    try {
-                        var snap = await firestoreDB.collection('users').where('email', '==', email).get();
-                        if (!snap.empty) {
-                            await snap.docs[0].ref.update({ password: '123456' });
-                        }
-                    } catch(e) {}
-                }
+            console.warn("Firebase Auth reset catch:", err.code || err.message);
+            // Fallback reset về 123456
+            if (localUsers[email]) {
+                localUsers[email].password = '123456';
+                localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
                 return {
                     success: true,
                     message: 'Khôi phục thành công! Mật khẩu của tài khoản ' + email + ' đã được đặt lại là: 123456. Bạn có thể đăng nhập ngay!'
                 };
             }
-
-            var errMsg = 'Không thể gửi email khôi phục.';
             if (err.code === 'auth/user-not-found') {
-                errMsg = 'Không tìm thấy tài khoản nào với địa chỉ email này!';
-            } else if (err.code === 'auth/invalid-email') {
-                errMsg = 'Địa chỉ email không hợp lệ!';
-            } else {
-                errMsg = err.message || errMsg;
+                return { success: false, error: 'Không tìm thấy tài khoản nào với địa chỉ email này!' };
             }
-            return { success: false, error: errMsg };
+            return { success: false, error: 'Không tìm thấy tài khoản với email này trên hệ thống.' };
         }
-    } else {
-        // Local DB Fallback Engine
-        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-        if (!localUsers[email]) {
-            return { success: false, error: 'Không tìm thấy tài khoản nào với email: ' + email };
-        }
+    }
+
+    if (localUsers[email]) {
         localUsers[email].password = '123456';
         localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
         return { 
@@ -278,6 +250,8 @@ async function dbResetPassword(email) {
             message: 'Khôi phục thành công! Mật khẩu của tài khoản ' + email + ' đã được đặt lại là: 123456. Bạn có thể dùng mật khẩu này để đăng nhập ngay.' 
         };
     }
+
+    return { success: false, error: 'Không tìm thấy tài khoản nào với email: ' + email };
 }
 
 // Lắng nghe dữ liệu thời gian thực (Realtime onSnapshot)

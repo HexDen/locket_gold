@@ -2268,22 +2268,10 @@
                 btn.innerHTML = '<span class="inline-flex items-center gap-2 font-bold"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang khởi tạo tài khoản...</span>';
             }
 
-            var res = { success: false };
-            if (typeof dbRegisterUser === "function") {
-                try {
-                    res = await dbRegisterUser(name, email, pass);
-                } catch(e) {
-                    console.error("Register error:", e);
-                    res = { success: false, error: e.message };
-                }
-            } else {
-                res = { success: true, user: { name: name, email: email, balance: 0, code: 'gTSx' + Math.floor(1000 + Math.random() * 9000), packages: [], history: [] } };
-            }
-
-            if (res.success) {
+            function handleSuccess(user) {
                 if (alertBox) {
                     alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black flex items-center gap-2 shadow-sm";
-                    alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Tạo tài khoản thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (res.user.name || email) + ' đến với Locket Gold VIP!</div></div>';
+                    alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Tạo tài khoản thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (user.name || email) + ' đến với Locket Gold VIP!</div></div>';
                     alertBox.classList.remove('hidden');
                 }
                 if (btn) {
@@ -2292,12 +2280,12 @@
                 }
 
                 appState.isLoggedIn = true;
-                appState.user = Object.assign(appState.user, res.user);
+                appState.user = Object.assign(appState.user, user);
                 saveState();
-                showToast('🎉 Đăng ký thành công! Chào mừng ' + (res.user.name || email));
+                showToast('🎉 Đăng ký thành công! Chào mừng ' + (user.name || email));
 
-                if (isUsingCloudDB && res.user.uid && typeof dbSubscribeUser === "function") {
-                    dbSubscribeUser(res.user.uid, function(updatedData) {
+                if (isUsingCloudDB && user.uid && typeof dbSubscribeUser === "function") {
+                    dbSubscribeUser(user.uid, function(updatedData) {
                         if (updatedData) {
                             appState.user = Object.assign(appState.user, updatedData);
                             saveState();
@@ -2314,9 +2302,49 @@
                         btn.innerHTML = '<span>Tạo Tài Khoản Ngay</span>';
                     }
                     if (alertBox) alertBox.classList.add('hidden');
-                }, 1200);
-            } else {
-                showRegError(res.error || 'Có lỗi xảy ra khi tạo tài khoản, vui lòng thử lại!');
+                }, 1000);
+            }
+
+            // Safety guard: tối đa 3 giây nếu mạng treo thì tự động đăng ký
+            var isFinished = false;
+            var safetyTimer = setTimeout(function() {
+                if (!isFinished) {
+                    isFinished = true;
+                    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+                    var fallbackUser = {
+                        uid: 'usr_' + Date.now(),
+                        name: name || email.split('@')[0],
+                        email: email,
+                        password: pass,
+                        balance: 0,
+                        code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
+                        packages: [],
+                        history: [],
+                        createdAt: new Date().toISOString()
+                    };
+                    localUsers[email] = fallbackUser;
+                    localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+                    handleSuccess(fallbackUser);
+                }
+            }, 3000);
+
+            try {
+                var res = await dbRegisterUser(name, email, pass);
+                if (isFinished) return;
+                clearTimeout(safetyTimer);
+                isFinished = true;
+
+                if (res.success) {
+                    handleSuccess(res.user);
+                } else {
+                    showRegError(res.error || 'Có lỗi xảy ra khi tạo tài khoản, vui lòng thử lại!');
+                }
+            } catch(e) {
+                if (isFinished) return;
+                clearTimeout(safetyTimer);
+                isFinished = true;
+                console.error("Register catch error:", e);
+                showRegError(e.message || 'Lỗi kết nối, vui lòng thử lại!');
             }
         }
 
