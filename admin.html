@@ -11,7 +11,292 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+        // -------------------------------------------------------------
+        // FRIEND GENERATOR CONTROLLER
+        // -------------------------------------------------------------
+        function updateFriendGenerator() {
+            var inputEl = document.getElementById('friendUsernameInput');
+            if (!inputEl) return;
+            var rawUsername = inputEl.value.trim();
+            var cleanUsername = rawUsername.toLowerCase().replace(/[^a-z0-9_.]/g, '') || 'ban_be_vip';
+            var pkgType = document.getElementById('friendPkgSelect').value;
+            var isG2 = pkgType === 'g2_direct_vip';
+            var pkgName = isG2 ? 'Locket Gold VIP [Siêu Tốc]' : 'Locket Gold (Shadowrocket)';
+
+            var targetNameEl = document.getElementById('genTargetName');
+            if (targetNameEl) targetNameEl.textContent = '@' + cleanUsername;
+
+            var customUrl = isG2
+                ? 'https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig?user=' + cleanUsername
+                : 'shadowrocket://install?module=https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule';
+
+            var customUrlEl = document.getElementById('genCustomUrl');
+            if (customUrlEl) customUrlEl.value = customUrl;
+
+            // Generate ready-to-send message for Messenger/Zalo
+            var message = '';
+            if (isG2) {
+                message = `💛 HƯỚNG DẪN KÍCH HOẠT LOCKET GOLD VIP VĨNH VIỄN\n` +
+                          `👤 Dành riêng cho: @${cleanUsername}\n` +
+                          `Văn Nguyên đã kích hoạt gói Locket Gold Vĩnh Viễn 2099 cho bạn rồi nhé!\n\n` +
+                          `Bạn chỉ cần làm 2 bước siêu dễ sau trên iPhone:\n` +
+                          `1️⃣ Mở trình duyệt Safari trên iPhone và bấm vào link này để tải cấu hình:\n` +
+                          `👉 ${customUrl}\n` +
+                          `(Máy hiện thông báo thì bấm "Cho phép" rồi bấm "Đóng")\n\n` +
+                          `2️⃣ Cài vào máy & Bật tin cậy:\n` +
+                          `• Mở Cài đặt iPhone ➔ Bấm vào dòng "Đã tải về hồ sơ" ở ngay trên đầu ➔ Bấm "Cài đặt" góc trên phải.\n` +
+                          `• Vào Cài đặt ➔ Cài đặt chung ➔ Giới thiệu ➔ Cài đặt tin cậy chứng nhận ➔ Gạt công tắc xanh cho "HexDen Root CA".\n\n` +
+                          `🎉 Xong rồi vuốt tắt app Locket từ đa nhiệm rồi mở lại là tài khoản của bạn lên Gold VIP vĩnh viễn (quay video 60s, ảnh HD, toàn bộ icon và bộ lọc)!`;
+            } else {
+                message = `💛 HƯỚNG DẪN KÍCH HOẠT LOCKET GOLD (SHADOWROCKET)\n` +
+                          `👤 Dành riêng cho: @${cleanUsername}\n` +
+                          `Văn Nguyên đã nạp gói Locket Gold Vĩnh Viễn 2099 cho bạn!\n\n` +
+                          `Các bước cài đặt nhanh bằng Shadowrocket:\n` +
+                          `1️⃣ Bấm link này để tự động nạp Module vào Shadowrocket:\n` +
+                          `👉 ${customUrl}\n\n` +
+                          `2️⃣ Bật Giải mã HTTPS trong Shadowrocket ➔ Cài chứng chỉ CA ➔ Bật tin cậy trong Cài đặt iPhone.\n` +
+                          `3️⃣ Bật VPN Shadowrocket ➔ Mở Locket lên là có Gold vĩnh viễn nha! 🎉`;
+            }
+
+            var msgAreaEl = document.getElementById('genMessageArea');
+            if (msgAreaEl) msgAreaEl.value = message;
+        }
+
+        function copyGeneratedLink() {
+            var url = document.getElementById('genCustomUrl').value;
+            copyToClipboard(url);
+        }
+
+        function copyGeneratedMessage() {
+            var msg = document.getElementById('genMessageArea').value;
+            copyToClipboard(msg);
+        }
+
+        function downloadCustomMobileconfig() {
+            var inputEl = document.getElementById('friendUsernameInput');
+            var rawUsername = inputEl ? inputEl.value.trim() : 'ban_be_vip';
+            var cleanUsername = rawUsername.toLowerCase().replace(/[^a-z0-9_.]/g, '') || 'ban_be_vip';
+
+            var uuid1 = 'F' + Date.now().toString(16).toUpperCase() + '-1234-5678-ABCD-EF' + Math.floor(1000 + Math.random()*9000);
+            var xml = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadDisplayName</key>
+	<string>Locket Gold VIP - ${cleanUsername}</string>
+	<key>PayloadDescription</key>
+	<string>Cấu hình mở khóa Locket Gold VIP vĩnh viễn 2099 dành riêng cho @${cleanUsername} bởi HexDen (Trần Văn Nguyên).</string>
+	<key>PayloadIdentifier</key>
+	<string>com.hexden.locketgold.${cleanUsername}.profile</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>${uuid1}</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadOrganization</key>
+	<string>HexDen (Văn Nguyên)</string>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.apple.dnsSettings.managed</string>
+			<key>PayloadIdentifier</key>
+			<string>com.hexden.locketgold.${cleanUsername}.dns</string>
+			<key>PayloadUUID</key>
+			<string>${uuid1}-DNS</string>
+			<key>PayloadDisplayName</key>
+			<string>Locket Gold DNS - ${cleanUsername}</string>
+			<key>PayloadDescription</key>
+			<string>Định tuyến máy chủ Locket Gold VIP & Video 60s vĩnh viễn</string>
+			<key>PayloadOrganization</key>
+			<string>HexDen (Văn Nguyên)</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>DNSSettings</key>
+			<dict>
+				<key>DNSProtocol</key>
+				<string>HTTPS</string>
+				<key>ServerURL</key>
+				<string>https://apple.dns.nextdns.io/a2dd89/${cleanUsername}</string>
+				<key>ServerAddresses</key>
+				<array>
+					<string>45.90.28.0</string>
+					<string>45.90.30.0</string>
+					<string>2a07:a8c0::a2:dd89</string>
+					<string>2a07:a8c1::a2:dd89</string>
+				</array>
+				<key>SupplementalMatchDomains</key>
+				<array>
+					<string>api.revenuecat.com</string>
+					<string>app.revenuecat.com</string>
+					<string>revenuecat.com</string>
+					<string>firebaseremoteconfig.googleapis.com</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>`;
+
+            var blob = new Blob([xml], { type: 'application/x-apple-aspen-config' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `locketgold_${cleanUsername}.mobileconfig`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+            showAdminToast(`📥 Đã tạo và tải file locketgold_${cleanUsername}.mobileconfig thành công!`);
+        }
+
+        async function autoCreateFriendOrder() {
+            var inputEl = document.getElementById('friendUsernameInput');
+            var rawUsername = inputEl ? inputEl.value.trim() : 'ban_be_vip';
+            var cleanUsername = rawUsername.toLowerCase().replace(/[^a-z0-9_.]/g, '') || 'ban_be_vip';
+            var pkgType = document.getElementById('friendPkgSelect').value;
+            var isG2 = pkgType === 'g2_direct_vip';
+            var pkgName = isG2 ? 'Locket Gold VIP [Siêu Tốc]' : 'Locket Gold (Shadowrocket)';
+            var orderId = 'ORD-BB-' + Math.floor(10000 + Math.random() * 90000);
+            var orderDate = new Date().toLocaleString('vi-VN');
+
+            var orderData = {
+                id: orderId,
+                userId: 'usr_friend_' + cleanUsername,
+                userEmail: cleanUsername + '@locket.friend',
+                pkgType: pkgType,
+                pkgName: pkgName + ' (Tặng bạn @' + cleanUsername + ')',
+                priceXu: 0,
+                date: orderDate,
+                expires: 'Vĩnh viễn (2099)',
+                status: 'Đã kích hoạt'
+            };
+
+            // Save order to DB
+            if (typeof isUsingCloudDB !== "undefined" && isUsingCloudDB && typeof firestoreDB !== "undefined" && firestoreDB) {
+                try {
+                    await firestoreDB.collection('orders').doc(orderId).set(orderData);
+                } catch(e) {
+                    console.error("Firestore friend order error:", e);
+                }
+            } else {
+                var localOrders = JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+                localOrders.unshift(orderData);
+                localStorage.setItem('locket_gold_orders_db', JSON.stringify(localOrders));
+            }
+
+            // Save to friends history
+            var friendsList = JSON.parse(localStorage.getItem('admin_friends_upgrades') || '[]');
+            friendsList.unshift({
+                id: orderId,
+                username: cleanUsername,
+                pkgName: pkgName,
+                date: orderDate
+            });
+            localStorage.setItem('admin_friends_upgrades', JSON.stringify(friendsList));
+
+            showAdminToast(`🎉 Đã tự lên đơn thành công cho bạn @${cleanUsername}! (0 Xu)`);
+            loadAllAdminData();
+            renderFriendsHistoryTable();
+        }
+
+        function renderFriendsHistoryTable() {
+            var container = document.getElementById('friendsHistoryContainer');
+            if (!container) return;
+
+            var friendsList = JSON.parse(localStorage.getItem('admin_friends_upgrades') || '[]');
+            if (adminState.orders) {
+                adminState.orders.forEach(function(o) {
+                    if (o.id && o.id.startsWith('ORD-BB-')) {
+                        var uname = (o.userEmail || '').replace('@locket.friend', '');
+                        if (!friendsList.some(f => f.id === o.id)) {
+                            friendsList.push({
+                                id: o.id,
+                                username: uname,
+                                pkgName: o.pkgName,
+                                date: o.date
+                            });
+                        }
+                    }
+                });
+            }
+
+            if (friendsList.length === 0) {
+                container.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">Chưa có bạn bè nào được tự lên đơn. Hãy nhập username ở trên để nâng VIP ngay!</div>';
+                return;
+            }
+
+            var html = `
+                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
+                            <th class="py-2.5 px-3">Mã Đơn</th>
+                            <th class="py-2.5 px-3">Username Bạn Bè</th>
+                            <th class="py-2.5 px-3">Gói Kích Hoạt</th>
+                            <th class="py-2.5 px-3">Thời Gian</th>
+                            <th class="py-2.5 px-3 text-right">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/80 font-sans">
+            `;
+
+            friendsList.forEach(function(f) {
+                html += `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-3 px-3 font-mono font-bold text-amber-400">${f.id}</td>
+                        <td class="py-3 px-3 font-mono font-bold text-white flex items-center gap-1.5">
+                            <span class="text-amber-400">@</span><span>${f.username}</span>
+                        </td>
+                        <td class="py-3 px-3">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                                ${f.pkgName}
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 text-slate-400 text-[11px]">${f.date}</td>
+                        <td class="py-3 px-3 text-right space-x-1.5">
+                            <button onclick="copyFriendMsgFor('${f.username}')" class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">
+                                📋 Chép tin nhắn
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function copyFriendMsgFor(uname) {
+            var input = document.getElementById('friendUsernameInput');
+            if (input) input.value = uname;
+            updateFriendGenerator();
+            copyGeneratedMessage();
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showAdminToast('Đã sao chép vào bộ nhớ tạm!');
+                }).catch(function() {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            var input = document.createElement('input');
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            showAdminToast('Đã sao chép vào bộ nhớ tạm!');
+        }
+
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -138,6 +423,14 @@
                         </div>
                     </button>
 
+                    <button onclick="switchTab('products')" id="nav-products" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-feather="link-2" class="w-4 h-4 text-amber-400"></i>
+                            <span>Kho Link & Nâng Bạn Bè</span>
+                        </div>
+                        <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">PRO</span>
+                    </button>
+
                     <button onclick="switchTab('recharges')" id="nav-recharges" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
                         <div class="flex items-center gap-3">
                             <i data-feather="credit-card" class="w-4 h-4"></i>
@@ -198,6 +491,10 @@
                 </div>
 
                 <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="switchTab('products')" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95">
+                        <i data-feather="zap" class="w-3.5 h-3.5"></i>
+                        <span>Nâng VIP Bạn Bè</span>
+                    </button>
                     <button onclick="openManualTopupModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95">
                         <i data-feather="plus-circle" class="w-3.5 h-3.5"></i>
                         <span>Cộng Xu Khách</span>
@@ -312,6 +609,246 @@
                             <!-- Render dynamic recent orders -->
                         </div>
                     </div>
+                </div>
+
+                                <!-- ========================================================================= -->
+                <!-- TAB: KHO SẢN PHẨM & NÂNG VIP CHO BẠN BÈ THEO USERNAME -->
+                <!-- ========================================================================= -->
+                <div id="tab-products" class="hidden space-y-6">
+                    
+                    <!-- HERO: BỘ TẠO LINK & TỰ LÊN ĐƠN THEO USERNAME CHO BẠN BÈ -->
+                    <div class="bg-gradient-to-br from-amber-500/10 via-[#0f172a] to-[#070d1e] border-2 border-amber-400/50 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+                        <div class="absolute -top-24 -right-24 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold border border-amber-400/30 mb-2">
+                                    👑 DÀNH RIÊNG ADMIN • TỰ LÊN ĐƠN KHÔNG CẦN MUA
+                                </div>
+                                <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+                                    <span>Tự Động Nâng Locket Gold VIP Cho Bạn Bè Theo Username</span>
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-1">
+                                    Nhập username Locket của bạn bè ➔ Hệ thống tự động sinh link cá nhân hóa, tự tạo file .mobileconfig riêng và tự động lên đơn kích hoạt 0 Xu vĩnh viễn 2099!
+                                </p>
+                            </div>
+                            <span class="text-xs px-3.5 py-1.5 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/40 font-mono shrink-0 self-start sm:self-auto font-black">
+                                ⚡ Siêu Tốc 1 Chạm
+                            </span>
+                        </div>
+
+                        <!-- INPUT FORM -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    1. Nhập Username Locket Của Bạn Bè (Không Dấu, Ví dụ: <span class="text-amber-400 font-mono">hoangnam, quynhanh, nguyen99</span>):
+                                </label>
+                                <div class="relative">
+                                    <span class="absolute left-3.5 top-3 text-amber-400 font-bold font-mono">@</span>
+                                    <input id="friendUsernameInput" oninput="updateFriendGenerator()" type="text" placeholder="nhap_username_cua_ban" value="ban_be_vip"
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-2xl pl-8 pr-4 py-3 text-sm text-white font-mono font-bold focus:outline-none focus:border-amber-400 transition">
+                                </div>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-300">
+                                    2. Chọn Gói Cần Nâng Cho Bạn:
+                                </label>
+                                <select id="friendPkgSelect" onchange="updateFriendGenerator()" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm text-white font-bold focus:outline-none focus:border-amber-400 transition">
+                                    <option value="g2_direct_vip">⭐ Gói 2 VIP: Cài Trực Tiếp Safari (.mobileconfig) - Khuyên dùng (Không cần Shadowrocket, không lag)</option>
+                                    <option value="g1_shadowrocket">Gói 1: Locket Gold (Shadowrocket) - Nạp Module/Config</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- GENERATED OUTPUT BOX -->
+                        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 space-y-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+                                <div class="text-xs font-bold text-amber-400 flex items-center gap-2">
+                                    <span>🔗 Link Kích Hoạt Cá Nhân Hóa Dành Riêng Cho:</span>
+                                    <span id="genTargetName" class="font-mono text-white text-sm bg-slate-800 px-2.5 py-0.5 rounded-lg border border-slate-700">@ban_be_vip</span>
+                                </div>
+                                <span class="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">
+                                    Hạn dùng: Vĩnh viễn (2099) • 0 Xu
+                                </span>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                                <input id="genCustomUrl" type="text" readonly
+                                    class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-cyan-300 font-mono select-all focus:outline-none">
+                                <button onclick="copyGeneratedLink()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shrink-0">
+                                    <i data-feather="copy" class="w-3.5 h-3.5"></i>
+                                    <span>Chép Link</span>
+                                </button>
+                                <button onclick="downloadCustomMobileconfig()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shrink-0">
+                                    <i data-feather="download" class="w-3.5 h-3.5"></i>
+                                    <span>Tải File .mobileconfig Riêng</span>
+                                </button>
+                            </div>
+
+                            <!-- PRE-COMPOSED MESSAGE FOR MESSENGER / ZALO -->
+                            <div class="space-y-1.5 pt-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-slate-300">💬 Tin Nhắn Soạn Sẵn Kèm Link Để Gửi Bạn Bè (Messenger / Zalo / Telegram):</span>
+                                    <button onclick="copyGeneratedMessage()" class="text-xs text-amber-400 hover:underline font-bold flex items-center gap-1">
+                                        <i data-feather="copy" class="w-3 h-3"></i>
+                                        <span>Sao Chép Toàn Bộ Tin Nhắn</span>
+                                    </button>
+                                </div>
+                                <textarea id="genMessageArea" rows="6" readonly
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs font-mono text-slate-300 select-all focus:outline-none leading-relaxed"></textarea>
+                            </div>
+
+                            <!-- ACTION BUTTON: AUTO CREATE ORDER IN DATABASE -->
+                            <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-800/80">
+                                <div class="text-[11px] text-slate-400">
+                                    💡 Bấm nút bên phải để ghi nhận luôn đơn hàng vào CSDL mà không cần thanh toán.
+                                </div>
+                                <button onclick="autoCreateFriendOrder()" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-3 rounded-xl text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition active:scale-95">
+                                    <i data-feather="check-circle" class="w-4 h-4"></i>
+                                    <span>⚡ Tự Động Lên Đơn Kích Hoạt Trong CSDL (0 Xu)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHẦN 2: KHO LINK GÓI 1 (SHADOWROCKET - LINK CHUNG CỐ ĐỊNH) -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-7 space-y-5">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-2xl">🚀</span>
+                                <div>
+                                    <h4 class="text-base sm:text-lg font-black text-white">Kho Link Gói 1: Shadowrocket (Bộ Link Cố Định Dùng Cho Mọi Khách)</h4>
+                                    <p class="text-xs text-slate-400">Admin lấy link trực tiếp tại đây, không cần phải mở GitHub</p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-3 py-1 rounded-full border border-sky-500/30 font-bold">
+                                3 File Cấu Hình
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- 1. Module -->
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Module (.sgmodule)
+                                        </span>
+                                        <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-bold">Khuyên dùng</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">Tự động cấu hình RevenueCat bẻ khóa Gold vĩnh viễn.</p>
+                                    <input type="text" readonly value="https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule" class="w-full bg-slate-950 border border-slate-800 text-[10px] font-mono p-2 rounded text-slate-300 truncate">
+                                </div>
+                                <div class="space-y-1.5 pt-2">
+                                    <button onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule')" class="w-full bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                        <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link Module
+                                    </button>
+                                    <a href="shadowrocket://install?module=https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                        <i data-feather="download" class="w-3.5 h-3.5"></i> 1-Click Cài Shadowrocket
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 2. Config -->
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Cấu Hình Config (.conf)
+                                        </span>
+                                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-bold">Đầy đủ</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">Trọn bộ file config cấu hình chi tiết cho Shadowrocket.</p>
+                                    <input type="text" readonly value="https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf" class="w-full bg-slate-950 border border-slate-800 text-[10px] font-mono p-2 rounded text-slate-300 truncate">
+                                </div>
+                                <div class="space-y-1.5 pt-2">
+                                    <button onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf')" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                        <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link Config
+                                    </button>
+                                    <a href="shadowrocket://config/add/https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                        <i data-feather="plus-circle" class="w-3.5 h-3.5"></i> 1-Click Thêm Config
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- 3. DNS Profile -->
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3 flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span> DNS Profile (.mobileconfig)
+                                        </span>
+                                        <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-bold">Chống thu hồi</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">Hồ sơ DNS NextDNS ID <code class="text-amber-300">a2dd89</code> chống thu hồi vĩnh viễn.</p>
+                                    <input type="text" readonly value="https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig" class="w-full bg-slate-950 border border-slate-800 text-[10px] font-mono p-2 rounded text-slate-300 truncate">
+                                </div>
+                                <div class="space-y-1.5 pt-2">
+                                    <button onclick="copyToClipboard('https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig')" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                        <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link DNS
+                                    </button>
+                                    <a href="https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig" target="_blank" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5">
+                                        <i data-feather="download-cloud" class="w-3.5 h-3.5"></i> Tải Hồ Sơ DNS Về Máy
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHẦN 3: KHO LINK GÓI 2 (VIP SIÊU TỐC - CÀI TRỰC TIẾP SAFARI) -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-7 space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-2xl">👑</span>
+                                <div>
+                                    <h4 class="text-base sm:text-lg font-black text-white">Kho Link Gói 2: Locket Gold VIP [Siêu Tốc] (Cài Trực Tiếp Safari)</h4>
+                                    <p class="text-xs text-slate-400">Không cần app phụ Shadowrocket • Không cần VPN • Lên Gold vĩnh viễn</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-900 border border-amber-400/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="space-y-1">
+                                <div class="text-sm font-black text-white flex items-center gap-2">
+                                    <span>Hồ Sơ Cấu Hình VIP Safari:</span>
+                                    <span class="text-xs text-amber-400 font-mono">locketgold.mobileconfig</span>
+                                </div>
+                                <div class="text-xs text-slate-400">
+                                    Link tải trực tiếp: <span class="font-mono text-slate-300">https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig')" class="bg-slate-800 hover:bg-slate-700 text-amber-300 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition">
+                                    <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link Tải
+                                </button>
+                                <a href="https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig" target="_blank" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 transition">
+                                    <i data-feather="download" class="w-3.5 h-3.5"></i> Tải Về Máy
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PHẦN 4: LỊCH SỬ BẠN BÈ ĐÃ ĐƯỢC ADMIN TỰ LÊN ĐƠN NÂNG CẤP -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-7 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-xl">👥</span>
+                                <div>
+                                    <h4 class="text-base font-black text-white">Danh Sách Bạn Bè Đã Được Admin Tự Lên Đơn</h4>
+                                    <p class="text-xs text-slate-400">Các đơn hàng được Admin cấp miễn phí (0 Xu)</p>
+                                </div>
+                            </div>
+                            <button onclick="renderFriendsHistoryTable()" class="text-xs text-amber-400 hover:underline font-bold flex items-center gap-1">
+                                <i data-feather="refresh-cw" class="w-3 h-3"></i> Làm mới
+                            </button>
+                        </div>
+
+                        <div id="friendsHistoryContainer" class="overflow-x-auto">
+                            <!-- Render dynamic friends orders -->
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- ========================================================================= -->
@@ -625,6 +1162,8 @@
             }
             feather.replace();
             checkAdminSession();
+            updateFriendGenerator();
+            renderFriendsHistoryTable();
             
             // Sync custom firebase config text
             var savedConfig = localStorage.getItem('custom_firebase_config');
@@ -685,7 +1224,7 @@
         // 2. Tab Navigation
         function switchTab(tabId) {
             adminState.currentTab = tabId;
-            var tabs = ['overview', 'recharges', 'orders', 'users', 'settings'];
+            var tabs = ['overview', 'products', 'recharges', 'orders', 'users', 'settings'];
             
             tabs.forEach(function(t) {
                 var tabEl = document.getElementById('tab-' + t);
@@ -705,6 +1244,7 @@
 
             var titles = {
                 overview: 'Thống Kê Tổng Quan',
+                products: 'Kho Sản Phẩm & Nâng VIP Bạn Bè (Không Cần Mua)',
                 recharges: 'Quản Lý Nạp Tiền (VietQR MB Bank)',
                 orders: 'Quản Lý Đơn Hàng Mua Gói',
                 users: 'Quản Lý Khách Hàng / Thành Viên',
