@@ -45,6 +45,14 @@
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
 
+    <!-- Firebase SDK Compat v10 -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Database Adapter -->
+    <script src="./firebase-db.js"></script>
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -444,6 +452,13 @@
                             <i data-feather="bell" class="w-4 h-4 text-slate-400"></i>
                             <span>Thông báo</span>
                         </button>
+                        <button onclick="openFirebaseConfigModal()" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
+                            <div class="flex items-center gap-3">
+                                <i data-feather="database" class="w-4 h-4 text-amber-500"></i>
+                                <span>CSDL Firebase</span>
+                            </div>
+                            <span id="sidebarDbDot" class="w-2 h-2 rounded-full bg-amber-400" title="Trạng thái kết nối CSDL"></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -488,7 +503,13 @@
                     <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100">
                         <i data-feather="menu" class="w-5 h-5"></i>
                     </button>
-                    <span class="text-sm font-extrabold text-slate-900 hidden sm:inline-block">Cổng Dịch Vụ Locket Gold</span>
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-sm font-extrabold text-slate-900 hidden sm:inline-block">Cổng Dịch Vụ Locket Gold</span>
+                        <button onclick="openFirebaseConfigModal()" id="dbStatusBadge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 hover:bg-amber-100 transition flex items-center gap-1.5 shadow-sm" title="Bấm để kiểm tra hoặc gắn CSDL Firebase">
+                            <span id="dbStatusDot" class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                            <span id="dbStatusText">CSDL: Local Storage</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Header Actions (Theo đúng ảnh 1: + Nạp Xu, Chuông, Số dư) -->
@@ -972,6 +993,65 @@
         </div>
     </div>
 
+    <!-- Modal Quản Lý Cấu Hình Firebase CSDL -->
+    <div id="firebaseConfigModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-4 max-h-[92vh] overflow-y-auto relative">
+            <button onclick="closeFirebaseConfigModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg">
+                    🔥
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold text-slate-900">Cơ Sở Dữ Liệu Firebase (Google)</h3>
+                    <p class="text-xs text-slate-500">Lưu trữ tài khoản, số dư và lịch sử mua hàng đám mây</p>
+                </div>
+            </div>
+
+            <!-- Trạng thái kết nối hiện tại -->
+            <div id="firebaseStatusBox" class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <div class="text-xs font-bold text-slate-800 flex items-center gap-2">
+                        <span id="firebaseStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span id="firebaseStatusTitle">Đang Chạy Chế Độ Local Storage</span>
+                    </div>
+                    <div id="firebaseStatusDesc" class="text-[11px] text-slate-500 mt-0.5">Dữ liệu đang lưu tạm trong trình duyệt. Nhập thông tin Firebase bên dưới để lưu vào Google Cloud!</div>
+                </div>
+            </div>
+
+            <!-- Hướng dẫn 3 bước tạo Firebase miễn phí -->
+            <div class="space-y-2 text-xs text-slate-600 bg-sky-50/60 p-4 rounded-2xl border border-sky-100">
+                <div class="font-bold text-sky-900 flex items-center gap-1.5">
+                    <span>💡</span> 3 Bước Tạo CSDL Firebase Miễn Phí (Trong 2 Phút):
+                </div>
+                <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-700">
+                    <li>Vào <a href="https://console.firebase.google.com" target="_blank" class="text-blue-600 font-bold underline">console.firebase.google.com</a> ➔ Bấm <strong>Tạo dự án</strong> (Add project).</li>
+                    <li>Vào menu <strong>Build ➔ Firestore Database</strong> ➔ Bấm <em>Create database</em> (chọn Test mode).</li>
+                    <li>Vào <strong>Cài đặt dự án (Project settings)</strong> ➔ Cuộn xuống mục <em>Your apps</em> ➔ Chọn Web <code>&lt;/&gt;</code> ➔ Copy đoạn mã <code>firebaseConfig</code> và dán vào ô dưới đây.</li>
+                </ol>
+            </div>
+
+            <!-- Form cấu hình Firebase -->
+            <div class="space-y-3 pt-1">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Dán đoạn mã firebaseConfig (Dạng JSON hoặc JS)</label>
+                    <textarea id="firebaseConfigInput" rows="5" placeholder='{\n  "apiKey": "AIzaSy...",\n  "authDomain": "...",\n  "projectId": "...",\n  "storageBucket": "...",\n  "messagingSenderId": "...",\n  "appId": "..."\n}' class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-amber-400"></textarea>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <button onclick="applyCustomFirebaseConfig()" class="flex-1 bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black py-2.5 px-4 rounded-xl shadow-yellow-btn text-xs transition">
+                        Lưu Cấu Hình & Kết Nối Ngay
+                    </button>
+                    <button onclick="resetFirebaseConfig()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-3 rounded-xl text-xs transition">
+                        Đặt Lại
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating Toast Notification -->
     <div id="toastNotification" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 opacity-0 translate-y-3 pointer-events-none transition-all duration-300">
         <span id="toastIcon">✨</span>
@@ -1000,8 +1080,8 @@
             currentRechargeAmount: 49
         };
 
-        // Load saved state from localStorage
-        function initApp() {
+        // Load saved state and initialize database
+        async function initApp() {
             var saved = localStorage.getItem('locket_gold_app_state');
             if (saved) {
                 try {
@@ -1009,8 +1089,56 @@
                     appState = Object.assign(appState, parsed);
                 } catch(e) {}
             }
+
+            // Initialize Firebase Cloud Firestore
+            var cloudConnected = false;
+            if (typeof initFirebase === "function") {
+                cloudConnected = initFirebase();
+            }
+
+            updateDatabaseStatusUI(cloudConnected);
+
+            // If user has a cloud UID, listen for realtime sync
+            if (cloudConnected && appState.user && appState.user.uid && typeof dbSubscribeUser === "function") {
+                dbSubscribeUser(appState.user.uid, function(updatedData) {
+                    if (updatedData) {
+                        appState.user = Object.assign(appState.user, updatedData);
+                        saveState();
+                        updateUI();
+                    }
+                });
+            }
+
             updateUI();
             feather.replace();
+        }
+
+        function updateDatabaseStatusUI(cloudConnected) {
+            var dot = document.getElementById('dbStatusDot');
+            var text = document.getElementById('dbStatusText');
+            var badge = document.getElementById('dbStatusBadge');
+            var sideDot = document.getElementById('sidebarDbDot');
+            var modalDot = document.getElementById('firebaseStatusDot');
+            var modalTitle = document.getElementById('firebaseStatusTitle');
+            var modalDesc = document.getElementById('firebaseStatusDesc');
+
+            if (cloudConnected) {
+                if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse';
+                if (text) text.textContent = 'CSDL: Cloud Firestore';
+                if (badge) badge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/80 hover:bg-emerald-100 transition flex items-center gap-1.5 shadow-sm';
+                if (sideDot) sideDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+                if (modalDot) modalDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+                if (modalTitle) modalTitle.textContent = '🟢 Cloud Firestore Đang Hoạt Động (Google)';
+                if (modalDesc) modalDesc.textContent = 'Dữ liệu tài khoản, ví Xu và lịch sử mua hàng được đồng bộ đám mây 24/7.';
+            } else {
+                if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse';
+                if (text) text.textContent = 'CSDL: Local Storage';
+                if (badge) badge.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 hover:bg-amber-100 transition flex items-center gap-1.5 shadow-sm';
+                if (sideDot) sideDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                if (modalDot) modalDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+                if (modalTitle) modalTitle.textContent = '🟡 Đang Chạy Chế Độ Local Storage';
+                if (modalDesc) modalDesc.textContent = 'Dữ liệu đang lưu trong trình duyệt. Nhập mã cấu hình Firebase để kích hoạt Google Cloud!';
+            }
         }
 
         function saveState() {
@@ -1104,22 +1232,47 @@
             document.getElementById('loginModal').classList.remove('flex');
         }
 
-        function performLogin() {
+        async function performLogin() {
             var email = document.getElementById('loginEmailInput').value.trim() || 'tranvannguyen991@gmail.com';
-            appState.isLoggedIn = true;
-            appState.user.email = email;
-            saveState();
-            closeLoginModal();
-            showToast('Đăng nhập thành công! Chào mừng ' + email);
+            var pass = document.getElementById('loginPassInput').value || '123456';
+            
+            showToast('Đang đăng nhập vào cơ sở dữ liệu...');
+            var res = { success: true, user: { email: email, balance: 0, code: 'gTSxCJPL', packages: [], history: [] } };
+            
+            if (typeof dbLoginUser === "function") {
+                try {
+                    res = await dbLoginUser(email, pass);
+                } catch(e) {
+                    console.error("DB Login error:", e);
+                }
+            }
+
+            if (res.success) {
+                appState.isLoggedIn = true;
+                appState.user = Object.assign(appState.user, res.user);
+                saveState();
+                closeLoginModal();
+                showToast('Đăng nhập thành công! Chào mừng ' + email);
+
+                // Subscribe to realtime changes if Cloud DB is active
+                if (isUsingCloudDB && res.user.uid && typeof dbSubscribeUser === "function") {
+                    dbSubscribeUser(res.user.uid, function(updatedData) {
+                        if (updatedData) {
+                            appState.user = Object.assign(appState.user, updatedData);
+                            saveState();
+                            updateUI();
+                        }
+                    });
+                }
+            } else {
+                showToast('⚠️ Lỗi đăng nhập: ' + (res.error || 'Vui lòng thử lại'));
+            }
         }
 
-        function performDemoLogin() {
-            appState.isLoggedIn = true;
-            appState.user.email = 'tranvannguyen991@gmail.com';
-            appState.user.code = 'gTSxCJPL';
-            saveState();
-            closeLoginModal();
-            showToast('Đăng nhập thành công với tài khoản Trần Văn Nguyên!');
+        async function performDemoLogin() {
+            document.getElementById('loginEmailInput').value = 'tranvannguyen991@gmail.com';
+            document.getElementById('loginPassInput').value = '123456';
+            await performLogin();
         }
 
         function logout() {
@@ -1137,7 +1290,7 @@
             }
         }
 
-        function buyPackageLoggedIn(pkgType) {
+        async function buyPackageLoggedIn(pkgType) {
             var requiredXu = pkgType === 'g1_shadowrocket' ? 29 : 49;
             var pkgName = pkgType === 'g1_shadowrocket' ? 'Locket Gold (Shadowrocket)' : 'Locket Gold VIP [Siêu Tốc]';
 
@@ -1146,6 +1299,28 @@
                 showToast('⚠️ Số dư không đủ ' + requiredXu + ' Xu. Vui lòng nạp thêm Xu!');
                 openRechargeModal(requiredXu);
                 return;
+            }
+
+            var orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
+            var orderDate = new Date().toLocaleString('vi-VN');
+
+            // Save to Firebase Cloud Firestore / Local DB
+            if (typeof dbCreateOrder === "function") {
+                try {
+                    await dbCreateOrder({
+                        id: orderId,
+                        userId: appState.user.uid || 'usr_' + Date.now(),
+                        userEmail: appState.user.email,
+                        pkgType: pkgType,
+                        pkgName: pkgName,
+                        priceXu: requiredXu,
+                        date: orderDate,
+                        expires: 'Vĩnh viễn (2099)',
+                        status: 'Đã kích hoạt'
+                    });
+                } catch(e) {
+                    console.error("DB Create Order error:", e);
+                }
             }
 
             // Deduct balance and add package
@@ -1162,11 +1337,11 @@
             // Log to database history
             appState.user.history = appState.user.history || [];
             appState.user.history.unshift({
-                id: 'ORD-' + Math.floor(10000 + Math.random() * 90000),
+                id: orderId,
                 type: 'order',
                 title: 'Mua ' + pkgName,
                 amount: '-' + requiredXu + ' Xu',
-                date: new Date().toLocaleString('vi-VN'),
+                date: orderDate,
                 status: 'Đã kích hoạt'
             });
 
@@ -1369,8 +1544,28 @@
             });
         }
 
-        function confirmRecharge() {
+        async function confirmRecharge() {
             var added = appState.currentRechargeAmount || 49;
+            var vnd = added * 1000;
+            var rechargeDate = new Date().toLocaleString('vi-VN');
+
+            // Save to Firebase Cloud Firestore / Local DB
+            if (typeof dbCreateRecharge === "function") {
+                try {
+                    await dbCreateRecharge({
+                        id: currentRechargeCode,
+                        userId: appState.user.uid || 'usr_' + Date.now(),
+                        userEmail: appState.user.email,
+                        xu: added,
+                        amountVnd: vnd,
+                        date: rechargeDate,
+                        status: 'Thành công'
+                    });
+                } catch(e) {
+                    console.error("DB Create Recharge error:", e);
+                }
+            }
+
             appState.user.balance = (appState.user.balance || 0) + added;
 
             // Log to database history
@@ -1379,14 +1574,69 @@
                 id: currentRechargeCode,
                 type: 'recharge',
                 title: 'Nạp Xu VietQR (MB Bank)',
-                amount: '+ ' + added + ' Xu (' + (added * 1000).toLocaleString('vi-VN') + ' đ)',
-                date: new Date().toLocaleString('vi-VN'),
+                amount: '+ ' + added + ' Xu (' + vnd.toLocaleString('vi-VN') + ' đ)',
+                date: rechargeDate,
                 status: 'Thành công'
             });
 
             saveState();
             closeRechargeModal();
             showToast('🎉 Nạp thành công ' + added + ' Xu vào ví! Số dư mới: ' + appState.user.balance + ' Xu');
+        }
+
+        // Firebase Config Modal Controllers
+        function openFirebaseConfigModal() {
+            var modal = document.getElementById('firebaseConfigModal');
+            var input = document.getElementById('firebaseConfigInput');
+            var saved = localStorage.getItem('custom_firebase_config');
+            if (saved && input) {
+                input.value = saved;
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            feather.replace();
+        }
+
+        function closeFirebaseConfigModal() {
+            var modal = document.getElementById('firebaseConfigModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function applyCustomFirebaseConfig() {
+            var raw = document.getElementById('firebaseConfigInput').value.trim();
+            if (!raw) {
+                showToast('⚠️ Vui lòng dán đoạn mã firebaseConfig!');
+                return;
+            }
+            try {
+                var configObj;
+                if (raw.indexOf('{') !== -1) {
+                    var jsonStr = raw.replace(/([a-zA-Z0-9_]+)\s*:/g, '"$1":').replace(/'/g, '"');
+                    configObj = JSON.parse(jsonStr);
+                } else {
+                    configObj = JSON.parse(raw);
+                }
+                if (!configObj.apiKey || !configObj.projectId) {
+                    showToast('⚠️ Cấu hình thiếu apiKey hoặc projectId!');
+                    return;
+                }
+                if (typeof saveCustomFirebaseConfig === "function") {
+                    saveCustomFirebaseConfig(configObj);
+                } else {
+                    localStorage.setItem('custom_firebase_config', JSON.stringify(configObj));
+                    location.reload();
+                }
+                showToast('✅ Đã lưu cấu hình Firebase! Đang tải lại...');
+            } catch(e) {
+                showToast('⚠️ Đoạn mã cấu hình không đúng định dạng!');
+            }
+        }
+
+        function resetFirebaseConfig() {
+            localStorage.removeItem('custom_firebase_config');
+            showToast('Đã khôi phục cài đặt CSDL mặc định!');
+            setTimeout(function() { location.reload(); }, 600);
         }
 
         // Pre-Buy Guides
