@@ -694,16 +694,32 @@
                     <h3 class="text-xl font-extrabold text-slate-900">Tổng Quan Tài Khoản</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-soft-card">
-                            <div class="text-xs text-slate-400 font-bold uppercase">Số dư hiện tại</div>
+                            <div class="text-xs text-slate-400 font-bold uppercase">Số dư ví hiện tại</div>
                             <div id="overviewBalance" class="text-3xl font-black text-amber-500 mt-2 font-mono">0 Xu</div>
+                            <div class="text-[11px] text-slate-400 mt-1">1 Xu = 1.000 VNĐ</div>
                         </div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-soft-card">
                             <div class="text-xs text-slate-400 font-bold uppercase">Gói đang kích hoạt</div>
-                            <div id="overviewPkgCount" class="text-3xl font-black text-slate-900 mt-2">0</div>
+                            <div id="overviewPkgCount" class="text-3xl font-black text-emerald-600 mt-2">0</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Thời hạn vĩnh viễn đến năm 2099</div>
                         </div>
                         <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-soft-card">
-                            <div class="text-xs text-slate-400 font-bold uppercase">Mã giới thiệu</div>
+                            <div class="text-xs text-slate-400 font-bold uppercase">Mã giới thiệu của bạn</div>
                             <div class="text-xl font-black text-sky-600 mt-2 font-mono">gTSxCJPL</div>
+                            <div class="text-[11px] text-slate-400 mt-1">Tặng 5 Xu khi có bạn bè đăng ký</div>
+                        </div>
+                    </div>
+
+                    <!-- Giao dịch gần đây trên tổng quan -->
+                    <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-soft-card space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Giao Dịch Gần Đây</h4>
+                            <button onclick="switchDashboardTab('history')" class="text-xs font-bold text-sky-600 hover:underline">
+                                Xem tất cả ➔
+                            </button>
+                        </div>
+                        <div id="overviewRecentActivity" class="text-xs text-slate-500">
+                            Chưa có hoạt động giao dịch nào.
                         </div>
                     </div>
                 </div>
@@ -711,24 +727,34 @@
                 <!-- Tab: VÍ XU -->
                 <div id="dashTab-wallet" class="hidden space-y-6">
                     <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-soft-card space-y-6">
-                        <div class="flex items-center justify-between">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
                                 <h3 class="text-xl font-extrabold text-slate-900">Ví Xu Của Bạn</h3>
                                 <p class="text-xs text-slate-400 mt-0.5">Dùng Xu để mở khóa và nâng cấp Locket Gold vĩnh viễn</p>
                             </div>
-                            <button onclick="openRechargeModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black text-sm px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-2">
+                            <button onclick="openRechargeModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black text-sm px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-2 self-start sm:self-auto">
                                 <i data-feather="plus" class="w-4 h-4"></i>
                                 <span>Nạp Thêm Xu</span>
                             </button>
                         </div>
-                        <div class="p-5 rounded-2xl bg-amber-50/60 border border-amber-200/60 flex items-center justify-between">
+
+                        <div class="p-5 rounded-2xl bg-amber-50/70 border border-amber-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
-                                <span class="text-xs text-amber-800 font-bold uppercase">Số dư khả dụng:</span>
-                                <div id="walletBalanceBig" class="text-3xl font-black text-slate-950 font-mono mt-1">0 Xu</div>
+                                <span class="text-xs text-amber-800 font-bold uppercase tracking-wider">Số dư khả dụng:</span>
+                                <div id="walletBalanceBig" class="text-4xl font-black text-slate-950 font-mono mt-1">0 Xu</div>
                             </div>
-                            <div class="text-right text-xs text-slate-500">
-                                <div>Tỷ giá quy đổi:</div>
-                                <div class="font-bold text-slate-800">1 Xu = 1.000 VNĐ</div>
+                            <div class="text-xs text-slate-600 space-y-1">
+                                <div>Tỷ giá quy đổi: <strong class="text-slate-900">1 Xu = 1.000 VNĐ</strong></div>
+                                <div>Ngân hàng thụ hưởng: <strong class="text-blue-700">MB Bank (6012072005)</strong></div>
+                                <div>Chủ tài khoản: <strong class="text-slate-900">TRẦN VĂN NGUYÊN</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Lịch sử nạp Xu gần nhất -->
+                        <div class="space-y-3 pt-2">
+                            <h4 class="text-sm font-bold text-slate-900">Lịch Sử Nạp Xu Vào Ví</h4>
+                            <div id="walletRechargeHistory" class="overflow-x-auto">
+                                <div class="text-xs text-slate-400 py-4 text-center">Chưa có giao dịch nạp Xu.</div>
                             </div>
                         </div>
                     </div>
@@ -736,7 +762,12 @@
 
                 <!-- Tab: CỦA TÔI (Gói đã mua) -->
                 <div id="dashTab-my_packages" class="hidden space-y-6">
-                    <h3 class="text-xl font-extrabold text-slate-900">Gói Dịch Vụ Của Tôi</h3>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-extrabold text-slate-900">Gói Dịch Vụ Của Tôi</h3>
+                        <button onclick="switchDashboardTab('pricing')" class="text-xs font-bold text-sky-600 hover:underline">
+                            + Mua thêm gói mới
+                        </button>
+                    </div>
                     <div id="myPackagesContainer" class="space-y-4">
                         <div class="bg-white rounded-3xl p-8 border border-slate-100 text-center space-y-3">
                             <span class="text-4xl">📦</span>
@@ -752,8 +783,11 @@
 
                 <!-- Tab: LỊCH SỬ MUA -->
                 <div id="dashTab-history" class="hidden space-y-6">
-                    <h3 class="text-xl font-extrabold text-slate-900">Lịch Sử Giao Dịch</h3>
-                    <div id="orderHistoryContainer" class="bg-white rounded-3xl p-6 border border-slate-100 shadow-soft-card">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-extrabold text-slate-900">Lịch Sử Mua & Giao Dịch</h3>
+                        <span class="text-xs text-slate-400">Tất cả giao dịch mua gói và nạp tiền</span>
+                    </div>
+                    <div id="orderHistoryContainer" class="bg-white rounded-3xl p-6 border border-slate-100 shadow-soft-card overflow-x-auto">
                         <div class="text-center py-6 text-slate-400 text-xs">Chưa có giao dịch phát sinh.</div>
                     </div>
                 </div>
@@ -1013,6 +1047,7 @@
             if (userCodeDisplay) userCodeDisplay.textContent = appState.user.code;
 
             renderMyPackages();
+            renderHistory();
             feather.replace();
         }
 
@@ -1117,13 +1152,25 @@
             appState.user.balance -= requiredXu;
             appState.user.packages = appState.user.packages || [];
             appState.user.packages.push({
+                id: 'PKG-' + Math.floor(10000 + Math.random() * 90000),
                 type: pkgType,
                 name: pkgName,
                 date: new Date().toLocaleDateString('vi-VN'),
                 expires: 'Vĩnh viễn (2099)'
             });
-            saveState();
 
+            // Log to database history
+            appState.user.history = appState.user.history || [];
+            appState.user.history.unshift({
+                id: 'ORD-' + Math.floor(10000 + Math.random() * 90000),
+                type: 'order',
+                title: 'Mua ' + pkgName,
+                amount: '-' + requiredXu + ' Xu',
+                date: new Date().toLocaleString('vi-VN'),
+                status: 'Đã kích hoạt'
+            });
+
+            saveState();
             openInstallGuideModal(pkgType);
         }
 
@@ -1170,6 +1217,117 @@
             container.innerHTML = html;
         }
 
+        // Render History & Database Tables
+        function renderHistory() {
+            var container = document.getElementById('orderHistoryContainer');
+            var overviewAct = document.getElementById('overviewRecentActivity');
+            var walletHist = document.getElementById('walletRechargeHistory');
+
+            var history = appState.user.history || [];
+
+            // History Table
+            if (container) {
+                if (history.length === 0) {
+                    container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs">Chưa có giao dịch phát sinh.</div>';
+                } else {
+                    var tableHtml = `
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                                    <th class="py-3 px-3">Mã GD</th>
+                                    <th class="py-3 px-3">Loại giao dịch</th>
+                                    <th class="py-3 px-3">Thời gian</th>
+                                    <th class="py-3 px-3">Biến động</th>
+                                    <th class="py-3 px-3">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
+                    `;
+                    history.forEach(function(item) {
+                        var isPlus = item.amount.indexOf('+') !== -1;
+                        tableHtml += `
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="py-3 px-3 font-mono font-bold text-slate-900">${item.id}</td>
+                                <td class="py-3 px-3 font-semibold">${item.title}</td>
+                                <td class="py-3 px-3 text-slate-400">${item.date}</td>
+                                <td class="py-3 px-3 font-black ${isPlus ? 'text-emerald-600' : 'text-rose-600'}">${item.amount}</td>
+                                <td class="py-3 px-3">
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPlus ? 'bg-emerald-50 text-emerald-700' : 'bg-sky-50 text-sky-700'}">
+                                        ${item.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    tableHtml += '</tbody></table>';
+                    container.innerHTML = tableHtml;
+                }
+            }
+
+            // Overview recent activity (top 3)
+            if (overviewAct) {
+                if (history.length === 0) {
+                    overviewAct.innerHTML = '<div class="text-slate-400 text-center py-2">Chưa có hoạt động giao dịch nào.</div>';
+                } else {
+                    var actHtml = '<div class="space-y-2">';
+                    history.slice(0, 3).forEach(function(item) {
+                        var isPlus = item.amount.indexOf('+') !== -1;
+                        actHtml += `
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isPlus ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">
+                                        ${isPlus ? '↓' : '↑'}
+                                    </span>
+                                    <div>
+                                        <div class="font-bold text-slate-900">${item.title}</div>
+                                        <div class="text-[10px] text-slate-400">${item.date}</div>
+                                    </div>
+                                </div>
+                                <div class="font-black ${isPlus ? 'text-emerald-600' : 'text-slate-900'}">${item.amount}</div>
+                            </div>
+                        `;
+                    });
+                    actHtml += '</div>';
+                    overviewAct.innerHTML = actHtml;
+                }
+            }
+
+            // Wallet recharges
+            if (walletHist) {
+                var recharges = history.filter(function(h) { return h.type === 'recharge'; });
+                if (recharges.length === 0) {
+                    walletHist.innerHTML = '<div class="text-xs text-slate-400 py-3 text-center">Chưa có giao dịch nạp Xu.</div>';
+                } else {
+                    var wHtml = `
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                                    <th class="py-2 px-2">Mã Nạp</th>
+                                    <th class="py-2 px-2">Ngân Hàng</th>
+                                    <th class="py-2 px-2">Thời gian</th>
+                                    <th class="py-2 px-2">Số Xu nhận</th>
+                                    <th class="py-2 px-2">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
+                    `;
+                    recharges.forEach(function(r) {
+                        wHtml += `
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="py-2.5 px-2 font-mono font-bold text-slate-900">${r.id}</td>
+                                <td class="py-2.5 px-2 font-medium">MB Bank (6012072005)</td>
+                                <td class="py-2.5 px-2 text-slate-400">${r.date}</td>
+                                <td class="py-2.5 px-2 font-black text-emerald-600">${r.amount}</td>
+                                <td class="py-2.5 px-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">${r.status}</span></td>
+                            </tr>
+                        `;
+                    });
+                    wHtml += '</tbody></table>';
+                    walletHist.innerHTML = wHtml;
+                }
+            }
+        }
+
         // Recharge (VietQR) Modal Controller
         function openRechargeModal(defaultAmount) {
             var modal = document.getElementById('rechargeModal');
@@ -1185,16 +1343,18 @@
             modal.classList.remove('flex');
         }
 
+        var currentRechargeCode = 'NAPXU 8391';
+
         function selectRechargeAmount(xu) {
             appState.currentRechargeAmount = xu;
             var vnd = xu * 1000;
             var randomCode = Math.floor(1000 + Math.random() * 9000);
-            var content = 'NAPXU ' + randomCode;
+            currentRechargeCode = 'NAPXU ' + randomCode;
 
-            document.getElementById('rechargeContentText').textContent = content;
+            document.getElementById('rechargeContentText').textContent = currentRechargeCode;
 
             var qrImg = document.getElementById('rechargeQrImg');
-            var qrUrl = 'https://img.vietqr.io/image/MB-6012072005-compact2.png?amount=' + vnd + '&addInfo=' + encodeURIComponent(content) + '&accountName=TRAN%20VAN%20NGUYEN';
+            var qrUrl = 'https://img.vietqr.io/image/MB-6012072005-compact2.png?amount=' + vnd + '&addInfo=' + encodeURIComponent(currentRechargeCode) + '&accountName=TRAN%20VAN%20NGUYEN';
             qrImg.src = qrUrl;
 
             // Highlight buttons
@@ -1212,6 +1372,18 @@
         function confirmRecharge() {
             var added = appState.currentRechargeAmount || 49;
             appState.user.balance = (appState.user.balance || 0) + added;
+
+            // Log to database history
+            appState.user.history = appState.user.history || [];
+            appState.user.history.unshift({
+                id: currentRechargeCode,
+                type: 'recharge',
+                title: 'Nạp Xu VietQR (MB Bank)',
+                amount: '+ ' + added + ' Xu (' + (added * 1000).toLocaleString('vi-VN') + ' đ)',
+                date: new Date().toLocaleString('vi-VN'),
+                status: 'Thành công'
+            });
+
             saveState();
             closeRechargeModal();
             showToast('🎉 Nạp thành công ' + added + ' Xu vào ví! Số dư mới: ' + appState.user.balance + ' Xu');
