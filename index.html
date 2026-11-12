@@ -1609,28 +1609,47 @@
                 showToast('⚠️ Vui lòng dán đoạn mã firebaseConfig!');
                 return;
             }
-            try {
-                var configObj;
-                if (raw.indexOf('{') !== -1) {
-                    var jsonStr = raw.replace(/([a-zA-Z0-9_]+)\s*:/g, '"$1":').replace(/'/g, '"');
-                    configObj = JSON.parse(jsonStr);
-                } else {
+
+            var configObj = null;
+
+            // 1. Dùng Regex thông minh để bóc tách chính xác các trường (kể cả khi copy lẫn code thừa)
+            var apiKeyMatch = raw.match(/apiKey\s*:\s*["']([^"']+)["']/i);
+            var authDomainMatch = raw.match(/authDomain\s*:\s*["']([^"']+)["']/i);
+            var projectIdMatch = raw.match(/projectId\s*:\s*["']([^"']+)["']/i);
+            var storageBucketMatch = raw.match(/storageBucket\s*:\s*["']([^"']+)["']/i);
+            var messagingSenderIdMatch = raw.match(/messagingSenderId\s*:\s*["']([^"']+)["']/i);
+            var appIdMatch = raw.match(/appId\s*:\s*["']([^"']+)["']/i);
+            var measurementIdMatch = raw.match(/measurementId\s*:\s*["']([^"']+)["']/i);
+
+            if (apiKeyMatch && projectIdMatch) {
+                configObj = {
+                    apiKey: apiKeyMatch[1],
+                    authDomain: authDomainMatch ? authDomainMatch[1] : (projectIdMatch[1] + ".firebaseapp.com"),
+                    projectId: projectIdMatch[1],
+                    storageBucket: storageBucketMatch ? storageBucketMatch[1] : (projectIdMatch[1] + ".appspot.com"),
+                    messagingSenderId: messagingSenderIdMatch ? messagingSenderIdMatch[1] : "",
+                    appId: appIdMatch ? appIdMatch[1] : "",
+                    measurementId: measurementIdMatch ? measurementIdMatch[1] : ""
+                };
+            } else {
+                // Fallback: Thử parse JSON thông thường
+                try {
                     configObj = JSON.parse(raw);
-                }
-                if (!configObj.apiKey || !configObj.projectId) {
-                    showToast('⚠️ Cấu hình thiếu apiKey hoặc projectId!');
-                    return;
-                }
-                if (typeof saveCustomFirebaseConfig === "function") {
-                    saveCustomFirebaseConfig(configObj);
-                } else {
-                    localStorage.setItem('custom_firebase_config', JSON.stringify(configObj));
-                    location.reload();
-                }
-                showToast('✅ Đã lưu cấu hình Firebase! Đang tải lại...');
-            } catch(e) {
-                showToast('⚠️ Đoạn mã cấu hình không đúng định dạng!');
+                } catch(e) {}
             }
+
+            if (!configObj || !configObj.apiKey || !configObj.projectId) {
+                showToast('⚠️ Không tìm thấy apiKey hoặc projectId trong đoạn mã bạn dán!');
+                return;
+            }
+
+            if (typeof saveCustomFirebaseConfig === "function") {
+                saveCustomFirebaseConfig(configObj);
+            } else {
+                localStorage.setItem('custom_firebase_config', JSON.stringify(configObj));
+                location.reload();
+            }
+            showToast('✅ Đã nhận diện và lưu cấu hình Firebase thành công! Đang tải lại...');
         }
 
         function resetFirebaseConfig() {
