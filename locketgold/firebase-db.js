@@ -4,15 +4,15 @@
  * Có cơ chế tự động Fallback sang LocalStorage nếu chưa cấu hình Firebase.
  */
 
-// CẤU HÌNH FIREBASE CỦA BẠN
-// Lấy thông tin này tại: https://console.firebase.google.com -> Project Settings -> General -> Your apps
+// CẤU HÌNH FIREBASE CỦA BẠN (Dự án: locket-gold-85462)
 var firebaseConfig = {
-    apiKey: "AIzaSyYOUR_API_KEY_HERE",
-    authDomain: "locket-gold-vip.firebaseapp.com",
-    projectId: "locket-gold-vip",
-    storageBucket: "locket-gold-vip.appspot.com",
-    messagingSenderId: "1234567890",
-    appId: "1:1234567890:web:abcdef123456"
+    apiKey: "AIzaSyASU-0pK1uWrzkVeQMCpxrR-jcfZuMJPHI",
+    authDomain: "locket-gold-85462.firebaseapp.com",
+    projectId: "locket-gold-85462",
+    storageBucket: "locket-gold-85462.firebasestorage.app",
+    messagingSenderId: "538965240283",
+    appId: "1:538965240283:web:4e20ecb04b284ae3d9dffe",
+    measurementId: "G-0E3ZLC29DN"
 };
 
 // Kiểm tra xem cấu hình đã được thay thế bằng key thật chưa
