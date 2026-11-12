@@ -272,36 +272,60 @@ function dbSubscribeUser(userId, onUpdate) {
 // 2. NẠP XU (RECHARGES / INVOICES)
 // =========================================================================
 
+// Tạo đơn nạp tiền mới (Trạng thái mặc định: Chờ duyệt - KHÔNG TỰ ĐỘNG CỘNG XU)
 async function dbCreateRecharge(rechargeData) {
-    // rechargeData: { id, userId, userEmail, xu, amountVnd, date, status }
-    if (isUsingCloudDB && firestoreDB) {
-        try {
-            await firestoreDB.collection('recharges').doc(rechargeData.id).set(rechargeData);
-            // Ghi vào mảng history của user
-            var userRef = firestoreDB.collection('users').doc(rechargeData.userId);
-            await userRef.update({
-                balance: firebase.firestore.FieldValue.increment(rechargeData.xu),
-                history: firebase.firestore.FieldValue.arrayUnion({
-                    id: rechargeData.id,
-                    type: 'recharge',
-                    title: 'Nạp Xu VietQR (MB Bank)',
-                    amount: '+ ' + rechargeData.xu + ' Xu (' + rechargeData.amountVnd.toLocaleString('vi-VN') + ' đ)',
-                    date: rechargeData.date,
-                    status: 'Thành công'
-                })
-            });
-            return { success: true };
-        } catch (err) {
-            console.error("Lỗi ghi recharge Firestore:", err);
-            return { success: false, error: err.message };
-        }
-    } else {
-        // Local DB
+    rechargeData.status = 'Chờ duyệt';
+    
+    // 1. Lưu vào Local Storage
+    try {
         var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
         localRecharges.unshift(rechargeData);
         localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
-        return { success: true };
+
+        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+        var userEmail = (rechargeData.userEmail || '').toLowerCase();
+        var matchedKey = Object.keys(localUsers).find(function(k) {
+            return k.toLowerCase() === userEmail;
+        });
+        if (matchedKey) {
+            localUsers[matchedKey].history = localUsers[matchedKey].history || [];
+            localUsers[matchedKey].history.unshift({
+                id: rechargeData.id,
+                type: 'recharge',
+                title: 'Nạp Xu VietQR (MB Bank)',
+                amount: '+ ' + rechargeData.xu + ' Xu (' + (rechargeData.amountVnd || rechargeData.xu * 1000).toLocaleString('vi-VN') + ' đ)',
+                date: rechargeData.date,
+                status: 'Chờ duyệt'
+            });
+            localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+        }
+    } catch(e) {
+        console.warn("Local dbCreateRecharge write warn:", e);
     }
+
+    // 2. Lưu vào Cloud Firestore trong nền (Non-blocking)
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            firestoreDB.collection('recharges').doc(rechargeData.id).set(rechargeData).catch(function(e) {
+                console.warn("Firestore recharge set error:", e);
+            });
+            if (rechargeData.userId) {
+                var userRef = firestoreDB.collection('users').doc(rechargeData.userId);
+                userRef.update({
+                    history: firebase.firestore.FieldValue.arrayUnion({
+                        id: rechargeData.id,
+                        type: 'recharge',
+                        title: 'Nạp Xu VietQR (MB Bank)',
+                        amount: '+ ' + rechargeData.xu + ' Xu (' + (rechargeData.amountVnd || rechargeData.xu * 1000).toLocaleString('vi-VN') + ' đ)',
+                        date: rechargeData.date,
+                        status: 'Chờ duyệt'
+                    })
+                }).catch(function(){});
+            }
+        } catch(e) {}
+    }
+
+    return { success: true };
 }
 
 // =========================================================================

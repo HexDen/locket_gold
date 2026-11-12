@@ -1096,14 +1096,21 @@
             </div>
 
             <!-- Confirmation Action -->
-            <div class="space-y-2 pt-1">
-                <button onclick="confirmRecharge()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black py-3 rounded-full shadow-yellow-btn flex items-center justify-center gap-1.5 text-sm transition">
-                    <i data-feather="check-circle" class="w-4 h-4"></i>
-                    <span>Tôi Đã Chuyển Khoản ➔ Cộng Xu</span>
+            <div class="space-y-2.5 pt-1">
+                <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200/80 flex items-start gap-2.5">
+                    <span class="text-base leading-none">⏳</span>
+                    <p class="text-[11px] text-amber-950 leading-relaxed font-medium">
+                        Sau khi bạn chuyển khoản và bấm xác nhận, Admin sẽ kiểm tra biến động số dư MB Bank và duyệt cộng Xu vào ví của bạn trong vòng <strong>1 - 3 phút</strong>.
+                    </p>
+                </div>
+
+                <button id="rechargeConfirmBtn" onclick="confirmRecharge()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black py-3 rounded-full shadow-yellow-btn flex items-center justify-center gap-2 text-sm transition active:scale-98">
+                    <i data-feather="send" class="w-4 h-4"></i>
+                    <span>Tôi Đã Chuyển Khoản ➔ Gửi Yêu Cầu Duyệt</span>
                 </button>
                 <div class="text-center">
-                    <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="text-xs text-slate-500 hover:text-slate-800 transition">
-                        Cần hỗ trợ giao dịch? Nhắn tin Văn Nguyên qua FB
+                    <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="text-xs text-slate-500 hover:text-slate-800 transition font-medium">
+                        Cần hỗ trợ giao dịch gấp? Nhắn tin Văn Nguyên qua FB
                     </a>
                 </div>
             </div>
@@ -2555,8 +2562,8 @@
                                 <td class="py-3 px-3 text-slate-400">${item.date}</td>
                                 <td class="py-3 px-3 font-black ${isPlus ? 'text-emerald-600' : 'text-rose-600'}">${item.amount}</td>
                                 <td class="py-3 px-3">
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPlus ? 'bg-emerald-50 text-emerald-700' : 'bg-sky-50 text-sky-700'}">
-                                        ${item.status}
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${item.status === 'Chờ duyệt' ? 'bg-amber-50 text-amber-800 border border-amber-200' : (item.status === 'Đã từ chối' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200')}">
+                                        ${item.status === 'Chờ duyệt' ? '⏳ Chờ Admin duyệt' : (item.status === 'Đã từ chối' ? '✕ Đã từ chối' : '✓ ' + item.status)}
                                     </span>
                                 </td>
                             </tr>
@@ -2621,7 +2628,7 @@
                                 <td class="py-2.5 px-2 font-medium">MB Bank (6012072005)</td>
                                 <td class="py-2.5 px-2 text-slate-400">${r.date}</td>
                                 <td class="py-2.5 px-2 font-black text-emerald-600">${r.amount}</td>
-                                <td class="py-2.5 px-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">${r.status}</span></td>
+                                <td class="py-2.5 px-2"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${r.status === 'Chờ duyệt' ? 'bg-amber-50 text-amber-800 border border-amber-200' : (r.status === 'Đã từ chối' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200')}">${r.status === 'Chờ duyệt' ? '⏳ Chờ Admin duyệt' : (r.status === 'Đã từ chối' ? '✕ Đã từ chối' : '✓ ' + r.status)}</span></td>
                             </tr>
                         `;
                     });
@@ -2676,27 +2683,39 @@
             var added = appState.currentRechargeAmount || 49;
             var vnd = added * 1000;
             var rechargeDate = new Date().toLocaleString('vi-VN');
+            var btn = document.getElementById('rechargeConfirmBtn');
 
-            // Save to Firebase Cloud Firestore / Local DB
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="inline-flex items-center gap-2"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang gửi yêu cầu...</span>';
+            }
+
+            var newRecharge = {
+                id: currentRechargeCode,
+                userId: appState.user.uid || 'usr_' + Date.now(),
+                userEmail: appState.user.email,
+                userName: appState.user.name || appState.user.email.split('@')[0],
+                xu: added,
+                amountVnd: vnd,
+                content: document.getElementById('rechargeContentText') ? document.getElementById('rechargeContentText').textContent : ('NAPXU ' + (appState.user.code || 'VIP')),
+                date: rechargeDate,
+                status: 'Chờ duyệt'
+            };
+
+            // Lưu vào CSDL (Cloud Firestore + LocalStorage) với trạng thái CHỜ DUYỆT
             if (typeof dbCreateRecharge === "function") {
                 try {
-                    await dbCreateRecharge({
-                        id: currentRechargeCode,
-                        userId: appState.user.uid || 'usr_' + Date.now(),
-                        userEmail: appState.user.email,
-                        xu: added,
-                        amountVnd: vnd,
-                        date: rechargeDate,
-                        status: 'Thành công'
-                    });
+                    await dbCreateRecharge(newRecharge);
                 } catch(e) {
                     console.error("DB Create Recharge error:", e);
                 }
+            } else {
+                var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+                localRecharges.unshift(newRecharge);
+                localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
             }
 
-            appState.user.balance = (appState.user.balance || 0) + added;
-
-            // Log to database history
+            // Ghi vào lịch sử với trạng thái "Chờ duyệt" (KHÔNG TỰ Ý CỘNG XU VÀO VÍ)
             appState.user.history = appState.user.history || [];
             appState.user.history.unshift({
                 id: currentRechargeCode,
@@ -2704,12 +2723,20 @@
                 title: 'Nạp Xu VietQR (MB Bank)',
                 amount: '+ ' + added + ' Xu (' + vnd.toLocaleString('vi-VN') + ' đ)',
                 date: rechargeDate,
-                status: 'Thành công'
+                status: 'Chờ duyệt'
             });
 
             saveState();
+            updateUI();
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-feather="send" class="w-4 h-4"></i><span>Tôi Đã Chuyển Khoản ➔ Gửi Yêu Cầu Duyệt</span>';
+            }
+
             closeRechargeModal();
-            showToast('🎉 Nạp thành công ' + added + ' Xu vào ví! Số dư mới: ' + appState.user.balance + ' Xu');
+            showToast('⏳ Đã gửi đơn nạp ' + added + ' Xu! Admin đang kiểm tra tài khoản MB Bank và sẽ duyệt Xu cho bạn trong 1 - 3 phút.');
+            if (typeof feather !== "undefined") feather.replace();
         }
 
         // Firebase Config Modal Controllers
