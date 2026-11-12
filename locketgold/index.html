@@ -714,11 +714,13 @@
                             </div>
 
                             <div class="pt-6 space-y-3">
-                                <button onclick="buyPackageLoggedIn('g1_shadowrocket')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm py-3.5 px-4 rounded-full shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
-                                    <span>Chọn gói (29 Xu)</span>
-                                    <i data-feather="arrow-right" class="w-4 h-4"></i>
-                                </button>
-                                <div class="text-center">
+                                <div id="btn-container-g1">
+                                    <button onclick="buyPackageLoggedIn('g1_shadowrocket')" id="btn-buy-g1" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm py-3.5 px-4 rounded-full shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                                        <span>Chọn gói (29 Xu)</span>
+                                        <i data-feather="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div class="text-center" id="prebuy-box-g1">
                                     <button onclick="openPreBuyGuide('g1_shadowrocket')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
                                         <span>Xem hướng dẫn trước khi mua</span>
                                         <i data-feather="arrow-right" class="w-3 h-3"></i>
@@ -793,11 +795,13 @@
                             </div>
 
                             <div class="pt-6 space-y-3">
-                                <button onclick="buyPackageLoggedIn('g2_direct_vip')" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-yellow-btn flex items-center justify-center gap-1.5 transition active:scale-95">
-                                    <span>Chọn gói (49 Xu)</span>
-                                    <i data-feather="arrow-right" class="w-4 h-4"></i>
-                                </button>
-                                <div class="text-center">
+                                <div id="btn-container-g2">
+                                    <button onclick="buyPackageLoggedIn('g2_direct_vip')" id="btn-buy-g2" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-yellow-btn flex items-center justify-center gap-1.5 transition active:scale-95">
+                                        <span>Chọn gói (49 Xu)</span>
+                                        <i data-feather="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div class="text-center" id="prebuy-box-g2">
                                     <button onclick="openPreBuyGuide('g2_direct_vip')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
                                         <span>Xem hướng dẫn trước khi mua</span>
                                         <i data-feather="arrow-right" class="w-3 h-3"></i>
@@ -1208,6 +1212,118 @@
                         Cần hỗ trợ giao dịch gấp? Nhắn tin Văn Nguyên qua FB
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN ĐẶT MUA GÓI & NHẬP VOUCHER -->
+    <div id="modalOrderConfirm" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target===this)closeOrderConfirmModal()">
+        <div class="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-7 shadow-2xl border border-slate-100 space-y-5 max-h-[95vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-xl font-bold shadow-sm">
+                        🛍️
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-slate-900">Xác Nhận Đặt Mua Gói</h3>
+                        <p class="text-xs text-slate-500">Kiểm tra thông tin đơn hàng và áp dụng mã giảm giá</p>
+                    </div>
+                </div>
+                <button onclick="closeOrderConfirmModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
+                    <i data-feather="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Package Card Info -->
+            <div class="bg-gradient-to-br from-amber-500/10 via-amber-400/5 to-transparent border border-amber-300/40 rounded-2xl p-4 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-900">
+                        <span>⭐</span> Kích hoạt trọn đời
+                    </span>
+                    <span class="text-xs font-mono font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-100">
+                        Hạn: Vĩnh viễn (2099)
+                    </span>
+                </div>
+                <div class="flex items-baseline justify-between pt-1">
+                    <h4 id="orderConfirmPkgName" class="text-base sm:text-lg font-extrabold text-slate-900">
+                        Locket Gold VIP [Siêu Tốc]
+                    </h4>
+                    <span id="orderConfirmBasePriceTag" class="text-lg font-black font-mono text-amber-600">
+                        49 Xu
+                    </span>
+                </div>
+                <p class="text-[11px] text-slate-500">Mở toàn bộ tính năng Locket Gold: quay video HD 60s, đăng ảnh từ thư viện, chống thu hồi, huy hiệu Gold chính chủ.</p>
+            </div>
+
+            <!-- Voucher Promo Input Section -->
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-700">Mã Voucher / Khuyến Mãi (Nếu có):</label>
+                <div class="flex gap-2">
+                    <input id="orderVoucherInput" type="text" placeholder="Nhập mã (VD: LOCKET5, TRIAN20, DEN2026...)"
+                        class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono uppercase font-bold text-slate-900 focus:outline-none focus:border-amber-400 focus:bg-white transition"
+                        onkeydown="if(event.key==='Enter'){event.preventDefault();applyOrderVoucher();}">
+                    <button id="btnApplyOrderVoucher" onclick="applyOrderVoucher()"
+                        class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-sm active:scale-95 shrink-0">
+                        Áp Dụng
+                    </button>
+                </div>
+                <!-- Voucher Status Feedback -->
+                <div id="orderVoucherFeedback" class="hidden text-xs"></div>
+                <!-- Voucher Applied Tag Box -->
+                <div id="orderVoucherAppliedBox" class="hidden"></div>
+            </div>
+
+            <!-- Payment Calculation Breakdown -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-2.5 text-xs">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span>Giá niêm yết:</span>
+                    <span id="orderSummaryOriginalPrice" class="font-bold text-slate-700 font-mono">49 Xu</span>
+                </div>
+                <div id="orderSummaryDiscountRow" class="hidden flex items-center justify-between text-emerald-600 font-bold">
+                    <span class="flex items-center gap-1"><span>🏷️</span> Giảm giá Voucher:</span>
+                    <span id="orderSummaryDiscount" class="font-mono">-0 Xu</span>
+                </div>
+                <hr class="border-slate-200 my-1">
+                <div class="flex items-center justify-between text-slate-900 font-extrabold text-sm">
+                    <span>Tổng Xu thanh toán:</span>
+                    <span id="orderSummaryFinalPrice" class="text-xl font-black text-amber-500 font-mono">49 Xu</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-500 pt-1 border-t border-dashed border-slate-200">
+                    <span>Số dư ví hiện tại của bạn:</span>
+                    <span id="orderSummaryCurrentBalance" class="font-bold text-slate-800 font-mono">0 Xu</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-500">
+                    <span>Số dư ví sau khi thanh toán:</span>
+                    <span id="orderSummaryRemainingBalance" class="font-bold text-slate-800 font-mono">0 Xu</span>
+                </div>
+            </div>
+
+            <!-- Insufficient Balance Alert -->
+            <div id="orderInsufficientAlert" class="hidden p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-800 space-y-2">
+                <div class="flex items-start gap-2">
+                    <span class="text-base shrink-0">⚠️</span>
+                    <div>
+                        <div class="font-bold">Số dư trong ví không đủ để thanh toán!</div>
+                        <div class="text-[11px] text-rose-600 mt-0.5">
+                            Bạn còn thiếu <strong id="orderDeficitAmount">0 Xu</strong>. Vui lòng nạp thêm Xu qua VietQR MB Bank để tiếp tục.
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeOrderConfirmModal(); openRechargeModal();" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-black py-2 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-1.5">
+                    <span>💳 Nạp Xu Ngay Bằng VietQR MB Bank</span>
+                </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 gap-3 pt-1">
+                <button onclick="closeOrderConfirmModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl text-xs transition">
+                    Hủy Bỏ
+                </button>
+                <button id="btnConfirmOrderExecute" onclick="executeOrderPurchase()" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3.5 px-4 rounded-2xl shadow-lg shadow-amber-400/20 flex items-center justify-center gap-2 transition active:scale-95 text-xs">
+                    <i data-feather="check-circle" class="w-4 h-4"></i>
+                    <span>Xác Nhận Thanh Toán</span>
+                </button>
             </div>
         </div>
     </div>
@@ -2123,6 +2239,11 @@
 
         function saveState() {
             localStorage.setItem('locket_gold_app_state', JSON.stringify(appState));
+            if (appState.user && appState.user.uid && typeof dbSaveUser === "function") {
+                dbSaveUser(appState.user).catch(function(e) {
+                    console.warn("Lỗi lưu người dùng lên cloud:", e);
+                });
+            }
             updateUI();
         }
 
@@ -2219,6 +2340,7 @@
 
             renderMyPackages();
             renderHistory();
+            updatePricingCardsOwnership();
             feather.replace();
         }
 
@@ -2894,6 +3016,97 @@
             showToast('Đã đăng xuất tài khoản.');
         }
 
+        // Package Ownership & Status Checking
+        function checkUserOwnsPackage(pkgType) {
+            if (!appState || !appState.user || !Array.isArray(appState.user.packages)) return false;
+            return appState.user.packages.some(function(p) {
+                if (!p) return false;
+                if (p.type === pkgType || p.pkgType === pkgType) return true;
+                if (pkgType === 'g1_shadowrocket' && p.name && p.name.toLowerCase().includes('shadowrocket')) return true;
+                if (pkgType === 'g2_direct_vip' && p.name && (p.name.toLowerCase().includes('siêu tốc') || p.name.toLowerCase().includes('direct') || p.name.toLowerCase().includes('vip'))) return true;
+                return false;
+            });
+        }
+
+        // Cập nhật trạng thái card Mua Gói nếu khách đã sở hữu
+        function updatePricingCardsOwnership() {
+            var ownsG1 = checkUserOwnsPackage('g1_shadowrocket');
+            var ownsG2 = checkUserOwnsPackage('g2_direct_vip');
+
+            var btnContainerG1 = document.getElementById('btn-container-g1');
+            var prebuyBoxG1 = document.getElementById('prebuy-box-g1');
+            var btnContainerG2 = document.getElementById('btn-container-g2');
+            var prebuyBoxG2 = document.getElementById('prebuy-box-g2');
+
+            // Gói 1
+            if (btnContainerG1) {
+                if (ownsG1) {
+                    btnContainerG1.innerHTML = `
+                        <button onclick="openShadowGuideModal(false)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm py-3.5 px-4 rounded-full shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition active:scale-95">
+                            <i data-feather="check-circle" class="w-4 h-4 text-white"></i>
+                            <span>✓ Đã Sở Hữu (Bấm xem cài đặt)</span>
+                        </button>
+                    `;
+                    if (prebuyBoxG1) {
+                        prebuyBoxG1.innerHTML = `
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
+                                <span>✨</span> Gói kích hoạt vĩnh viễn đến năm 2099
+                            </div>
+                        `;
+                    }
+                } else {
+                    btnContainerG1.innerHTML = `
+                        <button onclick="buyPackageLoggedIn('g1_shadowrocket')" id="btn-buy-g1" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm py-3.5 px-4 rounded-full shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                            <span>Chọn gói (29 Xu)</span>
+                            <i data-feather="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                    if (prebuyBoxG1) {
+                        prebuyBoxG1.innerHTML = `
+                            <button onclick="openPreBuyGuide('g1_shadowrocket')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                <span>Xem hướng dẫn trước khi mua</span>
+                                <i data-feather="arrow-right" class="w-3 h-3"></i>
+                            </button>
+                        `;
+                    }
+                }
+            }
+
+            // Gói 2
+            if (btnContainerG2) {
+                if (ownsG2) {
+                    btnContainerG2.innerHTML = `
+                        <button onclick="openDirectVipGuideModal(false)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm py-3.5 px-4 rounded-full shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition active:scale-95">
+                            <i data-feather="check-circle" class="w-4 h-4 text-white"></i>
+                            <span>✓ Đã Sở Hữu (Bấm xem cài đặt)</span>
+                        </button>
+                    `;
+                    if (prebuyBoxG2) {
+                        prebuyBoxG2.innerHTML = `
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
+                                <span>⭐</span> Gói VIP Siêu Tốc vĩnh viễn 2099
+                            </div>
+                        `;
+                    }
+                } else {
+                    btnContainerG2.innerHTML = `
+                        <button onclick="buyPackageLoggedIn('g2_direct_vip')" id="btn-buy-g2" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-yellow-btn flex items-center justify-center gap-1.5 transition active:scale-95">
+                            <span>Chọn gói (49 Xu)</span>
+                            <i data-feather="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                    if (prebuyBoxG2) {
+                        prebuyBoxG2.innerHTML = `
+                            <button onclick="openPreBuyGuide('g2_direct_vip')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                <span>Xem hướng dẫn trước khi mua</span>
+                                <i data-feather="arrow-right" class="w-3 h-3"></i>
+                            </button>
+                        `;
+                    }
+                }
+            }
+        }
+
         // Package Handling
         function handlePackageAction(pkgType) {
             if (!appState.isLoggedIn) {
@@ -2903,68 +3116,314 @@
             }
         }
 
-        async function buyPackageLoggedIn(pkgType) {
-            var requiredXu = pkgType === 'g1_shadowrocket' ? 29 : 49;
-            var pkgName = pkgType === 'g1_shadowrocket' ? 'Locket Gold (Shadowrocket)' : 'Locket Gold VIP [Siêu Tốc]';
-
-            // Check balance
-            if (appState.user.balance < requiredXu) {
-                showToast('⚠️ Số dư không đủ ' + requiredXu + ' Xu. Vui lòng nạp thêm Xu!');
-                openRechargeModal(requiredXu);
+        function buyPackageLoggedIn(pkgType) {
+            if (!appState.isLoggedIn) {
+                openLoginModal();
                 return;
             }
 
-            var orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
-            var orderDate = new Date().toLocaleString('vi-VN');
-
-            // Save to Firebase Cloud Firestore / Local DB
-            if (typeof dbCreateOrder === "function") {
-                try {
-                    await dbCreateOrder({
-                        id: orderId,
-                        userId: appState.user.uid || 'usr_' + Date.now(),
-                        userEmail: appState.user.email,
-                        pkgType: pkgType,
-                        pkgName: pkgName,
-                        priceXu: requiredXu,
-                        date: orderDate,
-                        expires: 'Vĩnh viễn (2099)',
-                        status: 'Đã kích hoạt'
-                    });
-                } catch(e) {
-                    console.error("DB Create Order error:", e);
-                }
+            if (checkUserOwnsPackage(pkgType)) {
+                showToast('🎉 Bạn đã sở hữu gói này rồi! Đang mở hướng dẫn cài đặt...');
+                openInstallGuideModal(pkgType);
+                return;
             }
 
-            // Deduct balance and add package
-            appState.user.balance -= requiredXu;
-            appState.user.packages = appState.user.packages || [];
-            appState.user.packages.push({
-                id: 'PKG-' + Math.floor(10000 + Math.random() * 90000),
-                type: pkgType,
-                name: pkgName,
-                date: new Date().toLocaleDateString('vi-VN'),
-                expires: 'Vĩnh viễn (2099)'
-            });
+            openOrderConfirmModal(pkgType);
+        }
 
-            // Log to database history
-            appState.user.history = appState.user.history || [];
-            appState.user.history.unshift({
-                id: orderId,
-                type: 'order',
-                title: 'Mua ' + pkgName,
-                amount: '-' + requiredXu + ' Xu',
-                date: orderDate,
-                status: 'Đã kích hoạt'
-            });
+        // =========================================================================
+        // ORDER CONFIRMATION & VOUCHER ENGINE CONTROLLER
+        // =========================================================================
+        var orderState = {
+            currentPkg: null,
+            basePrice: 0,
+            appliedVoucher: null,
+            discount: 0,
+            finalPrice: 0
+        };
 
-            saveState();
-            if (pkgType === 'g1_shadowrocket') {
-                showToast('🎉 Mua thành công Gói Shadowrocket! Đang mở hướng dẫn chi tiết...');
-                openShadowGuideModal(false);
+        function openOrderConfirmModal(pkgType) {
+            if (!appState.isLoggedIn) {
+                openLoginModal();
+                return;
+            }
+
+            if (checkUserOwnsPackage(pkgType)) {
+                showToast('🎉 Bạn đã sở hữu gói này rồi! Đang mở hướng dẫn cài đặt...');
+                openInstallGuideModal(pkgType);
+                return;
+            }
+
+            var basePrice = pkgType === 'g1_shadowrocket' ? 29 : 49;
+            var pkgName = pkgType === 'g1_shadowrocket' ? 'Locket Gold (Shadowrocket)' : 'Locket Gold VIP [Siêu Tốc]';
+
+            orderState = {
+                currentPkg: pkgType,
+                basePrice: basePrice,
+                appliedVoucher: null,
+                discount: 0,
+                finalPrice: basePrice
+            };
+
+            // Reset modal fields
+            document.getElementById('orderConfirmPkgName').textContent = pkgName;
+            document.getElementById('orderConfirmBasePriceTag').textContent = basePrice + ' Xu';
+            document.getElementById('orderVoucherInput').value = '';
+            document.getElementById('orderVoucherFeedback').classList.add('hidden');
+            document.getElementById('orderVoucherAppliedBox').classList.add('hidden');
+
+            renderOrderCalculation();
+
+            var modal = document.getElementById('modalOrderConfirm');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            feather.replace();
+        }
+
+        function closeOrderConfirmModal() {
+            var modal = document.getElementById('modalOrderConfirm');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        async function applyOrderVoucher() {
+            var code = (document.getElementById('orderVoucherInput').value || '').trim().toUpperCase().replace(/\s+/g, '');
+            var feedbackEl = document.getElementById('orderVoucherFeedback');
+            var appliedBox = document.getElementById('orderVoucherAppliedBox');
+
+            if (!code) {
+                feedbackEl.className = 'text-xs text-rose-500 font-bold mt-1.5 flex items-center gap-1';
+                feedbackEl.innerHTML = '<i data-feather="alert-circle" class="w-3.5 h-3.5"></i> Vui lòng nhập mã voucher!';
+                feedbackEl.classList.remove('hidden');
+                feather.replace();
+                return;
+            }
+
+            var btn = document.getElementById('btnApplyOrderVoucher');
+            btn.disabled = true;
+            btn.textContent = '...';
+
+            try {
+                var res = null;
+                if (typeof dbApplyVoucher === "function") {
+                    res = await dbApplyVoucher(code, orderState.basePrice);
+                } else {
+                    res = { valid: false, message: 'Hệ thống voucher chưa sẵn sàng.' };
+                }
+
+                if (res.valid) {
+                    orderState.appliedVoucher = res.voucher;
+                    orderState.discount = res.discount;
+                    orderState.finalPrice = res.finalPrice;
+
+                    feedbackEl.className = 'text-xs text-emerald-600 font-bold mt-1.5 flex items-center gap-1';
+                    feedbackEl.innerHTML = `<i data-feather="check-circle" class="w-3.5 h-3.5"></i> ${res.message}`;
+                    feedbackEl.classList.remove('hidden');
+
+                    var discountLabel = res.voucher.type === 'percent' ? `Giảm ${res.voucher.value}% (-${res.discount} Xu)` : `Giảm ${res.voucher.value} Xu`;
+                    appliedBox.innerHTML = `
+                        <div class="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs">
+                            <div class="flex items-center gap-2">
+                                <span class="text-base">🏷️</span>
+                                <div>
+                                    <span class="font-black font-mono text-emerald-800">${res.voucher.code}</span>
+                                    <span class="text-slate-500 ml-1">(${discountLabel})</span>
+                                </div>
+                            </div>
+                            <button onclick="removeOrderVoucher()" class="text-xs font-bold text-rose-600 hover:text-rose-800 px-2 py-1 rounded-lg hover:bg-rose-100 transition">
+                                Gỡ mã
+                            </button>
+                        </div>
+                    `;
+                    appliedBox.classList.remove('hidden');
+                    document.getElementById('orderVoucherInput').value = '';
+                } else {
+                    feedbackEl.className = 'text-xs text-rose-500 font-bold mt-1.5 flex items-center gap-1';
+                    feedbackEl.innerHTML = `<i data-feather="alert-circle" class="w-3.5 h-3.5"></i> ${res.message}`;
+                    feedbackEl.classList.remove('hidden');
+                }
+            } catch (err) {
+                feedbackEl.className = 'text-xs text-rose-500 font-bold mt-1.5 flex items-center gap-1';
+                feedbackEl.innerHTML = `<i data-feather="alert-circle" class="w-3.5 h-3.5"></i> Lỗi kiểm tra voucher: ${err.message}`;
+                feedbackEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Áp Dụng';
+                renderOrderCalculation();
+                feather.replace();
+            }
+        }
+
+        function removeOrderVoucher() {
+            orderState.appliedVoucher = null;
+            orderState.discount = 0;
+            orderState.finalPrice = orderState.basePrice;
+
+            document.getElementById('orderVoucherAppliedBox').classList.add('hidden');
+            var feedbackEl = document.getElementById('orderVoucherFeedback');
+            feedbackEl.classList.add('hidden');
+
+            renderOrderCalculation();
+        }
+
+        function renderOrderCalculation() {
+            var basePrice = orderState.basePrice;
+            var discount = orderState.discount || 0;
+            var finalPrice = Math.max(1, basePrice - discount);
+            orderState.finalPrice = finalPrice;
+
+            var currentBalance = appState.user ? (appState.user.balance || 0) : 0;
+            var remainingBalance = currentBalance - finalPrice;
+
+            document.getElementById('orderSummaryOriginalPrice').textContent = basePrice + ' Xu';
+            
+            var discountRow = document.getElementById('orderSummaryDiscountRow');
+            if (discount > 0) {
+                discountRow.classList.remove('hidden');
+                document.getElementById('orderSummaryDiscount').textContent = '-' + discount + ' Xu';
             } else {
-                showToast('🎉 Mua thành công Gói VIP Siêu Tốc! Đang mở hướng dẫn cài đặt...');
-                openDirectVipGuideModal(false);
+                discountRow.classList.add('hidden');
+            }
+
+            document.getElementById('orderSummaryFinalPrice').textContent = finalPrice + ' Xu';
+            document.getElementById('orderSummaryCurrentBalance').textContent = currentBalance + ' Xu';
+
+            var remainingEl = document.getElementById('orderSummaryRemainingBalance');
+            var insufficientAlert = document.getElementById('orderInsufficientAlert');
+            var confirmBtn = document.getElementById('btnConfirmOrderExecute');
+
+            if (currentBalance >= finalPrice) {
+                remainingEl.textContent = remainingBalance + ' Xu';
+                remainingEl.className = 'font-bold text-slate-800 font-mono';
+                insufficientAlert.classList.add('hidden');
+                confirmBtn.disabled = false;
+                confirmBtn.className = 'w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3.5 px-4 rounded-2xl shadow-lg shadow-amber-400/20 flex items-center justify-center gap-2 transition active:scale-95 text-xs cursor-pointer';
+                confirmBtn.innerHTML = `<i data-feather="check-circle" class="w-4 h-4"></i><span>Xác Nhận Thanh Toán (${finalPrice} Xu)</span>`;
+            } else {
+                var deficit = finalPrice - currentBalance;
+                remainingEl.textContent = 'Thiếu ' + deficit + ' Xu';
+                remainingEl.className = 'font-bold text-rose-600 font-mono';
+                insufficientAlert.classList.remove('hidden');
+                document.getElementById('orderDeficitAmount').textContent = deficit + ' Xu (' + (deficit * 1000).toLocaleString('vi-VN') + ' đ)';
+                confirmBtn.disabled = true;
+                confirmBtn.className = 'w-full bg-slate-200 text-slate-400 font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 text-xs cursor-not-allowed';
+                confirmBtn.innerHTML = `<span>Số Dư Không Đủ (${currentBalance}/${finalPrice} Xu)</span>`;
+            }
+        }
+
+        async function executeOrderPurchase() {
+            if (!orderState.currentPkg) return;
+            var pkgType = orderState.currentPkg;
+            var basePrice = orderState.basePrice || (pkgType === 'g1_shadowrocket' ? 29 : 49);
+            var pkgName = pkgType === 'g1_shadowrocket' ? 'Locket Gold (Shadowrocket)' : 'Locket Gold VIP [Siêu Tốc]';
+            
+            // Check if already owned again
+            if (checkUserOwnsPackage(pkgType)) {
+                showToast('🎉 Bạn đã sở hữu gói này rồi!');
+                closeOrderConfirmModal();
+                openInstallGuideModal(pkgType);
+                return;
+            }
+
+            var finalPrice = orderState.finalPrice !== undefined ? orderState.finalPrice : basePrice;
+
+            // Check balance
+            if (appState.user.balance < finalPrice) {
+                showToast(`⚠️ Số dư (${appState.user.balance} Xu) không đủ thanh toán ${finalPrice} Xu! Vui lòng nạp thêm.`);
+                closeOrderConfirmModal();
+                openRechargeModal(finalPrice - appState.user.balance);
+                return;
+            }
+
+            var confirmBtn = document.getElementById('btnConfirmOrderExecute');
+            if (confirmBtn) {
+                confirmBtn.disabled = true;
+                confirmBtn.innerHTML = '<span>⏳ Đang xử lý kích hoạt...</span>';
+            }
+
+            try {
+                var orderId = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
+                var orderDate = new Date().toLocaleString('vi-VN');
+
+                // Record voucher usage if used
+                if (orderState.appliedVoucher && typeof dbRecordVoucherUse === "function") {
+                    try {
+                        await dbRecordVoucherUse(orderState.appliedVoucher.code);
+                    } catch (err) {
+                        console.warn("Lỗi ghi nhận voucher:", err);
+                    }
+                }
+
+                // Save order to DB
+                if (typeof dbCreateOrder === "function") {
+                    try {
+                        await dbCreateOrder({
+                            id: orderId,
+                            userId: appState.user.uid || 'usr_' + Date.now(),
+                            userEmail: appState.user.email,
+                            pkgType: pkgType,
+                            pkgName: pkgName,
+                            priceXu: finalPrice,
+                            originalPriceXu: basePrice,
+                            voucherCode: orderState.appliedVoucher ? orderState.appliedVoucher.code : null,
+                            discountXu: orderState.discount || 0,
+                            date: orderDate,
+                            expires: 'Vĩnh viễn (2099)',
+                            status: 'Đã kích hoạt'
+                        });
+                    } catch(e) {
+                        console.error("DB Create Order error:", e);
+                    }
+                }
+
+                // Deduct balance
+                appState.user.balance -= finalPrice;
+                
+                // Add package to user
+                appState.user.packages = appState.user.packages || [];
+                appState.user.packages.push({
+                    id: 'PKG-' + Math.floor(10000 + Math.random() * 90000),
+                    type: pkgType,
+                    name: pkgName,
+                    date: new Date().toLocaleDateString('vi-VN'),
+                    expires: 'Vĩnh viễn (2099)'
+                });
+
+                // Add history entry
+                appState.user.history = appState.user.history || [];
+                var historyNote = orderState.appliedVoucher ? ` (Giảm ${orderState.appliedVoucher.code})` : '';
+                appState.user.history.unshift({
+                    id: orderId,
+                    type: 'order',
+                    title: 'Mua ' + pkgName + historyNote,
+                    amount: '-' + finalPrice + ' Xu',
+                    date: orderDate,
+                    status: 'Đã kích hoạt'
+                });
+
+                saveState();
+                closeOrderConfirmModal();
+                updateUI();
+
+                showToast(`🎉 Kích hoạt thành công ${pkgName}! Trừ ${finalPrice} Xu.`);
+
+                // Automatically open full guide
+                if (pkgType === 'g1_shadowrocket') {
+                    openShadowGuideModal(false);
+                } else {
+                    openDirectVipGuideModal(false);
+                }
+            } catch (e) {
+                console.error("Lỗi xác nhận mua gói:", e);
+                showToast('❌ Có lỗi xảy ra khi kích hoạt: ' + e.message);
+            } finally {
+                if (confirmBtn) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = '<i data-feather="check-circle" class="w-4 h-4"></i><span>Xác Nhận Thanh Toán</span>';
+                    feather.replace();
+                }
             }
         }
 

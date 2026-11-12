@@ -1126,3 +1126,246 @@ function saveCustomFirebaseConfig(config) {
     }
 })();
 
+// =========================================================================
+// QUẢN LÝ VOUCHER / MÃ GIẢM GIÁ (VOUCHER ENGINE)
+// =========================================================================
+
+// Khởi tạo các mã Voucher mặc định ban đầu nếu chưa có
+var DEFAULT_VOUCHERS = [
+    {
+        code: 'LOCKET5',
+        type: 'fixed',
+        value: 5,
+        maxUses: 100,
+        usedCount: 0,
+        description: 'Giảm ngay 5 Xu cho mọi đơn mua gói',
+        active: true,
+        createdAt: '2026-11-12T00:00:00.000Z'
+    },
+    {
+        code: 'TRIAN20',
+        type: 'percent',
+        value: 20,
+        maxUses: 50,
+        usedCount: 0,
+        description: 'Giảm 20% tổng tiền gói Locket Gold',
+        active: true,
+        createdAt: '2026-11-12T00:00:00.000Z'
+    },
+    {
+        code: 'DEN2026',
+        type: 'fixed',
+        value: 10,
+        maxUses: 30,
+        usedCount: 0,
+        description: 'Voucher đặc quyền giảm 10 Xu từ Văn Nguyên',
+        active: true,
+        createdAt: '2026-11-12T00:00:00.000Z'
+    }
+];
+
+// Lấy toàn bộ danh sách Voucher (Hợp nhất Local + Cloud)
+async function dbGetAllVouchers() {
+    var vouchersMap = {};
+
+    // 1. Nạp từ Local Storage
+    try {
+        var localVouchers = JSON.parse(localStorage.getItem('locket_gold_vouchers_db') || 'null');
+        if (!localVouchers || !Array.isArray(localVouchers) || localVouchers.length === 0) {
+            localVouchers = DEFAULT_VOUCHERS;
+            localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(localVouchers));
+        }
+        localVouchers.forEach(function(v) {
+            if (v && v.code) vouchersMap[v.code.toUpperCase()] = v;
+        });
+    } catch(e) {}
+
+    // 2. Nạp thêm từ Cloud Firestore nếu có
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var snap = await runWithTimeout(firestoreDB.collection('vouchers').get(), 3000);
+            if (!snap.empty) {
+                snap.forEach(function(doc) {
+                    var d = doc.data();
+                    if (d && d.code) {
+                        var c = d.code.toUpperCase();
+                        vouchersMap[c] = Object.assign({}, vouchersMap[c] || {}, d);
+                    }
+                });
+            } else {
+                // Tải mẫu lên Firestore nếu rỗng
+                DEFAULT_VOUCHERS.forEach(function(v) {
+                    firestoreDB.collection('vouchers').doc(v.code).set(v).catch(function(){});
+                });
+            }
+        } catch(e) {
+            console.warn("Firestore get vouchers warn:", e);
+        }
+    }
+
+    var list = Object.values(vouchersMap);
+    try {
+        localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
+    } catch(e) {}
+    return list;
+}
+
+// Tạo mới Voucher
+async function dbAdminCreateVoucher(voucherData) {
+    if (!voucherData || !voucherData.code) {
+        return { success: false, error: 'Thiếu mã voucher!' };
+    }
+    var code = voucherData.code.trim().toUpperCase();
+    var newVoucher = {
+        code: code,
+        type: voucherData.type === 'percent' ? 'percent' : 'fixed',
+        value: Number(voucherData.value) || 0,
+        maxUses: Number(voucherData.maxUses) || 0,
+        usedCount: Number(voucherData.usedCount) || 0,
+        description: voucherData.description || ('Mã giảm giá ' + code),
+        active: voucherData.active !== false,
+        createdAt: new Date().toISOString()
+    };
+
+    // 1. Lưu Local Storage
+    try {
+        var list = JSON.parse(localStorage.getItem('locket_gold_vouchers_db') || '[]');
+        list = list.filter(function(v) { return (v.code || '').toUpperCase() !== code; });
+        list.unshift(newVoucher);
+        localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
+    } catch(e) {}
+
+    // 2. Lưu Cloud Firestore
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            await runWithTimeout(firestoreDB.collection('vouchers').doc(code).set(newVoucher), 3000);
+        } catch(e) {
+            console.warn("Firestore create voucher warn:", e);
+        }
+    }
+
+    return { success: true, voucher: newVoucher };
+}
+
+// Xóa Voucher
+async function dbAdminDeleteVoucher(code) {
+    code = (code || '').trim().toUpperCase();
+    if (!code) return { success: false, error: 'Thiếu mã voucher cần xóa!' };
+
+    // 1. Xóa trong Local
+    try {
+        var list = JSON.parse(localStorage.getItem('locket_gold_vouchers_db') || '[]');
+        list = list.filter(function(v) { return (v.code || '').toUpperCase() !== code; });
+        localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
+    } catch(e) {}
+
+    // 2. Xóa trên Cloud Firestore
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            await runWithTimeout(firestoreDB.collection('vouchers').doc(code).delete(), 3000);
+        } catch(e) {
+            console.warn("Firestore delete voucher warn:", e);
+        }
+    }
+
+    return { success: true };
+}
+
+// Bật / Tắt trạng thái Voucher
+async function dbAdminToggleVoucher(code) {
+    code = (code || '').trim().toUpperCase();
+    var updatedStatus = false;
+
+    // 1. Local
+    try {
+        var list = JSON.parse(localStorage.getItem('locket_gold_vouchers_db') || '[]');
+        list.forEach(function(v) {
+            if ((v.code || '').toUpperCase() === code) {
+                v.active = !v.active;
+                updatedStatus = v.active;
+            }
+        });
+        localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
+    } catch(e) {}
+
+    // 2. Cloud Firestore
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            await firestoreDB.collection('vouchers').doc(code).update({ active: updatedStatus }).catch(function(){});
+        } catch(e) {}
+    }
+
+    return { success: true, active: updatedStatus };
+}
+
+// Áp dụng và Kiểm tra Voucher cho đơn hàng
+async function dbApplyVoucher(code, originalPriceXu) {
+    code = (code || '').trim().toUpperCase();
+    originalPriceXu = Number(originalPriceXu) || 0;
+
+    if (!code) {
+        return { valid: false, error: 'Vui lòng nhập mã voucher!' };
+    }
+
+    var vouchers = await dbGetAllVouchers();
+    var voucher = vouchers.find(function(v) {
+        return (v.code || '').toUpperCase() === code;
+    });
+
+    if (!voucher) {
+        return { valid: false, error: 'Mã voucher "' + code + '" không tồn tại hoặc đã bị xóa!' };
+    }
+
+    if (!voucher.active) {
+        return { valid: false, error: 'Mã voucher "' + code + '" hiện đang tạm ngưng sử dụng!' };
+    }
+
+    if (voucher.maxUses > 0 && voucher.usedCount >= voucher.maxUses) {
+        return { valid: false, error: 'Mã voucher "' + code + '" đã hết lượt sử dụng (Tối đa ' + voucher.maxUses + ' lượt)!' };
+    }
+
+    var discountXu = 0;
+    if (voucher.type === 'percent') {
+        discountXu = Math.round(originalPriceXu * (voucher.value / 100));
+    } else {
+        discountXu = Number(voucher.value) || 0;
+    }
+
+    // Đảm bảo không giảm quá giá trị đơn hàng, tối thiểu thanh toán 1 Xu
+    discountXu = Math.min(discountXu, Math.max(0, originalPriceXu - 1));
+    var finalPriceXu = Math.max(1, originalPriceXu - discountXu);
+
+    return {
+        valid: true,
+        code: code,
+        voucher: voucher,
+        discountXu: discountXu,
+        finalPriceXu: finalPriceXu,
+        message: 'Áp dụng thành công mã ' + code + ': Giảm -' + discountXu + ' Xu!'
+    };
+}
+
+// Ghi nhận đã dùng voucher +1 lượt
+async function dbRecordVoucherUse(code) {
+    code = (code || '').trim().toUpperCase();
+    if (!code) return;
+
+    try {
+        var list = JSON.parse(localStorage.getItem('locket_gold_vouchers_db') || '[]');
+        list.forEach(function(v) {
+            if ((v.code || '').toUpperCase() === code) {
+                v.usedCount = (v.usedCount || 0) + 1;
+            }
+        });
+        localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
+    } catch(e) {}
+
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            firestoreDB.collection('vouchers').doc(code).update({
+                usedCount: firebase.firestore.FieldValue.increment(1)
+            }).catch(function(){});
+        } catch(e) {}
+    }
+}
+

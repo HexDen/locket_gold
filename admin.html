@@ -511,6 +511,14 @@
                         <span id="usersCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
                     </button>
 
+                    <button onclick="switchTab('vouchers')" id="nav-vouchers" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-feather="tag" class="w-4 h-4 text-amber-400"></i>
+                            <span>Mã Voucher</span>
+                        </div>
+                        <span id="vouchersCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">0</span>
+                    </button>
+
                     <button onclick="switchTab('settings')" id="nav-settings" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
                         <div class="flex items-center gap-3">
                             <i data-feather="settings" class="w-4 h-4"></i>
@@ -979,7 +987,32 @@
                 </div>
 
                 <!-- ========================================================================= -->
-                <!-- TAB 5: CÀI ĐẶT HỆ THỐNG & CSDL (SETTINGS) -->
+                <!-- TAB 5: QUẢN LÝ MÃ GIẢM GIÁ / VOUCHER (VOUCHERS) -->
+                <!-- ========================================================================= -->
+                <div id="tab-vouchers" class="hidden space-y-6">
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                            <div>
+                                <h3 class="text-lg font-black text-white flex items-center gap-2">
+                                    <span>🏷️</span> Quản Lý Mã Giảm Giá & Voucher Khuyến Mãi
+                                </h3>
+                                <p class="text-xs text-slate-400">Admin có thể tùy ý tạo, điều chỉnh và xóa mã giảm giá cho khách hàng khi mua gói Locket Gold</p>
+                            </div>
+                            <button onclick="openCreateVoucherModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95">
+                                <i data-feather="plus-circle" class="w-4 h-4"></i>
+                                <span>Tạo Voucher Mới</span>
+                            </button>
+                        </div>
+
+                        <!-- Danh sách Voucher -->
+                        <div id="vouchersTableContainer" class="overflow-x-auto">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- TAB 6: CÀI ĐẶT HỆ THỐNG & CSDL (SETTINGS) -->
                 <!-- ========================================================================= -->
                 <div id="tab-settings" class="hidden space-y-6">
                     
@@ -1140,6 +1173,8 @@
         </div>
     </div>
 
+
+
     <!-- MODAL 2: CẤP GÓI LOCKET GOLD TRỰC TIẾP -->
     <div id="modalManualGrant" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
@@ -1187,6 +1222,71 @@
         </div>
     </div>
 
+
+
+    <!-- MODAL TẠO VOUCHER MỚI -->
+    <div id="modalCreateVoucher" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="relative w-full max-w-md bg-[#0b1329] border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-5">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-xl font-bold">
+                        🏷️
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-white">Tạo Mã Voucher Khuyến Mãi</h3>
+                        <p class="text-xs text-slate-400">Khách hàng có thể nhập mã này khi đặt mua gói</p>
+                    </div>
+                </div>
+                <button onclick="closeCreateVoucherModal()" class="text-slate-400 hover:text-white p-1">
+                    <i data-feather="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleCreateVoucherSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Mã Voucher (Code):</label>
+                    <input id="vCode" type="text" placeholder="Ví dụ: LOCKET50, TRIAN, DEN2026..." required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono uppercase font-black focus:outline-none focus:border-amber-400">
+                    <p class="text-[10px] text-slate-500 mt-1">Mã sẽ tự động chuyển thành in hoa (viết liền không dấu).</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Loại Giảm Giá:</label>
+                        <select id="vType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-400 font-bold" onchange="updateVoucherValueLabel()">
+                            <option value="fixed">Trừ Số Xu Cố Định</option>
+                            <option value="percent">Trừ Theo Phần Trăm (%)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label id="vValueLabel" class="block font-bold text-slate-300 mb-1">Mức Giảm (Số Xu):</label>
+                        <input id="vValue" type="number" min="1" placeholder="Ví dụ: 10" required
+                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-amber-400 font-mono font-bold focus:outline-none focus:border-amber-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Giới Hạn Lượt Dùng (0 = Không Giới Hạn):</label>
+                    <input id="vMaxUses" type="number" min="0" value="50" placeholder="Ví dụ: 50"
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Mô Tả / Ghi Chú Voucher:</label>
+                    <input id="vDesc" type="text" placeholder="Ví dụ: Khuyến mãi đặc biệt tri ân khách hàng..."
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md">
+                        <i data-feather="check-circle" class="w-4 h-4"></i>
+                        <span>Tạo Voucher Ngay</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- TOAST NOTIFICATION -->
     <div id="adminToast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-300 opacity-0 translate-y-3 pointer-events-none">
         <div class="bg-amber-400 text-slate-950 font-black px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs">
@@ -1205,7 +1305,8 @@
             currentTab: 'overview',
             users: [],
             recharges: [],
-            orders: []
+            orders: [],
+            vouchers: []
         };
 
         // Master PINs
@@ -1356,7 +1457,7 @@
         // 2. Tab Navigation
         function switchTab(tabId) {
             adminState.currentTab = tabId;
-            var tabs = ['overview', 'products', 'recharges', 'orders', 'users', 'settings'];
+            var tabs = ['overview', 'products', 'recharges', 'orders', 'users', 'vouchers', 'settings'];
             
             tabs.forEach(function(t) {
                 var tabEl = document.getElementById('tab-' + t);
@@ -1380,6 +1481,7 @@
                 recharges: 'Quản Lý Nạp Tiền (VietQR MB Bank)',
                 orders: 'Quản Lý Đơn Hàng Mua Gói',
                 users: 'Quản Lý Khách Hàng / Thành Viên',
+                vouchers: 'Quản Lý Mã Giảm Giá & Voucher Khuyến Mãi',
                 settings: 'Cài Đặt Hệ Thống & CSDL'
             };
             document.getElementById('viewHeaderTitle').textContent = titles[tabId] || 'Quản Trị';
@@ -1418,12 +1520,20 @@
                     adminState.orders = JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
                 }
 
+                // Load vouchers
+                if (typeof dbGetAllVouchers === "function") {
+                    adminState.vouchers = await dbGetAllVouchers();
+                } else {
+                    adminState.vouchers = JSON.parse(localStorage.getItem('locket_gold_vouchers_db') || '[]');
+                }
+
                 // Update UI
                 renderOverviewMetrics();
                 renderOverviewTables();
                 renderRechargesTable();
                 renderOrdersTable();
                 renderUsersTable();
+                renderVouchersTable();
 
                 if (isManualRefresh) {
                     showAdminToast('✅ Đã làm mới toàn bộ dữ liệu mới nhất!');
@@ -1458,6 +1568,8 @@
             document.getElementById('pendingBadgeCount').textContent = pendingCount;
             document.getElementById('ordersCountBadge').textContent = adminState.orders.length;
             document.getElementById('usersCountBadge').textContent = adminState.users.length;
+            var vBadge = document.getElementById('vouchersCountBadge');
+            if (vBadge) vBadge.textContent = adminState.vouchers ? adminState.vouchers.length : 0;
         }
 
         // 5. Render Overview Tables
@@ -2031,7 +2143,8 @@
                 exportDate: new Date().toISOString(),
                 users: adminState.users,
                 recharges: adminState.recharges,
-                orders: adminState.orders
+                orders: adminState.orders,
+                vouchers: adminState.vouchers
             };
             var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             var url = URL.createObjectURL(blob);
@@ -2041,6 +2154,193 @@
             a.click();
             URL.revokeObjectURL(url);
             showAdminToast('💾 Đã tải xuống file sao lưu JSON thành công!');
+        }
+
+        // 14. Voucher Management Functions
+        function updateVoucherValueLabel() {
+            var type = document.getElementById('vType').value;
+            var label = document.getElementById('vValueLabel');
+            var input = document.getElementById('vValue');
+            if (type === 'percent') {
+                label.textContent = 'Mức Giảm (Phần trăm %):';
+                input.placeholder = 'Ví dụ: 20 (giảm 20%)';
+                input.max = '100';
+            } else {
+                label.textContent = 'Mức Giảm (Số Xu):';
+                input.placeholder = 'Ví dụ: 10 (giảm 10 Xu)';
+                input.removeAttribute('max');
+            }
+        }
+
+        function openCreateVoucherModal() {
+            var modal = document.getElementById('modalCreateVoucher');
+            document.getElementById('vCode').value = '';
+            document.getElementById('vValue').value = '';
+            document.getElementById('vMaxUses').value = '50';
+            document.getElementById('vDesc').value = '';
+            document.getElementById('vType').value = 'fixed';
+            updateVoucherValueLabel();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            feather.replace();
+        }
+
+        function closeCreateVoucherModal() {
+            var modal = document.getElementById('modalCreateVoucher');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function handleCreateVoucherSubmit(e) {
+            e.preventDefault();
+            var code = document.getElementById('vCode').value.trim().toUpperCase().replace(/\s+/g, '');
+            var type = document.getElementById('vType').value;
+            var value = parseInt(document.getElementById('vValue').value, 10);
+            var maxUses = parseInt(document.getElementById('vMaxUses').value, 10) || 0;
+            var desc = document.getElementById('vDesc').value.trim();
+
+            if (!code) {
+                alert('Vui lòng nhập mã voucher!');
+                return;
+            }
+            if (isNaN(value) || value <= 0) {
+                alert('Vui lòng nhập mức giảm hợp lệ lớn hơn 0!');
+                return;
+            }
+            if (type === 'percent' && value > 100) {
+                alert('Mức giảm theo phần trăm không thể vượt quá 100%!');
+                return;
+            }
+
+            try {
+                if (typeof dbAdminCreateVoucher === "function") {
+                    var res = await dbAdminCreateVoucher({
+                        code: code,
+                        type: type,
+                        value: value,
+                        maxUses: maxUses,
+                        description: desc
+                    });
+                    if (res.success) {
+                        showAdminToast(`🎉 Đã tạo mã voucher [${code}] thành công!`);
+                        closeCreateVoucherModal();
+                        await loadAllAdminData();
+                    } else {
+                        alert('Lỗi tạo voucher: ' + (res.error || 'Thất bại'));
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Lỗi xử lý tạo voucher: ' + err.message);
+            }
+        }
+
+        async function toggleVoucherAction(code) {
+            try {
+                if (typeof dbAdminToggleVoucher === "function") {
+                    var res = await dbAdminToggleVoucher(code);
+                    if (res.success) {
+                        showAdminToast(`Đã chuyển voucher [${code}] sang ${res.isActive ? 'Bật' : 'Tắt'}!`);
+                        await loadAllAdminData();
+                    }
+                }
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+            }
+        }
+
+        async function deleteVoucherAction(code) {
+            if (!confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn voucher [${code}]?`)) return;
+            try {
+                if (typeof dbAdminDeleteVoucher === "function") {
+                    var res = await dbAdminDeleteVoucher(code);
+                    if (res.success) {
+                        showAdminToast(`🗑️ Đã xóa voucher [${code}]!`);
+                        await loadAllAdminData();
+                    }
+                }
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+            }
+        }
+
+        function renderVouchersTable() {
+            var container = document.getElementById('vouchersTableContainer');
+            if (!container) return;
+            var vouchers = adminState.vouchers || [];
+
+            if (vouchers.length === 0) {
+                container.innerHTML = '<div class="text-center py-12 text-slate-500 text-xs">Chưa có mã voucher nào. Bấm nút "Tạo Voucher Mới" phía trên để tạo!</div>';
+                return;
+            }
+
+            var rowsHtml = vouchers.map(function(v) {
+                var isExpired = v.maxUses > 0 && (v.usedCount || 0) >= v.maxUses;
+                var discountStr = v.type === 'percent' ? `Giảm ${v.value}%` : `Giảm ${v.value} Xu`;
+                var statusBadge = '';
+
+                if (!v.isActive) {
+                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-500 border border-slate-700">Đã tắt</span>';
+                } else if (isExpired) {
+                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">Hết lượt</span>';
+                } else {
+                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Đang hoạt động</span>';
+                }
+
+                var toggleBtnText = v.isActive ? 'Tắt' : 'Bật';
+                var toggleBtnClass = v.isActive ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30';
+
+                return `
+                    <tr class="border-b border-slate-800/80 hover:bg-slate-800/30 transition text-xs">
+                        <td class="py-3 px-3 font-mono font-black text-amber-400 text-sm">
+                            ${v.code}
+                        </td>
+                        <td class="py-3 px-3">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-400/10 text-amber-300 font-bold border border-amber-400/20">
+                                <span>🏷️</span> ${discountStr}
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 text-slate-300 font-mono">
+                            <span class="text-white font-bold">${v.usedCount || 0}</span> / <span class="text-slate-400">${v.maxUses > 0 ? v.maxUses : '∞'}</span>
+                        </td>
+                        <td class="py-3 px-3 text-slate-400 max-w-xs truncate" title="${v.description || ''}">
+                            ${v.description || '<span class="text-slate-600 italic">Không có mô tả</span>'}
+                        </td>
+                        <td class="py-3 px-3 whitespace-nowrap">
+                            ${statusBadge}
+                        </td>
+                        <td class="py-3 px-3 whitespace-nowrap text-right">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <button onclick="toggleVoucherAction('${v.code}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition active:scale-95 ${toggleBtnClass}">
+                                    ${toggleBtnText}
+                                </button>
+                                <button onclick="deleteVoucherAction('${v.code}')" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition active:scale-95">
+                                    Xóa
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
+                            <th class="py-3 px-3">Mã Voucher</th>
+                            <th class="py-3 px-3">Mức Giảm</th>
+                            <th class="py-3 px-3">Đã Dùng / Giới Hạn</th>
+                            <th class="py-3 px-3">Mô Tả</th>
+                            <th class="py-3 px-3">Trạng Thái</th>
+                            <th class="py-3 px-3 text-right">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/50">
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+            `;
+            feather.replace();
         }
 
         // Toast
