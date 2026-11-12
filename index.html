@@ -214,6 +214,77 @@
         </div>
     </div>
 
+    <!-- Payment VietQR Modal -->
+    <div id="paymentModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4 transition-opacity duration-300" onclick="closePaymentModal()">
+        <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-7 border-2 border-amber-400/60 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-ocean-800/80 p-2 rounded-full border border-gray-700 transition">
+                <i data-feather="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="text-center space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-xs font-bold text-amber-300 uppercase tracking-wider">
+                    💳 Thanh Toán An Toàn VietQR
+                </span>
+                <h3 id="payPkgName" class="text-xl sm:text-2xl font-display font-black text-white mt-1">Gói VIP Siêu Tốc</h3>
+                <div id="payPkgPrice" class="text-2xl sm:text-3xl font-display font-black text-amber-400">49.000 VNĐ</div>
+            </div>
+
+            <!-- VietQR Image Container -->
+            <div class="bg-white rounded-2xl p-3 shadow-xl border-2 border-amber-400/40 flex flex-col items-center justify-center max-w-[260px] mx-auto">
+                <img id="qrImage" src="" alt="Mã VietQR Thanh Toán" class="w-full h-auto object-contain rounded-lg">
+                <p class="text-[11px] text-gray-700 font-semibold mt-1.5 text-center flex items-center gap-1">
+                    <span>📱</span> Quét bằng ứng dụng ngân hàng bất kỳ
+                </p>
+            </div>
+
+            <!-- Account Details Table with Copy Buttons -->
+            <div class="bg-ocean-950/80 rounded-2xl p-3.5 border border-cyan-500/25 space-y-2 text-xs">
+                <div class="flex items-center justify-between py-1 border-b border-gray-800">
+                    <span class="text-gray-400">Ngân hàng:</span>
+                    <span class="font-bold text-white flex items-center gap-1">
+                        <span class="text-blue-400 font-black">MB Bank</span> (Quân Đội)
+                    </span>
+                </div>
+                <div class="flex items-center justify-between py-1 border-b border-gray-800">
+                    <span class="text-gray-400">Số tài khoản:</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-mono font-bold text-cyan-300 text-sm">6012072005</span>
+                        <button onclick="copyToClipboard('6012072005')" class="px-2 py-0.5 rounded bg-ocean-800 hover:bg-cyan-500 hover:text-black text-cyan-300 text-[10px] font-bold border border-cyan-500/40 transition">
+                            Sao chép
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-1 border-b border-gray-800">
+                    <span class="text-gray-400">Chủ tài khoản:</span>
+                    <span class="font-bold text-white uppercase">TRẦN VĂN NGUYÊN</span>
+                </div>
+                <div class="flex items-center justify-between py-1">
+                    <span class="text-gray-400">Nội dung chuyển khoản:</span>
+                    <div class="flex items-center gap-2">
+                        <span id="payContent" class="font-mono font-bold text-amber-300 text-xs sm:text-sm">LOCKET G2</span>
+                        <button onclick="copyToClipboard(document.getElementById('payContent').textContent)" class="px-2 py-0.5 rounded bg-ocean-800 hover:bg-amber-400 hover:text-black text-amber-300 text-[10px] font-bold border border-amber-400/40 transition">
+                            Sao chép
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmation & Help Buttons -->
+            <div class="space-y-2 pt-1">
+                <button onclick="confirmPayment()" class="w-full btn-glow-gold text-black font-black py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition">
+                    <i data-feather="check-circle" class="w-5 h-5"></i>
+                    <span>Tôi Đã Chuyển Khoản ➔ Mở Khóa Cài Đặt</span>
+                </button>
+                <div class="text-center">
+                    <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="text-xs text-gray-400 hover:text-cyan-300 inline-flex items-center gap-1 transition">
+                        <span>Cần hỗ trợ chuyển khoản? Nhắn Văn Nguyên qua Facebook</span>
+                        <i data-feather="arrow-right" class="w-3 h-3"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Top Navigation Header -->
     <header class="sticky top-0 z-40 bg-ocean-950/85 backdrop-blur-xl border-b border-cyan-glow/20">
         <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -342,8 +413,145 @@
             </div>
         </section>
 
+        <!-- 💎 Bảng Chọn Gói Kích Hoạt Locket Gold VIP -->
+        <section id="pricing" class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-cyan-glow/40 space-y-6" data-aos="fade-up">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400/20 to-cyan-500/20 border border-amber-400/40 text-xs font-bold text-amber-300 uppercase tracking-wider">
+                    💎 Bảng Giá Dịch Vụ Mở Khóa Vĩnh Viễn
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-display font-black text-white">
+                    Chọn Phương Thức <span class="text-gold-3d">Kích Hoạt Locket Gold</span>
+                </h3>
+                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                    Lựa chọn gói phù hợp nhất với nhu cầu của bạn. Kích hoạt 1 lần duy nhất - Sở hữu trọn đời.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <!-- GÓI 1: CƠ BẢN (SHADOWROCKET) -->
+                <div class="glass-card rounded-3xl p-6 sm:p-7 border border-cyan-500/30 hover:border-cyan-glow flex flex-col justify-between space-y-6 transition relative group">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+                                🥉 GÓI CƠ BẢN
+                            </span>
+                            <span class="text-xs text-gray-400 line-through">99.000 đ</span>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-display font-black text-white">Kích Hoạt Qua Shadowrocket</h4>
+                            <p class="text-xs text-gray-400 mt-1">Dành cho ai đã có app Shadowrocket hoặc thích tự thao tác kỹ thuật.</p>
+                        </div>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-3xl sm:text-4xl font-display font-black text-cyan-glow">29.000</span>
+                            <span class="text-sm font-bold text-cyan-300">VNĐ</span>
+                            <span class="text-xs text-gray-400 ml-1">/ vĩnh viễn</span>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs text-gray-300 pt-3 border-t border-gray-800/80">
+                            <li class="flex items-center gap-2">
+                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
+                                <span>Mở khóa Locket Gold VIP vĩnh viễn</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
+                                <span>Quay video 60 giây & Tải ảnh nét 2K</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
+                                <span>Mở khóa đổi màu themes & toàn bộ bộ lọc</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
+                                <span>Kèm cấu hình DNS chống thu hồi NextDNS</span>
+                            </li>
+                            <li class="flex items-center gap-2 text-amber-300/90 font-medium">
+                                <i data-feather="alert-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                                <span>Yêu cầu cần có ứng dụng Shadowrocket</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openPaymentModal('g1')" class="w-full bg-gradient-to-r from-cyan-glow to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-black py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition group-hover:shadow-cyan-500/30">
+                        <span>Đăng Ký Gói Cơ Bản (29K)</span>
+                        <i data-feather="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- GÓI 2: VIP SIÊU TỐC (MÁY CHỦ KHÔNG CẦN APP) -->
+                <div class="glass-card rounded-3xl p-6 sm:p-7 border-2 border-amber-400/80 shadow-neon-gold bg-gradient-to-b from-amber-500/10 via-transparent to-transparent flex flex-col justify-between space-y-6 transition relative group">
+                    <div class="absolute -top-3.5 right-6">
+                        <span class="text-xs font-mono font-black px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-black shadow-md flex items-center gap-1 uppercase tracking-wider">
+                            <span>🔥</span> Khuyên Dùng
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40">
+                                👑 GÓI VIP SIÊU TỐC
+                            </span>
+                            <span class="text-xs text-gray-400 line-through">199.000 đ</span>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-display font-black text-white flex items-center gap-1.5">
+                                Cài Trực Tiếp (Không Cần App)
+                            </h4>
+                            <p class="text-xs text-gray-400 mt-1">Cực kỳ đơn giản cho mọi người, chỉ cần 1 click Safari là lên Gold.</p>
+                        </div>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-3xl sm:text-4xl font-display font-black text-amber-400">49.000</span>
+                            <span class="text-sm font-bold text-amber-300">VNĐ</span>
+                            <span class="text-xs text-gray-400 ml-1">/ vĩnh viễn</span>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs text-gray-200 pt-3 border-t border-gray-800/80">
+                            <li class="flex items-center gap-2 font-semibold text-amber-300">
+                                <i data-feather="check-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                                <span>KHÔNG CẦN CÀI SHADOWROCKET (Tiết kiệm $2.99)</span>
+                            </li>
+                            <li class="flex items-center gap-2 font-semibold text-amber-300">
+                                <i data-feather="check-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                                <span>KHÔNG CẦN BẬT VPN KHI DÙNG (Không hao pin, không lag)</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-feather="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                                <span>1 Click tải file .mobileconfig trên Safari là xong</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-feather="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                                <span>Đầy đủ quay 60s, ảnh HD, màu themes, bộ lọc, huy hiệu</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-feather="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                                <span>Hỗ trợ kỹ thuật 1-1 trực tiếp từ Văn Nguyên</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button onclick="openPaymentModal('g2')" class="w-full btn-glow-gold text-black font-black py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition">
+                        <span>Đăng Ký Gói VIP Siêu Tốc (49K)</span>
+                        <i data-feather="zap" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🧭 Khu Vực Hướng Dẫn Cài Đặt (Phân Chia Theo Gói Đã Mở Khóa) -->
+        <section id="instructions-area" class="space-y-6" data-aos="fade-up">
+            <div class="glass-panel rounded-3xl p-2.5 border border-cyan-500/30 flex flex-col sm:flex-row gap-2">
+                <button id="tab-btn-g1" onclick="switchTab('g1')" class="flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-gradient-to-r from-cyan-glow to-blue-600 text-black shadow-lg shadow-cyan-500/30 flex items-center gap-2 justify-center">
+                    <span>🥉</span> Hướng Dẫn Gói 1: Shadowrocket
+                </button>
+                <button id="tab-btn-g2" onclick="switchTab('g2')" class="flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-ocean-900/60 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 justify-center">
+                    <span>👑</span> Hướng Dẫn Gói 2: VIP Trực Tiếp (Không Cần App)
+                </button>
+            </div>
+
+            <!-- 📦 NỘI DUNG GÓI 1 (SHADOWROCKET) -->
+            <div id="content-g1" class="space-y-8">
+
         <!-- 🚀 Cài Đặt Nhanh 1-Click (Dành Cho iOS) -->
-        <section id="install" class="glass-panel rounded-3xl p-6 sm:p-7 shadow-2xl border-2 border-cyan-glow/50 space-y-6 relative overflow-hidden" data-aos="fade-up">
+        <section id="install" class="glass-panel rounded-3xl p-6 sm:p-7 shadow-2xl border-2 border-cyan-glow/50 space-y-6 relative overflow-hidden">
             <!-- Neon background splash -->
             <div class="absolute -top-24 right-0 w-80 h-80 bg-cyan-glow/15 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -843,6 +1051,109 @@
             </ol>
         </section>
 
+            </div>
+            <!-- KẾT THÚC NỘI DUNG GÓI 1 -->
+
+            <!-- 👑 NỘI DUNG GÓI 2: VIP SIÊU TỐC (CÀI TRỰC TIẾP TRÊN SAFARI KHÔNG CẦN APP) -->
+            <div id="content-g2" class="space-y-8 hidden">
+                <section class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-400/80 space-y-6 bg-gradient-to-br from-amber-500/10 via-ocean-950/80 to-transparent relative overflow-hidden">
+                    <div class="absolute -top-24 right-0 w-80 h-80 bg-amber-400/15 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4">
+                        <div>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-400/30 mb-1">
+                                👑 ĐỘC QUYỀN VIP - 30 GIÂY HOÀN TẤT
+                            </div>
+                            <h3 class="text-2xl font-display font-black text-white flex items-center gap-2">
+                                <span class="text-amber-400 text-3xl">🚀</span> Cài Đặt Trực Tiếp Qua Safari (Không Cần App)
+                            </h3>
+                            <p class="text-xs text-gray-300 mt-1">
+                                Không cần mua app Shadowrocket • Không cần bật VPN • Lên Gold vĩnh viễn
+                            </p>
+                        </div>
+                        <span class="text-xs px-3.5 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-400/40 font-mono shrink-0 self-start sm:self-auto font-bold">
+                            ✨ Siêu Đơn Giản
+                        </span>
+                    </div>
+
+                    <!-- Tải Hồ Sơ Cấu Hình VIP -->
+                    <div class="glass-card rounded-2xl p-5 sm:p-6 border-2 border-amber-400/60 shadow-neon-gold space-y-4 bg-gradient-to-r from-amber-500/15 to-transparent">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-3xl">📱</span>
+                                <div>
+                                    <h4 class="text-base sm:text-lg font-black text-white">Tải Hồ Sơ Cấu Hình VIP (.mobileconfig)</h4>
+                                    <span class="text-xs text-amber-300">Nhúng sẵn chứng chỉ HexDen Root CA & DoH Resolver</span>
+                                </div>
+                            </div>
+                            <button onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig')" class="text-xs bg-ocean-800 hover:bg-amber-400 hover:text-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-400/30 font-semibold flex items-center gap-1.5 transition self-start sm:self-auto">
+                                <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link Tải
+                            </button>
+                        </div>
+
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            Bấm nút bên dưới bằng trình duyệt <strong>Safari trên iPhone</strong> ➔ Chọn <strong>Cho phép (Allow)</strong> ➔ Làm theo 3 bước hướng dẫn cực nhanh bên dưới là Locket tự động lên Gold vĩnh viễn!
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <a href="https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig" class="btn-glow-gold text-black font-black py-4 px-5 rounded-2xl shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition text-center">
+                                <i data-feather="download" class="w-5 h-5 shrink-0"></i>
+                                <span>Bấm Để Tải Cấu Hình VIP Về iPhone</span>
+                            </a>
+                            <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="bg-ocean-800/90 hover:bg-ocean-700 text-amber-300 font-bold py-4 px-4 rounded-2xl border border-amber-400/40 flex items-center justify-center gap-2 text-sm transition text-center">
+                                <i data-feather="message-circle" class="w-5 h-5 shrink-0"></i>
+                                <span>Nhờ Văn Nguyên Cài Hộ Từ Xa (Miễn Phí)</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 3 Bước Cài Đặt Chi Tiết Bằng Thẻ Trực Quan -->
+                    <div class="space-y-4 pt-2">
+                        <h4 class="text-lg font-display font-black text-white flex items-center gap-2">
+                            <span>📋</span> 3 Bước Kích Hoạt Nhanh Trong 30 Giây:
+                        </h4>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- Bước 1 -->
+                            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-amber-400/30 space-y-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 font-display font-black flex items-center justify-center text-sm border border-amber-400/50">
+                                    1
+                                </div>
+                                <h5 class="font-bold text-white text-sm">Tải Hồ Sơ Cấu Hình</h5>
+                                <p class="text-xs text-gray-300 leading-relaxed">
+                                    Mở <strong>Safari</strong> trên iPhone, bấm nút vàng tải cấu hình ở trên ➔ Khi máy hỏi cho phép tải hồ sơ, bấm <strong>Cho phép (Allow)</strong> ➔ Sau đó bấm <strong>Đóng</strong>.
+                                </p>
+                            </div>
+
+                            <!-- Bước 2 -->
+                            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-amber-400/30 space-y-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 font-display font-black flex items-center justify-center text-sm border border-amber-400/50">
+                                    2
+                                </div>
+                                <h5 class="font-bold text-white text-sm">Cài Đặt Vào iPhone</h5>
+                                <p class="text-xs text-gray-300 leading-relaxed">
+                                    Mở app <strong>Cài đặt (Settings)</strong> trên iPhone ➔ Bấm vào dòng <strong>"Đã tải về hồ sơ"</strong> ở ngay trên đầu ➔ Bấm <strong>Cài đặt (Install)</strong> ở góc trên bên phải ➔ Nhập mật mã mở máy.
+                                </p>
+                            </div>
+
+                            <!-- Bước 3 -->
+                            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-amber-400/30 space-y-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 font-display font-black flex items-center justify-center text-sm border border-amber-400/50">
+                                    3
+                                </div>
+                                <h5 class="font-bold text-white text-sm">Bật Tin Cậy & Mở Locket</h5>
+                                <p class="text-xs text-gray-300 leading-relaxed">
+                                    Vào <em>Cài đặt ➔ Cài đặt chung ➔ Giới thiệu ➔ Cài đặt tin cậy chứng nhận</em> ➔ Bật công tắc xanh cho <strong>HexDen Root CA</strong> ➔ Mở Locket lên là thành Gold vĩnh viễn!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- KẾT THÚC NỘI DUNG GÓI 2 -->
+        </section>
+        <!-- KẾT THÚC KHU VỰC HƯỚNG DẪN TỔNG -->
+
         <!-- ❓ Câu hỏi thường gặp (FAQ) Accordion -->
         <section class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border border-cyan-500/25 space-y-4" data-aos="fade-up">
             <h3 class="text-xl font-display font-black text-white flex items-center gap-2">
@@ -909,6 +1220,77 @@
     <script>
         AOS.init({ once: true, duration: 600 });
         feather.replace();
+
+        // Payment & Package State
+        var currentSelectedPkg = 'g2';
+
+        function openPaymentModal(pkg) {
+            currentSelectedPkg = pkg;
+            var pkgNameEl = document.getElementById('payPkgName');
+            var pkgPriceEl = document.getElementById('payPkgPrice');
+            var qrImgEl = document.getElementById('qrImage');
+            var payContentEl = document.getElementById('payContent');
+            var modal = document.getElementById('paymentModal');
+
+            var randSuffix = Math.floor(1000 + Math.random() * 9000);
+            var amount = 49000;
+            var content = 'LOCKET G2 ' + randSuffix;
+            var pkgTitle = 'Gói VIP Siêu Tốc (Trực Tiếp)';
+
+            if (pkg === 'g1') {
+                amount = 29000;
+                content = 'LOCKET G1 ' + randSuffix;
+                pkgTitle = 'Gói Cơ Bản (Shadowrocket)';
+            }
+
+            pkgNameEl.textContent = pkgTitle;
+            pkgPriceEl.textContent = amount.toLocaleString('vi-VN') + ' VNĐ';
+            payContentEl.textContent = content;
+
+            var qrUrl = 'https://img.vietqr.io/image/MB-6012072005-compact2.png?amount=' + amount + '&addInfo=' + encodeURIComponent(content) + '&accountName=' + encodeURIComponent('TRAN VAN NGUYEN');
+            qrImgEl.src = qrUrl;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            feather.replace();
+        }
+
+        function closePaymentModal() {
+            var modal = document.getElementById('paymentModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function confirmPayment() {
+            closePaymentModal();
+            showToast('✅ Đã xác nhận thanh toán! Đang mở hướng dẫn cài đặt...');
+            switchTab(currentSelectedPkg);
+            var targetEl = document.getElementById('instructions-area');
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function switchTab(tab) {
+            currentSelectedPkg = tab;
+            var contentG1 = document.getElementById('content-g1');
+            var contentG2 = document.getElementById('content-g2');
+            var tabBtnG1 = document.getElementById('tab-btn-g1');
+            var tabBtnG2 = document.getElementById('tab-btn-g2');
+
+            if (tab === 'g1') {
+                contentG1.classList.remove('hidden');
+                contentG2.classList.add('hidden');
+                tabBtnG1.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-gradient-to-r from-cyan-glow to-blue-600 text-black shadow-lg shadow-cyan-500/30 flex items-center gap-2 justify-center';
+                tabBtnG2.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-ocean-900/60 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 justify-center';
+            } else {
+                contentG2.classList.remove('hidden');
+                contentG1.classList.add('hidden');
+                tabBtnG2.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 btn-glow-gold text-black shadow-lg shadow-amber-500/30 flex items-center gap-2 justify-center';
+                tabBtnG1.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-ocean-900/60 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 justify-center';
+            }
+            feather.replace();
+        }
 
         // Copy to clipboard with toast notification
         function copyToClipboard(text) {
