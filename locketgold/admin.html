@@ -466,7 +466,7 @@
                             <span>Locket Gold</span>
                             <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">ADMIN</span>
                         </div>
-                        <div class="text-[11px] text-slate-400">Trần Văn Nguyên</div>
+                        <div id="adminProfileName" class="text-[11px] text-slate-400">Trần Văn Nguyên</div>
                     </div>
                 </div>
 
@@ -1232,7 +1232,23 @@
         // 1. Session & Auth Gate
         function checkAdminSession() {
             var isAuth = sessionStorage.getItem('locket_admin_authenticated');
-            if (isAuth === 'true') {
+            var localAdmin = false;
+
+            // Kiểm tra nếu tài khoản đang đăng nhập ở tab index.html có quyền Admin
+            try {
+                var appStateStr = localStorage.getItem('locket_gold_app_state');
+                if (appStateStr) {
+                    var parsed = JSON.parse(appStateStr);
+                    if (parsed && parsed.isLoggedIn && parsed.user && (parsed.user.role === 'admin' || (typeof checkIsAdmin === "function" && checkIsAdmin(parsed.user)))) {
+                        localAdmin = true;
+                        sessionStorage.setItem('locket_admin_authenticated', 'true');
+                        sessionStorage.setItem('locket_admin_email', parsed.user.email);
+                        sessionStorage.setItem('locket_admin_name', parsed.user.name || parsed.user.email);
+                    }
+                }
+            } catch(e) {}
+
+            if (isAuth === 'true' || localAdmin) {
                 unlockAdminPortal();
             } else {
                 document.getElementById('adminLockScreen').classList.remove('hidden');
@@ -1245,26 +1261,55 @@
             var pinInput = document.getElementById('adminPinInput');
             var pin = pinInput.value.trim();
 
+            // 1. Kiểm tra Master PINs
             if (VALID_PINS.includes(pin)) {
                 sessionStorage.setItem('locket_admin_authenticated', 'true');
                 showAdminToast('🎉 Mở khóa quyền Quản Trị thành công!');
                 unlockAdminPortal();
-            } else {
-                showAdminToast('⚠️ Mã PIN không đúng. Vui lòng thử 888888 hoặc admin123!');
-                pinInput.focus();
+                return;
             }
+
+            // 2. Cho phép đăng nhập bằng mật khẩu của tài khoản Admin hiện có
+            try {
+                var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+                var matchedAdmin = Object.values(localUsers).find(function(u) {
+                    return ((typeof checkIsAdmin === "function" && checkIsAdmin(u)) || u.role === 'admin') && u.password === pin;
+                });
+                if (matchedAdmin) {
+                    sessionStorage.setItem('locket_admin_authenticated', 'true');
+                    sessionStorage.setItem('locket_admin_email', matchedAdmin.email);
+                    sessionStorage.setItem('locket_admin_name', matchedAdmin.name || matchedAdmin.email);
+                    showAdminToast('🎉 Mở khóa quyền Quản Trị thành công!');
+                    unlockAdminPortal();
+                    return;
+                }
+            } catch(err) {}
+
+            showAdminToast('⚠️ Mã PIN hoặc mật khẩu Admin không đúng. Mặc định: 888888 hoặc admin123!');
+            pinInput.focus();
         }
 
         function unlockAdminPortal() {
             adminState.authenticated = true;
             document.getElementById('adminLockScreen').classList.add('hidden');
             document.getElementById('adminMainPortal').classList.remove('hidden');
+
+            var adminName = sessionStorage.getItem('locket_admin_name') || 'Trần Văn Nguyên';
+            var adminEmail = sessionStorage.getItem('locket_admin_email') || '';
+            var profileEl = document.getElementById('adminProfileName');
+            if (profileEl) {
+                profileEl.textContent = adminName + (adminEmail ? ' (' + adminEmail + ')' : '');
+                profileEl.title = adminEmail;
+            }
+
             feather.replace();
             loadAllAdminData();
         }
 
         function lockAdminSession() {
             sessionStorage.removeItem('locket_admin_authenticated');
+            sessionStorage.removeItem('locket_admin_email');
+            sessionStorage.removeItem('locket_admin_name');
             location.reload();
         }
 
@@ -1621,10 +1666,11 @@
                         <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                             <th class="py-3 px-3">Khách Hàng (Email)</th>
                             <th class="py-3 px-3">Mã Giới Thiệu</th>
+                            <th class="py-3 px-3">Vai Trò</th>
                             <th class="py-3 px-3">Số Dư Xu</th>
                             <th class="py-3 px-3">Gói Sở Hữu</th>
                             <th class="py-3 px-3">Ngày Tham Gia</th>
-                            <th class="py-3 px-3 text-right">Thao Tác Nhanh</th>
+                            <th class="py-3 px-3 text-right">Phân Quyền & Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-800/80 font-sans">
@@ -1633,18 +1679,46 @@
             filtered.forEach(function(u) {
                 var pkgsCount = (u.packages || []).length;
                 var dName = u.name || u.email.split('@')[0];
+                var isUserAdmin = (typeof checkIsAdmin === "function" && checkIsAdmin(u)) || u.role === 'admin';
+                var isRootAdmin = (u.email || '').toLowerCase() === 'tranvannguyen991@gmail.com';
+
+                var roleBadge = isUserAdmin 
+                    ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400/20 text-amber-300 border border-amber-400/40 shadow-sm">👑 Admin</span>`
+                    : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700/60">👤 Khách Hàng</span>`;
+
+                var roleActionBtn = '';
+                if (isUserAdmin) {
+                    if (!isRootAdmin) {
+                        roleActionBtn = `
+                            <button onclick="toggleUserRoleAction('${u.email}', 'user')" class="bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold transition" title="Hạ về tài khoản Khách Hàng thông thường">
+                                Hạ User
+                            </button>
+                        `;
+                    }
+                } else {
+                    roleActionBtn = `
+                        <button onclick="toggleUserRoleAction('${u.email}', 'admin')" class="bg-purple-600/20 hover:bg-purple-600/35 text-purple-300 border border-purple-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold transition" title="Cấp quyền Admin cho tài khoản này">
+                            👑 Cấp Admin
+                        </button>
+                    `;
+                }
+
                 html += `
                     <tr class="hover:bg-slate-800/40 transition">
                         <td class="py-3 px-3 font-semibold text-white flex items-center gap-2.5">
-                            <span class="w-8 h-8 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center font-black text-amber-400 text-xs">
+                            <span class="w-8 h-8 rounded-full ${isUserAdmin ? 'bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-500/30' : 'bg-amber-400/10 border border-amber-400/30 text-amber-400'} flex items-center justify-center font-black text-xs shrink-0">
                                 ${(dName || 'U').charAt(0).toUpperCase()}
                             </span>
-                            <div>
-                                <div class="text-white font-bold text-xs">${dName}</div>
-                                <div class="text-[11px] text-slate-400 font-mono">${u.email}</div>
+                            <div class="min-w-0">
+                                <div class="text-white font-bold text-xs truncate flex items-center gap-1.5">
+                                    <span>${dName}</span>
+                                    ${isUserAdmin ? '<span class="text-amber-400 text-xs">👑</span>' : ''}
+                                </div>
+                                <div class="text-[11px] text-slate-400 font-mono truncate">${u.email}</div>
                             </div>
                         </td>
                         <td class="py-3 px-3 font-mono font-bold text-slate-400">${u.code || '---'}</td>
+                        <td class="py-3 px-3">${roleBadge}</td>
                         <td class="py-3 px-3 font-mono font-black text-amber-400 text-sm">${u.balance || 0} Xu</td>
                         <td class="py-3 px-3">
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${pkgsCount > 0 ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-800 text-slate-400'}">
@@ -1652,7 +1726,8 @@
                             </span>
                         </td>
                         <td class="py-3 px-3 text-slate-400 text-[11px]">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('vi-VN') : 'Mới'}</td>
-                        <td class="py-3 px-3 text-right space-x-1.5">
+                        <td class="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
+                            ${roleActionBtn}
                             <button onclick="openManualTopupModal('${u.email}')" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 px-2.5 py-1 rounded-lg text-[11px] font-bold transition">
                                 + Nạp Xu
                             </button>
@@ -1666,6 +1741,26 @@
 
             html += `</tbody></table>`;
             container.innerHTML = html;
+        }
+
+        // Cấp / Hạ quyền Quản Trị Viên (Admin)
+        async function toggleUserRoleAction(email, newRole) {
+            var roleLabel = newRole === 'admin' ? 'Quản Trị Viên (Admin)' : 'Khách Hàng (User)';
+            var confirmMsg = newRole === 'admin' 
+                ? `Xác nhận CẤP QUYỀN ADMIN cho tài khoản:\n${email}?\n\nTài khoản này sẽ có quyền truy cập toàn bộ trang Quản Trị Admin!`
+                : `Xác nhận HẠ QUYỀN tài khoản ${email} về Khách Hàng thông thường?`;
+            
+            if (!confirm(confirmMsg)) return;
+
+            if (typeof dbAdminToggleRole === "function") {
+                var res = await dbAdminToggleRole(email, newRole);
+                if (res.success) {
+                    showAdminToast(`🎉 Đã cập nhật quyền thành công: ${email} ➔ ${roleLabel}!`);
+                    loadAllAdminData();
+                } else {
+                    showAdminToast('⚠️ Lỗi: ' + (res.error || 'Không thể đổi quyền'));
+                }
+            }
         }
 
         // 9. Actions: Approve & Reject Recharges

@@ -58,6 +58,43 @@ function initFirebase() {
 // 1. TÀI KHOẢN & ĐĂNG NHẬP / ĐĂNG KÝ / QUÊN MẬT KHẨU (USERS & AUTH)
 // =========================================================================
 
+// Danh sách Email mặc định có đặc quyền Quản Trị Viên (Admin)
+var DEFAULT_ADMIN_EMAILS = [
+    'tranvannguyen991@gmail.com',
+    'tranvannguyen992z@gmail.com',
+    'admin@locketgold.com',
+    'admin@gmail.com'
+];
+
+// Hàm kiểm tra tài khoản có quyền Quản Trị Viên hay không
+function checkIsAdmin(userOrEmail) {
+    if (!userOrEmail) return false;
+    var email = '';
+    var role = '';
+    if (typeof userOrEmail === 'string') {
+        email = userOrEmail.trim().toLowerCase();
+    } else if (typeof userOrEmail === 'object') {
+        email = (userOrEmail.email || '').trim().toLowerCase();
+        role = (userOrEmail.role || '').toLowerCase();
+    }
+    if (role === 'admin') return true;
+    if (DEFAULT_ADMIN_EMAILS.some(function(adm) { return adm.toLowerCase() === email; })) {
+        return true;
+    }
+    try {
+        var custom = JSON.parse(localStorage.getItem('locket_custom_admin_emails') || '[]');
+        if (Array.isArray(custom) && custom.map(function(e) { return (e || '').toLowerCase(); }).includes(email)) {
+            return true;
+        }
+    } catch(e) {}
+    return false;
+}
+
+if (typeof window !== 'undefined') {
+    window.checkIsAdmin = checkIsAdmin;
+    window.DEFAULT_ADMIN_EMAILS = DEFAULT_ADMIN_EMAILS;
+}
+
 // Tiện ích timeout để không bao giờ bị treo quá 2 giây
 function runWithTimeout(promise, ms) {
     return new Promise(function(resolve, reject) {
@@ -76,10 +113,23 @@ function runWithTimeout(promise, ms) {
 
 // Đăng nhập tài khoản
 async function dbLoginUser(email, password) {
+    email = (email || '').trim().toLowerCase();
+
     // 1. Kiểm tra Local Storage trước tiên (Siêu tốc 0.001s)
     var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-    var localUser = localUsers[email];
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === email;
+    });
+    var localUser = matchedKey ? localUsers[matchedKey] : null;
+
     if (localUser && localUser.password && localUser.password === password) {
+        if (checkIsAdmin(localUser) || checkIsAdmin(email)) {
+            localUser.role = 'admin';
+        } else {
+            localUser.role = localUser.role || 'user';
+        }
+        localUsers[matchedKey] = localUser;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
         return { success: true, user: localUser };
     }
 
@@ -88,11 +138,13 @@ async function dbLoginUser(email, password) {
         try {
             var userCredential = await runWithTimeout(firebaseAuth.signInWithEmailAndPassword(email, password), 2500);
             var uid = userCredential.user.uid;
+            var isAdminRole = checkIsAdmin(email);
             
             var defaultData = {
                 uid: uid,
                 name: userCredential.user.displayName || email.split('@')[0],
                 email: email,
+                role: isAdminRole ? 'admin' : 'user',
                 balance: 0,
                 code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
                 packages: [],
@@ -109,6 +161,11 @@ async function dbLoginUser(email, password) {
                 firestoreDB.collection('users').doc(uid).get().then(function(doc) {
                     if (doc.exists) {
                         var cloudData = doc.data();
+                        if (checkIsAdmin(cloudData) || checkIsAdmin(email)) {
+                            cloudData.role = 'admin';
+                        } else {
+                            cloudData.role = cloudData.role || 'user';
+                        }
                         localUsers[email] = cloudData;
                         localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
                     } else {
@@ -126,6 +183,13 @@ async function dbLoginUser(email, password) {
                     if (localUser.password && localUser.password !== password) {
                         return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
                     }
+                    if (checkIsAdmin(localUser) || checkIsAdmin(email)) {
+                        localUser.role = 'admin';
+                    } else {
+                        localUser.role = localUser.role || 'user';
+                    }
+                    localUsers[matchedKey] = localUser;
+                    localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
                     return { success: true, user: localUser };
                 }
                 return { success: false, error: 'Tài khoản chưa tồn tại hoặc sai mật khẩu. Vui lòng bấm Đăng ký tài khoản mới!' };
@@ -151,6 +215,13 @@ async function dbLoginUser(email, password) {
         if (localUser.password && localUser.password !== password) {
             return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
         }
+        if (checkIsAdmin(localUser) || checkIsAdmin(email)) {
+            localUser.role = 'admin';
+        } else {
+            localUser.role = localUser.role || 'user';
+        }
+        localUsers[matchedKey] = localUser;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
         return { success: true, user: localUser };
     }
 
@@ -159,18 +230,25 @@ async function dbLoginUser(email, password) {
 
 // Đăng ký tài khoản mới (Siêu tốc & Chống treo tuyệt đối)
 async function dbRegisterUser(name, email, password) {
+    email = (email || '').trim().toLowerCase();
+
     // 1. Kiểm tra tồn tại trong Local Storage (0.001s)
     var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-    if (localUsers[email]) {
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === email;
+    });
+    if (matchedKey) {
         return { success: false, error: 'Email này đã được đăng ký! Vui lòng chuyển sang tab Đăng nhập.' };
     }
 
     var uid = 'usr_' + Date.now();
+    var userRole = checkIsAdmin(email) ? 'admin' : 'user';
     var newUserData = {
         uid: uid,
         name: name || email.split('@')[0],
         email: email,
         password: password,
+        role: userRole,
         balance: 0,
         code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
         packages: [],
@@ -691,7 +769,13 @@ async function dbAdminGetAllUsers() {
         var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
         Object.values(localUsers).forEach(function(u) {
             if (u && u.email) {
-                userMap[u.email.toLowerCase()] = u;
+                var k = u.email.toLowerCase();
+                if (checkIsAdmin(u) || checkIsAdmin(k)) {
+                    u.role = 'admin';
+                } else {
+                    u.role = u.role || 'user';
+                }
+                userMap[k] = u;
             }
         });
     } catch(e) {
@@ -706,7 +790,13 @@ async function dbAdminGetAllUsers() {
                 var d = doc.data();
                 if (d && d.email) {
                     var k = d.email.toLowerCase();
-                    userMap[k] = Object.assign(userMap[k] || {}, d);
+                    var merged = Object.assign(userMap[k] || {}, d);
+                    if (checkIsAdmin(merged) || checkIsAdmin(k)) {
+                        merged.role = 'admin';
+                    } else {
+                        merged.role = merged.role || 'user';
+                    }
+                    userMap[k] = merged;
                 }
             });
         } catch(e) {
@@ -715,6 +805,58 @@ async function dbAdminGetAllUsers() {
     }
 
     return Object.values(userMap);
+}
+
+// Cấp hoặc hạ quyền Quản Trị Viên (Admin / User)
+async function dbAdminToggleRole(email, newRole) {
+    email = (email || '').trim().toLowerCase();
+    newRole = newRole === 'admin' ? 'admin' : 'user';
+
+    // 1. Cập nhật danh sách locket_custom_admin_emails
+    try {
+        var customAdmins = JSON.parse(localStorage.getItem('locket_custom_admin_emails') || '[]');
+        if (newRole === 'admin') {
+            if (!customAdmins.some(function(e) { return (e || '').toLowerCase() === email; })) {
+                customAdmins.push(email);
+            }
+        } else {
+            customAdmins = customAdmins.filter(function(e) { return (e || '').toLowerCase() !== email; });
+        }
+        localStorage.setItem('locket_custom_admin_emails', JSON.stringify(customAdmins));
+    } catch(e) {}
+
+    // 2. Cập nhật trong Local Storage users
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === email;
+    });
+    if (matchedKey) {
+        localUsers[matchedKey].role = newRole;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+    }
+
+    // 3. Cập nhật appState nếu tài khoản này đang mở trên phiên hiện tại
+    try {
+        var appState = JSON.parse(localStorage.getItem('locket_gold_app_state') || '{}');
+        if (appState && appState.user && (appState.user.email || '').toLowerCase() === email) {
+            appState.user.role = newRole;
+            localStorage.setItem('locket_gold_app_state', JSON.stringify(appState));
+        }
+    } catch(e) {}
+
+    // 4. Cập nhật trên Cloud Firestore nếu có kết nối
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+            if (!userSnap.empty) {
+                await userSnap.docs[0].ref.update({ role: newRole });
+            }
+        } catch(e) {
+            console.warn("Firestore dbAdminToggleRole warn:", e);
+        }
+    }
+
+    return { success: true, role: newRole };
 }
 
 // Lưu cấu hình Firebase tùy chỉnh người dùng nhập vào

@@ -200,13 +200,27 @@
 
                                 <!-- Auth Buttons -->
                 <div class="flex items-center gap-3">
-                    <button onclick="openAuthModal('login')" class="text-sm font-bold text-slate-700 hover:text-slate-900 px-3 py-2 transition">
-                        Đăng nhập
-                    </button>
-                    <button onclick="openAuthModal('register')" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm px-4 sm:px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
-                        <span>Đăng ký</span>
-                        <i data-feather="user-plus" class="w-4 h-4"></i>
-                    </button>
+                    <div id="publicAdminBtnBox" class="hidden">
+                        <a href="admin.html" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-3.5 py-2 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
+                            <span>👑</span>
+                            <span>Trang Admin</span>
+                        </a>
+                    </div>
+                    <div id="publicUserBtnBox" class="hidden">
+                        <button onclick="switchView('dashboard')" class="bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold text-xs px-3.5 py-2 rounded-full flex items-center gap-1.5 transition">
+                            <i data-feather="user" class="w-3.5 h-3.5"></i>
+                            <span id="publicUserNameDisplay">Tài khoản</span>
+                        </button>
+                    </div>
+                    <div id="publicAuthBtns" class="flex items-center gap-2">
+                        <button onclick="openAuthModal('login')" class="text-sm font-bold text-slate-700 hover:text-slate-900 px-3 py-2 transition">
+                            Đăng nhập
+                        </button>
+                        <button onclick="openAuthModal('register')" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm px-4 sm:px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
+                            <span>Đăng ký</span>
+                            <i data-feather="user-plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -532,18 +546,29 @@
             <div class="pt-4 border-t border-slate-100 space-y-2">
                 <div class="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 border border-slate-100">
                     <!-- Avatar "T" -->
-                    <div class="w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
+                    <div id="userAvatarBadge" class="w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
                         T
                     </div>
                     <div class="overflow-hidden leading-tight flex-1">
-                        <div id="userEmailDisplay" class="text-xs font-bold text-slate-900 truncate" title="tranvannguyen991@gmail.com">
-                            tranvannguyen991@gmail.com
+                        <div class="flex items-center gap-1.5">
+                            <div id="userEmailDisplay" class="text-xs font-bold text-slate-900 truncate" title="tranvannguyen991@gmail.com">
+                                tranvannguyen991@gmail.com
+                            </div>
+                            <span id="userRoleBadge" class="hidden text-[9px] px-1.5 py-0.5 rounded-full bg-amber-400/20 text-amber-800 font-black border border-amber-400/40 shrink-0">👑 Admin</span>
                         </div>
-                        <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                        <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1 mt-0.5">
                             <span>ID:</span>
                             <span id="userCodeDisplay" class="font-bold text-slate-600">gTSxCJPL</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Admin Quick Link Button (Tự động hiển thị khi tài khoản là Admin) -->
+                <div id="adminPortalLinkBox" class="hidden">
+                    <a href="admin.html" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md shadow-amber-400/25 transition active:scale-98">
+                        <span>👑</span>
+                        <span>Đến Trang Quản Trị Admin</span>
+                    </a>
                 </div>
 
                 <!-- Action row: Logout or Switch to Public -->
@@ -2011,6 +2036,50 @@
             if (userEmailDisplay) userEmailDisplay.textContent = appState.user.email;
             if (userCodeDisplay) userCodeDisplay.textContent = appState.user.code;
 
+            // Kiểm tra quyền Admin & Cập nhật giao diện
+            var isAdmin = (typeof checkIsAdmin === "function" && checkIsAdmin(appState.user)) || (appState.user && appState.user.role === 'admin');
+            var userRoleBadge = document.getElementById('userRoleBadge');
+            var adminPortalLinkBox = document.getElementById('adminPortalLinkBox');
+            var userAvatarBadge = document.getElementById('userAvatarBadge');
+            var publicAdminBtnBox = document.getElementById('publicAdminBtnBox');
+            var publicUserBtnBox = document.getElementById('publicUserBtnBox');
+            var publicAuthBtns = document.getElementById('publicAuthBtns');
+            var publicUserNameDisplay = document.getElementById('publicUserNameDisplay');
+
+            if (userRoleBadge) {
+                if (isAdmin) userRoleBadge.classList.remove('hidden');
+                else userRoleBadge.classList.add('hidden');
+            }
+            if (adminPortalLinkBox) {
+                if (isAdmin) adminPortalLinkBox.classList.remove('hidden');
+                else adminPortalLinkBox.classList.add('hidden');
+            }
+            if (userAvatarBadge) {
+                var firstLetter = (appState.user.name || appState.user.email || 'U').charAt(0).toUpperCase();
+                userAvatarBadge.textContent = firstLetter;
+                if (isAdmin) {
+                    userAvatarBadge.className = "w-9 h-9 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-amber-400/20 shrink-0";
+                } else {
+                    userAvatarBadge.className = "w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0";
+                }
+            }
+
+            if (appState.isLoggedIn) {
+                if (publicAuthBtns) publicAuthBtns.classList.add('hidden');
+                if (publicUserBtnBox) {
+                    publicUserBtnBox.classList.remove('hidden');
+                    if (publicUserNameDisplay) publicUserNameDisplay.textContent = appState.user.name || (appState.user.email ? appState.user.email.split('@')[0] : 'Tài khoản');
+                }
+                if (publicAdminBtnBox) {
+                    if (isAdmin) publicAdminBtnBox.classList.remove('hidden');
+                    else publicAdminBtnBox.classList.add('hidden');
+                }
+            } else {
+                if (publicAuthBtns) publicAuthBtns.classList.remove('hidden');
+                if (publicUserBtnBox) publicUserBtnBox.classList.add('hidden');
+                if (publicAdminBtnBox) publicAdminBtnBox.classList.add('hidden');
+            }
+
             renderMyPackages();
             renderHistory();
             feather.replace();
@@ -2191,23 +2260,51 @@
             }
 
             if (res.success) {
+                var user = res.user;
+                var isAdmin = (typeof checkIsAdmin === "function" && checkIsAdmin(user)) || (user && user.role === 'admin');
+                if (isAdmin) {
+                    user.role = 'admin';
+                    sessionStorage.setItem('locket_admin_authenticated', 'true');
+                    sessionStorage.setItem('locket_admin_email', user.email);
+                    sessionStorage.setItem('locket_admin_name', user.name || user.email);
+                }
+
                 if (alertBox) {
-                    alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black flex items-center gap-2 shadow-sm";
-                    alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Đăng nhập thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (res.user.name || email) + '</div></div>';
+                    if (isAdmin) {
+                        alertBox.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-black flex items-center gap-2 shadow-sm";
+                        alertBox.innerHTML = '<span class="text-base leading-none">👑</span> <div><div class="font-black text-amber-950">Đăng nhập Quản Trị Viên!</div><div class="text-[11px] text-amber-800 font-medium mt-0.5">Chào mừng ' + (user.name || email) + ' - Đang chuyển hướng sang trang Admin...</div></div>';
+                    } else {
+                        alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black flex items-center gap-2 shadow-sm";
+                        alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Đăng nhập thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (user.name || email) + '</div></div>';
+                    }
                     alertBox.classList.remove('hidden');
                 }
                 if (btn) {
-                    btn.className = "w-full bg-emerald-500 text-white font-extrabold text-sm py-3 rounded-full transition flex items-center justify-center gap-2";
-                    btn.innerHTML = '<span>✓ Đã Đăng Nhập Thành Công!</span>';
+                    if (isAdmin) {
+                        btn.className = "w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm py-3 rounded-full transition flex items-center justify-center gap-2 shadow-md shadow-amber-400/30";
+                        btn.innerHTML = '<span>👑 Đang Chuyển Hướng Sang Admin...</span>';
+                    } else {
+                        btn.className = "w-full bg-emerald-500 text-white font-extrabold text-sm py-3 rounded-full transition flex items-center justify-center gap-2";
+                        btn.innerHTML = '<span>✓ Đã Đăng Nhập Thành Công!</span>';
+                    }
                 }
 
                 appState.isLoggedIn = true;
-                appState.user = Object.assign(appState.user, res.user);
+                appState.user = Object.assign(appState.user, user);
                 saveState();
-                showToast('🎉 Đăng nhập thành công! Chào mừng ' + (res.user.name || email));
 
-                if (isUsingCloudDB && res.user.uid && typeof dbSubscribeUser === "function") {
-                    dbSubscribeUser(res.user.uid, function(updatedData) {
+                if (isAdmin) {
+                    showToast('👑 Chào mừng Quản Trị Viên! Đang chuyển hướng sang trang Admin...');
+                    setTimeout(function() {
+                        window.location.href = 'admin.html';
+                    }, 800);
+                    return;
+                }
+
+                showToast('🎉 Đăng nhập thành công! Chào mừng ' + (user.name || email));
+
+                if (isUsingCloudDB && user.uid && typeof dbSubscribeUser === "function") {
+                    dbSubscribeUser(user.uid, function(updatedData) {
                         if (updatedData) {
                             appState.user = Object.assign(appState.user, updatedData);
                             saveState();
@@ -2276,19 +2373,46 @@
             }
 
             function handleSuccess(user) {
+                var isAdmin = (typeof checkIsAdmin === "function" && checkIsAdmin(user)) || (user && user.role === 'admin');
+                if (isAdmin) {
+                    user.role = 'admin';
+                    sessionStorage.setItem('locket_admin_authenticated', 'true');
+                    sessionStorage.setItem('locket_admin_email', user.email);
+                    sessionStorage.setItem('locket_admin_name', user.name || user.email);
+                }
+
                 if (alertBox) {
-                    alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black flex items-center gap-2 shadow-sm";
-                    alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Tạo tài khoản thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (user.name || email) + ' đến với Locket Gold VIP!</div></div>';
+                    if (isAdmin) {
+                        alertBox.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-black flex items-center gap-2 shadow-sm";
+                        alertBox.innerHTML = '<span class="text-base leading-none">👑</span> <div><div class="font-black text-amber-950">Tạo tài khoản Quản Trị Viên!</div><div class="text-[11px] text-amber-800 font-medium mt-0.5">Chào mừng Sếp ' + (user.name || email) + ' - Đang chuyển hướng sang trang Admin...</div></div>';
+                    } else {
+                        alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black flex items-center gap-2 shadow-sm";
+                        alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Tạo tài khoản thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (user.name || email) + ' đến với Locket Gold VIP!</div></div>';
+                    }
                     alertBox.classList.remove('hidden');
                 }
                 if (btn) {
-                    btn.className = "w-full bg-emerald-500 text-white font-extrabold text-sm py-3 rounded-full transition flex items-center justify-center gap-2";
-                    btn.innerHTML = '<span>✓ Đã Tạo Tài Khoản Thành Công!</span>';
+                    if (isAdmin) {
+                        btn.className = "w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm py-3 rounded-full transition flex items-center justify-center gap-2 shadow-md shadow-amber-400/30";
+                        btn.innerHTML = '<span>👑 Đang Chuyển Hướng Sang Admin...</span>';
+                    } else {
+                        btn.className = "w-full bg-emerald-500 text-white font-extrabold text-sm py-3 rounded-full transition flex items-center justify-center gap-2";
+                        btn.innerHTML = '<span>✓ Đã Tạo Tài Khoản Thành Công!</span>';
+                    }
                 }
 
                 appState.isLoggedIn = true;
                 appState.user = Object.assign(appState.user, user);
                 saveState();
+
+                if (isAdmin) {
+                    showToast('👑 Chào mừng Quản Trị Viên! Đang chuyển hướng sang trang Admin...');
+                    setTimeout(function() {
+                        window.location.href = 'admin.html';
+                    }, 800);
+                    return;
+                }
+
                 showToast('🎉 Đăng ký thành công! Chào mừng ' + (user.name || email));
 
                 if (isUsingCloudDB && user.uid && typeof dbSubscribeUser === "function") {
@@ -2323,6 +2447,7 @@
                         name: name || email.split('@')[0],
                         email: email,
                         password: pass,
+                        role: checkIsAdmin(email) ? 'admin' : 'user',
                         balance: 0,
                         code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
                         packages: [],
@@ -2406,6 +2531,10 @@
 
         function logout() {
             appState.isLoggedIn = false;
+            appState.user = { balance: 0, packages: [], history: [] };
+            sessionStorage.removeItem('locket_admin_authenticated');
+            sessionStorage.removeItem('locket_admin_email');
+            sessionStorage.removeItem('locket_admin_name');
             saveState();
             showToast('Đã đăng xuất tài khoản.');
         }
