@@ -1,1381 +1,1498 @@
 <!DOCTYPE html>
-<html lang="vi" class="scroll-smooth">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Locket Gold VIP - Nâng Locket Gold Bằng Shadowrocket | HexDen</title>
-    <meta name="description" content="Hướng dẫn kích hoạt Locket Gold VIP vĩnh viễn trên iPhone bằng Shadowrocket. Kích hoạt video 60s, ảnh 2K HD, không quảng cáo và hỗ trợ độc quyền bởi Văn Nguyên.">
-    <meta name="theme-color" content="#020817">
-    <link rel="icon" type="image/png" href="./assets/banner.png"/>
+    <title>Bảng Giá Locket Gold - Mua Gói Locket Gold Phù Hợp Với Bạn</title>
+    <meta name="description" content="Mua và mở khóa tính năng Locket Gold nhanh chóng, bảo mật, tiện lợi cho iOS và Android. Hỗ trợ kích hoạt trực tiếp không cần đăng nhập iCloud.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💛</text></svg>">
     
-    <!-- Google Fonts: Outfit (Display) & Plus Jakarta Sans (Body) -->
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        cyan: {
-                            glow: '#00F0FF',
-                            deep: '#0284C7',
-                            neon: '#38BDF8',
-                        },
-                        gold: {
-                            DEFAULT: '#FFD700',
-                            glow: '#FBBF24',
-                            deep: '#D97706',
-                        },
-                        ocean: {
-                            950: '#020817',
-                            900: '#04112c',
-                            800: '#0a1c44',
-                            700: '#112966',
-                            600: '#1d3e8a',
+                        locket: {
+                            yellow: '#facc15',
+                            hover: '#eab308',
+                            light: '#fef9c3',
+                            cardBg: '#ffffff',
+                            slate: '#0f172a',
+                            muted: '#64748b'
                         }
                     },
                     boxShadow: {
-                        'neon-cyan': '0 0 25px rgba(0, 240, 255, 0.45)',
-                        'neon-gold': '0 0 25px rgba(251, 191, 36, 0.45)',
-                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.45)',
+                        'soft-card': '0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.02)',
+                        'hover-card': '0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 8px 16px -4px rgba(0, 0, 0, 0.03)',
+                        'yellow-btn': '0 4px 14px 0 rgba(250, 204, 21, 0.39)',
                     }
                 }
             }
         }
     </script>
-    
-    <!-- Feather Icons & AOS Animations -->
+
+    <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <style>
-        /* Cyber Ocean Aesthetic matching banner.png */
         body {
-            background-color: #020817;
-            color: #F3F4F6;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background-color: #fbfbfe;
+            color: #0f172a;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .glass-panel {
-            background: rgba(4, 17, 44, 0.72);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(0, 240, 255, 0.22);
-        }
-
-        .glass-card {
-            background: rgba(10, 28, 68, 0.55);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(0, 240, 255, 0.12);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card:hover {
-            border-color: rgba(0, 240, 255, 0.45);
-            box-shadow: 0 0 24px rgba(0, 240, 255, 0.22);
-            transform: translateY(-2px);
-        }
-
-        /* 3D Gold Glow Text */
-        .text-gold-3d {
-            color: #FFD700;
-            text-shadow: 0 0 12px rgba(255, 215, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.8);
-        }
-
-        /* Neon Buttons */
-        .btn-glow-cyan {
-            background: linear-gradient(135deg, #00F0FF 0%, #0284C7 100%);
-            box-shadow: 0 0 22px rgba(0, 240, 255, 0.45);
-            transition: all 0.25s ease;
-        }
-        .btn-glow-cyan:hover {
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.8);
-            transform: translateY(-2px);
-        }
-
-        .btn-glow-gold {
-            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
-            box-shadow: 0 0 22px rgba(245, 158, 11, 0.45);
-            transition: all 0.25s ease;
-        }
-        .btn-glow-gold:hover {
-            box-shadow: 0 0 35px rgba(245, 158, 11, 0.8);
-            transform: translateY(-2px);
-        }
-
-        .btn-glow-emerald {
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-            box-shadow: 0 0 22px rgba(16, 185, 129, 0.4);
-            transition: all 0.25s ease;
-        }
-        .btn-glow-emerald:hover {
-            box-shadow: 0 0 35px rgba(16, 185, 129, 0.7);
-            transform: translateY(-2px);
-        }
-
-        /* Subtle Floating Wave Animation */
-        @keyframes waveFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-7px) rotate(0.4deg); }
-        }
-        .animate-float {
-            animation: waveFloat 6s ease-in-out infinite;
-        }
-
-        /* Floating Cyber Bubbles Background */
-        .bubble-container {
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: -10;
-        }
-        .bubble {
+        /* Ambient background glow */
+        .ambient-glow {
             position: absolute;
-            bottom: -80px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(0, 240, 255, 0.35), rgba(0, 82, 255, 0.1) 70%, transparent 100%);
-            box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.4), 0 0 15px rgba(0, 240, 255, 0.25);
-            animation: rise 14s infinite ease-in;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1400px;
+            height: 480px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(254, 240, 138, 0.35) 0%, rgba(238, 242, 255, 0.5) 45%, rgba(251, 251, 254, 0) 75%);
+            pointer-events-none;
+            z-index: 0;
         }
-        @keyframes rise {
-            0% {
-                transform: translateY(0) scale(0.6);
-                opacity: 0;
-            }
-            15% { opacity: 0.8; }
-            85% { opacity: 0.8; }
-            100% {
-                transform: translateY(-120vh) scale(1.1);
-                opacity: 0;
-            }
-        }
-        .bubble:nth-child(1) { left: 8%; width: 45px; height: 45px; animation-duration: 12s; animation-delay: 0s; }
-        .bubble:nth-child(2) { left: 22%; width: 25px; height: 25px; animation-duration: 16s; animation-delay: 2s; }
-        .bubble:nth-child(3) { left: 40%; width: 65px; height: 65px; animation-duration: 18s; animation-delay: 4s; }
-        .bubble:nth-child(4) { left: 60%; width: 35px; height: 35px; animation-duration: 13s; animation-delay: 1s; }
-        .bubble:nth-child(5) { left: 78%; width: 50px; height: 50px; animation-duration: 15s; animation-delay: 3s; }
-        .bubble:nth-child(6) { left: 92%; width: 30px; height: 30px; animation-duration: 14s; animation-delay: 5s; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020817; }
-        ::-webkit-scrollbar-thumb { background: #0a1c44; border-radius: 4px; border: 1px solid rgba(0, 240, 255, 0.2); }
-        ::-webkit-scrollbar-thumb:hover { background: #0284C7; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Subtle pulse for popular badge */
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .popular-badge {
+            animation: subtlePulse 3s infinite ease-in-out;
+        }
     </style>
 </head>
-<body class="min-h-screen overflow-x-hidden selection:bg-cyan-500 selection:text-black">
+<body class="min-h-screen flex flex-col relative selection:bg-yellow-200 selection:text-yellow-900">
 
-    <!-- Atmospheric Cyber Ocean Glows -->
-    <div class="fixed inset-0 pointer-events-none -z-20 overflow-hidden">
-        <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-b from-cyan-glow/25 via-blue-600/20 to-transparent blur-[140px] rounded-full"></div>
-        <div class="absolute top-1/3 -left-48 w-[600px] h-[600px] bg-blue-600/20 blur-[150px] rounded-full"></div>
-        <div class="absolute top-2/3 -right-48 w-[550px] h-[550px] bg-amber-500/15 blur-[150px] rounded-full"></div>
-        <div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(circle at 1px 1px, rgba(0, 240, 255, 0.35) 1px, transparent 0); background-size: 32px 32px;"></div>
-    </div>
+    <!-- Ambient top glow -->
+    <div class="ambient-glow"></div>
 
-    <!-- Floating Cyber Bubbles Background (matching banner ocean theme) -->
-    <div class="bubble-container">
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-        <div id="toastContent" class="opacity-0 translate-y-3 transition-all duration-300">
-            <div class="bg-ocean-900/95 backdrop-blur-xl text-white rounded-full px-6 py-3.5 shadow-2xl ring-2 ring-cyan-glow/70 flex items-center gap-3 font-semibold text-sm border border-cyan-glow/50">
-                <span class="text-xl">✨</span>
-                <span id="toastMessage" class="text-cyan-200">Đã sao chép liên kết thành công!</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Image Lightbox Modal -->
-    <div id="imageModal" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-md hidden items-center justify-center p-4 transition-opacity duration-300" onclick="closeImageModal()">
-        <div class="relative max-w-4xl max-h-[92vh] flex flex-col items-center" onclick="event.stopPropagation()">
-            <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-gray-300 hover:text-white bg-ocean-800/90 hover:bg-ocean-700 p-2 rounded-full border border-cyan-500/40 transition">
-                <i data-feather="x" class="w-6 h-6"></i>
-            </button>
-            <img id="modalImg" src="" alt="Chi tiết bước cài đặt" class="max-w-full max-h-[82vh] object-contain rounded-2xl shadow-2xl border-2 border-cyan-glow/50">
-            <p id="modalCaption" class="text-center text-sm font-semibold text-cyan-300 mt-3.5 px-4 py-1.5 rounded-full bg-ocean-900/80 border border-cyan-500/30"></p>
-        </div>
-    </div>
-
-    <!-- Payment VietQR Modal -->
-    <div id="paymentModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4 transition-opacity duration-300" onclick="closePaymentModal()">
-        <div class="relative w-full max-w-md glass-panel rounded-3xl p-6 sm:p-7 border-2 border-amber-400/60 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto" onclick="event.stopPropagation()">
-            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-ocean-800/80 p-2 rounded-full border border-gray-700 transition">
-                <i data-feather="x" class="w-5 h-5"></i>
-            </button>
-            
-            <div class="text-center space-y-1">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-xs font-bold text-amber-300 uppercase tracking-wider">
-                    💳 Thanh Toán An Toàn VietQR
-                </span>
-                <h3 id="payPkgName" class="text-xl sm:text-2xl font-display font-black text-white mt-1">Gói VIP Siêu Tốc</h3>
-                <div id="payPkgPrice" class="text-2xl sm:text-3xl font-display font-black text-amber-400">49.000 VNĐ</div>
-            </div>
-
-            <!-- VietQR Image Container -->
-            <div class="bg-white rounded-2xl p-3 shadow-xl border-2 border-amber-400/40 flex flex-col items-center justify-center max-w-[260px] mx-auto">
-                <img id="qrImage" src="" alt="Mã VietQR Thanh Toán" class="w-full h-auto object-contain rounded-lg">
-                <p class="text-[11px] text-gray-700 font-semibold mt-1.5 text-center flex items-center gap-1">
-                    <span>📱</span> Quét bằng ứng dụng ngân hàng bất kỳ
-                </p>
-            </div>
-
-            <!-- Account Details Table with Copy Buttons -->
-            <div class="bg-ocean-950/80 rounded-2xl p-3.5 border border-cyan-500/25 space-y-2 text-xs">
-                <div class="flex items-center justify-between py-1 border-b border-gray-800">
-                    <span class="text-gray-400">Ngân hàng:</span>
-                    <span class="font-bold text-white flex items-center gap-1">
-                        <span class="text-blue-400 font-black">MB Bank</span> (Quân Đội)
-                    </span>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-gray-800">
-                    <span class="text-gray-400">Số tài khoản:</span>
-                    <div class="flex items-center gap-2">
-                        <span class="font-mono font-bold text-cyan-300 text-sm">6012072005</span>
-                        <button onclick="copyToClipboard('6012072005')" class="px-2 py-0.5 rounded bg-ocean-800 hover:bg-cyan-500 hover:text-black text-cyan-300 text-[10px] font-bold border border-cyan-500/40 transition">
-                            Sao chép
-                        </button>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between py-1 border-b border-gray-800">
-                    <span class="text-gray-400">Chủ tài khoản:</span>
-                    <span class="font-bold text-white uppercase">TRẦN VĂN NGUYÊN</span>
-                </div>
-                <div class="flex items-center justify-between py-1">
-                    <span class="text-gray-400">Nội dung chuyển khoản:</span>
-                    <div class="flex items-center gap-2">
-                        <span id="payContent" class="font-mono font-bold text-amber-300 text-xs sm:text-sm">LOCKET G2</span>
-                        <button onclick="copyToClipboard(document.getElementById('payContent').textContent)" class="px-2 py-0.5 rounded bg-ocean-800 hover:bg-amber-400 hover:text-black text-amber-300 text-[10px] font-bold border border-amber-400/40 transition">
-                            Sao chép
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Confirmation & Help Buttons -->
-            <div class="space-y-2 pt-1">
-                <button onclick="confirmPayment()" class="w-full btn-glow-gold text-black font-black py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition">
-                    <i data-feather="check-circle" class="w-5 h-5"></i>
-                    <span>Tôi Đã Chuyển Khoản ➔ Mở Khóa Cài Đặt</span>
-                </button>
-                <div class="text-center">
-                    <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="text-xs text-gray-400 hover:text-cyan-300 inline-flex items-center gap-1 transition">
-                        <span>Cần hỗ trợ chuyển khoản? Nhắn Văn Nguyên qua Facebook</span>
-                        <i data-feather="arrow-right" class="w-3 h-3"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Top Navigation Header -->
-    <header class="sticky top-0 z-40 bg-ocean-950/85 backdrop-blur-xl border-b border-cyan-glow/20">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="flex items-center gap-2.5 group">
-                <span class="text-2xl group-hover:scale-110 transition duration-300">🐳</span>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-display font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-glow via-blue-400 to-amber-400">HexDen</span>
-                        <span class="text-[10px] text-cyan-300 font-mono border border-cyan-500/40 bg-cyan-500/10 px-2 py-0.5 rounded-full font-bold">VIP GOLD</span>
-                    </div>
-                    <span class="text-[10px] text-gray-400 font-mono hidden sm:inline-block">Hỗ trợ độc quyền bởi Văn Nguyên</span>
-                </div>
-            </a>
-            
-            <div class="flex items-center gap-2">
-                <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3.5 py-1.5 rounded-xl border border-blue-400/40 flex items-center gap-1.5 transition shadow-sm hover:shadow-blue-500/30">
-                    <i data-feather="facebook" class="w-3.5 h-3.5 text-white"></i>
-                    <span>Kênh Hỗ Trợ FB</span>
+    <!-- ========================================================================= -->
+    <!-- 1. GIAO DIỆN CHƯA ĐĂNG NHẬP (PUBLIC VIEW - Theo ảnh 2)                     -->
+    <!-- ========================================================================= -->
+    <div id="publicView" class="w-full flex flex-col flex-1 relative z-10">
+        
+        <!-- Top Navbar -->
+        <header class="w-full border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-40 transition-all">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2 group">
+                    <span class="text-2xl transition-transform group-hover:scale-110">💛</span>
+                    <span class="font-extrabold text-xl tracking-tight text-slate-900">Locket Gold</span>
                 </a>
-            </div>
-        </div>
-    </header>
 
-    <!-- Main Container -->
-    <main class="max-w-4xl mx-auto px-4 py-6 space-y-8">
+                <!-- Nav Links Desktop -->
+                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                    <a href="#pricing-section" class="hover:text-slate-900 transition">Mua Locket Gold</a>
+                    <a href="#pricing-section" class="hover:text-slate-900 transition">Bảng giá</a>
+                    <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="hover:text-slate-900 transition">Trợ giúp</a>
+                </nav>
 
-        <!-- Hero Section with banner.png and Cyber Pill Badges -->
-        <section class="relative rounded-3xl overflow-hidden glass-panel border border-cyan-500/30 p-2 sm:p-3 shadow-2xl" data-aos="fade-up">
-            <!-- Banner Image with Subtle Float Effect -->
-            <div class="rounded-2xl overflow-hidden relative shadow-inner cursor-pointer" onclick="openImageModal('./assets/banner.png', 'Nâng Locket Gold bằng Shadowrocket - HexDen')">
-                <img src="./assets/banner.png" alt="Nâng Locket Gold bằng Shadowrocket - HexDen" class="w-full h-auto object-cover rounded-2xl animate-float">
-            </div>
-
-            <!-- Whale Slogan Quote from Banner -->
-            <div class="flex items-center justify-between flex-wrap gap-2 mt-3 px-2">
-                <div class="flex items-center gap-2 text-xs text-cyan-300/90 italic font-mono">
-                    <span class="text-base">🐳</span>
-                    <span>&ldquo;Bug còn chạy không phải là lỗi, mà là tính năng&rdquo;</span>
-                </div>
-                <div class="flex items-center gap-2 text-[11px] text-gray-400 font-mono">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Shadowrocket v2.2+ Ready</span>
-                </div>
-            </div>
-
-            <!-- 4 Cyber Feature Pills + Dalymmo Link (Exactly matching banner bottom row) -->
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mt-3 px-1">
-                <!-- 1: TỰ ĐỘNG -->
-                <div class="glass-card rounded-xl p-2.5 flex items-center gap-2 border border-cyan-500/30 hover:border-cyan-glow">
-                    <div class="w-8 h-8 rounded-lg bg-cyan-glow/15 border border-cyan-glow/40 flex items-center justify-center shrink-0 text-cyan-glow">
-                        <i data-feather="zap" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <div class="text-xs font-black text-white uppercase tracking-wider">Tự Động</div>
-                        <div class="text-[10px] text-cyan-300/80">Nhanh chóng</div>
-                    </div>
-                </div>
-
-                <!-- 2: ĐƠN GIẢN -->
-                <div class="glass-card rounded-xl p-2.5 flex items-center gap-2 border border-blue-500/30 hover:border-blue-400">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/15 border border-blue-400/40 flex items-center justify-center shrink-0 text-blue-400">
-                        <i data-feather="settings" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <div class="text-xs font-black text-white uppercase tracking-wider">Đơn Giản</div>
-                        <div class="text-[10px] text-blue-300/80">Dễ sử dụng</div>
-                    </div>
-                </div>
-
-                <!-- 3: MIỄN PHÍ -->
-                <div class="glass-card rounded-xl p-2.5 flex items-center gap-2 border border-amber-500/30 hover:border-amber-400">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-400/40 flex items-center justify-center shrink-0 text-amber-400">
-                        <i data-feather="gift" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <div class="text-xs font-black text-white uppercase tracking-wider">Miễn Phí</div>
-                        <div class="text-[10px] text-amber-300/80">100% Free</div>
-                    </div>
-                </div>
-
-                <!-- 4: AN TOÀN -->
-                <div class="glass-card rounded-xl p-2.5 flex items-center gap-2 border border-emerald-500/30 hover:border-emerald-400">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-400/40 flex items-center justify-center shrink-0 text-emerald-400">
-                        <i data-feather="shield" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <div class="text-xs font-black text-white uppercase tracking-wider">An Toàn</div>
-                        <div class="text-[10px] text-emerald-300/80">Ổn định</div>
-                    </div>
-                </div>
-
-                <!-- 5: KÊNH HỖ TRỢ FACEBOOK -->
-                <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="glass-card rounded-xl p-2.5 flex items-center gap-2 border border-blue-500/40 hover:border-blue-400 bg-gradient-to-r from-blue-600/20 to-cyan-500/10 col-span-2 sm:col-span-1 group">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-400/50 flex items-center justify-center shrink-0 text-blue-400 group-hover:scale-110 transition">
-                        <i data-feather="facebook" class="w-4 h-4"></i>
-                    </div>
-                    <div class="overflow-hidden">
-                        <div class="text-xs font-black text-blue-300 truncate">Hỗ Trợ: Văn Nguyên</div>
-                        <div class="text-[10px] text-gray-300 flex items-center gap-1">
-                            <span>Facebook</span>
-                            <span class="text-blue-400">↗</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </section>
-
-        <!-- 🌟 Giới thiệu (Full Intro from README.md) -->
-        <section class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border border-cyan-500/25 flex flex-col sm:flex-row items-center gap-6" data-aos="fade-up">
-            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 flex items-center justify-center text-4xl shadow-xl shadow-amber-500/30 shrink-0 border border-amber-300/40 animate-pulse">
-                💛
-            </div>
-            <div class="space-y-2 text-center sm:text-left">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/35 text-xs font-bold text-cyan-300 tracking-wide uppercase">
-                    ✨ Tinh gọn 100% dành riêng cho ứng dụng Locket
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-display font-black text-white">
-                    Bộ Giải Pháp Mở Khóa <span class="text-gold-3d">Locket Gold VIP</span>
-                </h2>
-                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                    <strong class="text-white">Locket Gold VIP</strong> là bộ giải pháp mở khóa Locket Gold chuyên nghiệp do <strong class="text-cyan-glow">HexDen</strong> phát triển, tinh gọn <strong class="text-cyan-glow">100% dành riêng cho ứng dụng Locket</strong>, loại bỏ toàn bộ các thành phần dư thừa của các ứng dụng khác giúp hệ thống hoạt động nhẹ nhất, mượt nhất và ổn định nhất.
-                </p>
-                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                    Mọi tính năng VIP của Locket Gold đều được mở khóa toàn diện từ giao diện, camera, dung lượng bộ nhớ cho tới các quyền hạn cao cấp trên hệ thống. Kèm theo đó là giải pháp <strong class="text-amber-400">DNS Chống thu hồi độc quyền từ HexDen</strong> giúp bạn giữ trạng thái Gold vĩnh viễn mà không cần phải bật VPN liên tục.
-                </p>
-            </div>
-        </section>
-
-        <!-- 💎 Bảng Chọn Gói Kích Hoạt Locket Gold VIP -->
-        <section id="pricing" class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-cyan-glow/40 space-y-6" data-aos="fade-up">
-            <div class="text-center max-w-2xl mx-auto space-y-2">
-                <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400/20 to-cyan-500/20 border border-amber-400/40 text-xs font-bold text-amber-300 uppercase tracking-wider">
-                    💎 Bảng Giá Dịch Vụ Mở Khóa Vĩnh Viễn
-                </div>
-                <h3 class="text-2xl sm:text-3xl font-display font-black text-white">
-                    Chọn Phương Thức <span class="text-gold-3d">Kích Hoạt Locket Gold</span>
-                </h3>
-                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                    Lựa chọn gói phù hợp nhất với nhu cầu của bạn. Kích hoạt 1 lần duy nhất - Sở hữu trọn đời.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                <!-- GÓI 1: CƠ BẢN (SHADOWROCKET) -->
-                <div class="glass-card rounded-3xl p-6 sm:p-7 border border-cyan-500/30 hover:border-cyan-glow flex flex-col justify-between space-y-6 transition relative group">
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
-                                🥉 GÓI CƠ BẢN
-                            </span>
-                            <span class="text-xs text-gray-400 line-through">99.000 đ</span>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-display font-black text-white">Kích Hoạt Qua Shadowrocket</h4>
-                            <p class="text-xs text-gray-400 mt-1">Dành cho ai đã có app Shadowrocket hoặc thích tự thao tác kỹ thuật.</p>
-                        </div>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-3xl sm:text-4xl font-display font-black text-cyan-glow">29.000</span>
-                            <span class="text-sm font-bold text-cyan-300">VNĐ</span>
-                            <span class="text-xs text-gray-400 ml-1">/ vĩnh viễn</span>
-                        </div>
-
-                        <ul class="space-y-2.5 text-xs text-gray-300 pt-3 border-t border-gray-800/80">
-                            <li class="flex items-center gap-2">
-                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
-                                <span>Mở khóa Locket Gold VIP vĩnh viễn</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
-                                <span>Quay video 60 giây & Tải ảnh nét 2K</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
-                                <span>Mở khóa đổi màu themes & toàn bộ bộ lọc</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <i data-feather="check" class="w-4 h-4 text-cyan-glow shrink-0"></i>
-                                <span>Kèm cấu hình DNS chống thu hồi NextDNS</span>
-                            </li>
-                            <li class="flex items-center gap-2 text-amber-300/90 font-medium">
-                                <i data-feather="alert-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                                <span>Yêu cầu cần có ứng dụng Shadowrocket</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <button onclick="openPaymentModal('g1')" class="w-full bg-gradient-to-r from-cyan-glow to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-black py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition group-hover:shadow-cyan-500/30">
-                        <span>Đăng Ký Gói Cơ Bản (29K)</span>
+                <!-- Auth Buttons -->
+                <div class="flex items-center gap-3">
+                    <button onclick="openLoginModal()" class="text-sm font-bold text-slate-700 hover:text-slate-900 px-3 py-2 transition">
+                        Đăng nhập
+                    </button>
+                    <button onclick="openLoginModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-sm px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
+                        <span>Bắt đầu</span>
                         <i data-feather="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </div>
+            </div>
+        </header>
 
-                <!-- GÓI 2: VIP SIÊU TỐC (MÁY CHỦ KHÔNG CẦN APP) -->
-                <div class="glass-card rounded-3xl p-6 sm:p-7 border-2 border-amber-400/80 shadow-neon-gold bg-gradient-to-b from-amber-500/10 via-transparent to-transparent flex flex-col justify-between space-y-6 transition relative group">
-                    <div class="absolute -top-3.5 right-6">
-                        <span class="text-xs font-mono font-black px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-black shadow-md flex items-center gap-1 uppercase tracking-wider">
-                            <span>🔥</span> Khuyên Dùng
-                        </span>
-                    </div>
+        <!-- Main Public Content -->
+        <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12">
+            
+            <!-- Hero Header -->
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <div class="inline-block text-[11px] font-extrabold tracking-widest uppercase text-slate-400 font-mono">
+                    BẢNG GIÁ LOCKET GOLD
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Mua gói Locket Gold<br/>phù hợp với bạn
+                </h1>
+                <p class="text-sm sm:text-base text-slate-500 font-medium">
+                    Tất cả giá được hiển thị bằng Xu và quyền lợi sẽ được xác nhận trước khi thanh toán.
+                </p>
+                <div class="pt-1">
+                    <a href="#guide-modal" onclick="openPreBuyGuide('all')" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-yellow-600 transition underline underline-offset-4">
+                        <span>Xem hướng dẫn bảng giá</span>
+                        <i data-feather="arrow-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
+            </div>
 
+            <!-- Pricing 3-Card Grid (Shared Component) -->
+            <div id="pricing-section" class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 items-stretch pt-2">
+                
+                <!-- CARD 1: Locket Gold iOS [Mới] (365 ngày, Phổ biến) -->
+                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-soft-card hover:shadow-hover-card transition-all duration-300 flex flex-col justify-between relative group hover:-translate-y-1">
+                    <!-- Top Badges -->
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40">
-                                👑 GÓI VIP SIÊU TỐC
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-600 border border-sky-100">
+                                365 ngày
                             </span>
-                            <span class="text-xs text-gray-400 line-through">199.000 đ</span>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-display font-black text-white flex items-center gap-1.5">
-                                Cài Trực Tiếp (Không Cần App)
-                            </h4>
-                            <p class="text-xs text-gray-400 mt-1">Cực kỳ đơn giản cho mọi người, chỉ cần 1 click Safari là lên Gold.</p>
-                        </div>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-3xl sm:text-4xl font-display font-black text-amber-400">49.000</span>
-                            <span class="text-sm font-bold text-amber-300">VNĐ</span>
-                            <span class="text-xs text-gray-400 ml-1">/ vĩnh viễn</span>
+                            <span class="popular-badge inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100/80 text-amber-900 border border-amber-200">
+                                <span>⭐</span> Phổ biến
+                            </span>
                         </div>
 
-                        <ul class="space-y-2.5 text-xs text-gray-200 pt-3 border-t border-gray-800/80">
-                            <li class="flex items-center gap-2 font-semibold text-amber-300">
-                                <i data-feather="check-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                                <span>KHÔNG CẦN CÀI SHADOWROCKET (Tiết kiệm $2.99)</span>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Locket Gold iOS [Mới]</h3>
+                            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Profile DNS HTTPS cho Locket Gold trên iOS/iPadOS.</p>
+                        </div>
+
+                        <!-- Price Tag -->
+                        <div class="py-2">
+                            <div class="inline-block bg-locket-yellow text-slate-950 font-black text-2xl px-5 py-2 rounded-2xl shadow-sm">
+                                30 Xu
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium ml-2">~ 30.000 VNĐ</span>
+                        </div>
+
+                        <hr class="border-slate-100 my-2">
+
+                        <!-- Features -->
+                        <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Không cần đăng nhập iCloud</span>
                             </li>
-                            <li class="flex items-center gap-2 font-semibold text-amber-300">
-                                <i data-feather="check-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                                <span>KHÔNG CẦN BẬT VPN KHI DÙNG (Không hao pin, không lag)</span>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Quay video 30s</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-feather="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                                <span>1 Click tải file .mobileconfig trên Safari là xong</span>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Đăng ảnh/video từ thư viện</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-feather="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                                <span>Đầy đủ quay 60s, ảnh HD, màu themes, bộ lọc, huy hiệu</span>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Chụp ảnh filter</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-feather="check" class="w-4 h-4 text-amber-400 shrink-0"></i>
-                                <span>Hỗ trợ kỹ thuật 1-1 trực tiếp từ Văn Nguyên</span>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Thay đổi biểu tượng ứng dụng</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Mở khóa giới hạn bạn bè</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-slate-400">
+                                <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                <span>Cần cài Root CA và profile DNS</span>
                             </li>
                         </ul>
                     </div>
 
-                    <button onclick="openPaymentModal('g2')" class="w-full btn-glow-gold text-black font-black py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition">
-                        <span>Đăng Ký Gói VIP Siêu Tốc (49K)</span>
-                        <i data-feather="zap" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 🧭 Khu Vực Hướng Dẫn Cài Đặt (Phân Chia Theo Gói Đã Mở Khóa) -->
-        <section id="instructions-area" class="space-y-6" data-aos="fade-up">
-            <div class="glass-panel rounded-3xl p-2.5 border border-cyan-500/30 flex flex-col sm:flex-row gap-2">
-                <button id="tab-btn-g1" onclick="switchTab('g1')" class="flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-gradient-to-r from-cyan-glow to-blue-600 text-black shadow-lg shadow-cyan-500/30 flex items-center gap-2 justify-center">
-                    <span>🥉</span> Hướng Dẫn Gói 1: Shadowrocket
-                </button>
-                <button id="tab-btn-g2" onclick="switchTab('g2')" class="flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-ocean-900/60 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 justify-center">
-                    <span>👑</span> Hướng Dẫn Gói 2: VIP Trực Tiếp (Không Cần App)
-                </button>
-            </div>
-
-            <!-- 📦 NỘI DUNG GÓI 1 (SHADOWROCKET) -->
-            <div id="content-g1" class="space-y-8">
-
-        <!-- 🚀 Cài Đặt Nhanh 1-Click (Dành Cho iOS) -->
-        <section id="install" class="glass-panel rounded-3xl p-6 sm:p-7 shadow-2xl border-2 border-cyan-glow/50 space-y-6 relative overflow-hidden">
-            <!-- Neon background splash -->
-            <div class="absolute -top-24 right-0 w-80 h-80 bg-cyan-glow/15 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4">
-                <div>
-                    <h3 class="text-2xl font-display font-black text-white flex items-center gap-2">
-                        <span class="text-amber-400 text-3xl">⚡</span> Cài Đặt Nhanh 1-Click (Dành Cho iOS)
-                    </h3>
-                    <p class="text-xs text-gray-300 mt-1">
-                        💡 <strong>Mẹo:</strong> Trên Safari iPhone, bấm trực tiếp vào nút bên dưới để iPhone tự động mở ứng dụng <strong>Shadowrocket</strong> nạp cấu hình ngay lập tức!
-                    </p>
-                </div>
-                <span class="text-xs px-3.5 py-1.5 rounded-xl bg-blue-500/20 text-cyan-300 border border-cyan-500/40 font-mono shrink-0 self-start sm:self-auto font-bold">
-                    🚀 iOS Safari 1-Touch
-                </span>
-            </div>
-
-            <!-- Action 1: Module Locket (.sgmodule) (Khuyên Dùng) -->
-            <div class="glass-card rounded-2xl p-4 sm:p-5 border-2 border-cyan-500/40 hover:border-cyan-glow transition space-y-3 bg-gradient-to-r from-cyan-glow/5 to-transparent">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-3.5 h-3.5 rounded-full bg-cyan-glow animate-ping"></span>
-                        <div>
-                            <span class="font-extrabold text-white text-base">Cài Đặt Module Locket (.sgmodule)</span>
-                            <span class="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/25 text-cyan-300 font-bold border border-cyan-500/40">Khuyên Dùng</span>
-                        </div>
-                    </div>
-                    <button class="text-xs bg-ocean-800 hover:bg-ocean-700 text-cyan-300 px-3 py-1.5 rounded-lg border border-cyan-500/30 font-semibold flex items-center gap-1.5 transition self-start sm:self-auto" onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule')">
-                        <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link Module
-                    </button>
-                </div>
-                <p class="text-xs text-gray-300">Tự động cấu hình kịch bản bẻ khóa RevenueCat, Remote Config và khóa huy hiệu Gold vĩnh viễn.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                    <a href="shadowrocket://install?module=https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule" class="btn-glow-cyan text-black font-black py-3.5 px-5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide">
-                        <i data-feather="download" class="w-5 h-5"></i>
-                        <span>Bấm Để Cài Module Vào Shadowrocket</span>
-                    </a>
-                    <a href="https://raw.githack.com/HexDen/locket_gold/main/module.html" target="_blank" class="bg-ocean-800/80 hover:bg-ocean-700 text-cyan-300 font-bold py-3.5 px-4 rounded-xl border border-cyan-500/40 flex items-center justify-center gap-2 text-sm transition">
-                        <i data-feather="external-link" class="w-4 h-4"></i>
-                        <span>Mở Link Chuyển Hướng (module.html)</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Action 2: Config Locket (.conf) -->
-            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-emerald-500/40 hover:border-emerald-400 transition space-y-3">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-400"></span>
-                        <span class="font-extrabold text-white text-base">Thêm Cấu Hình Config Locket (.conf)</span>
-                    </div>
-                    <button class="text-xs bg-ocean-800 hover:bg-ocean-700 text-emerald-300 px-3 py-1.5 rounded-lg border border-emerald-500/30 font-semibold flex items-center gap-1.5 transition self-start sm:self-auto" onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf')">
-                        <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link Config
-                    </button>
-                </div>
-                <p class="text-xs text-gray-300">Dùng khi bạn muốn thêm trọn bộ file cấu hình `.conf` riêng biệt vào Shadowrocket.</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                    <a href="shadowrocket://config/add/https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf" class="btn-glow-emerald text-white font-black py-3.5 px-5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide">
-                        <i data-feather="plus-circle" class="w-5 h-5"></i>
-                        <span>Bấm Để Thêm Config Vào Shadowrocket</span>
-                    </a>
-                    <a href="https://raw.githack.com/HexDen/locket_gold/main/conf.html" target="_blank" class="bg-ocean-800/80 hover:bg-ocean-700 text-emerald-300 font-bold py-3.5 px-4 rounded-xl border border-emerald-500/40 flex items-center justify-center gap-2 text-sm transition">
-                        <i data-feather="external-link" class="w-4 h-4"></i>
-                        <span>Mở Link Chuyển Hướng (conf.html)</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Action 3: Hồ Sơ DNS Chống Thu Hồi (.mobileconfig) -->
-            <div class="glass-card rounded-2xl p-4 sm:p-5 border-2 border-amber-500/50 hover:border-amber-400 transition space-y-3 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-2xl">🛡️</span>
-                        <div>
-                            <span class="font-black text-white text-base">Tải Hồ Sơ DNS Chống Thu Hồi Về iPhone (.mobileconfig)</span>
-                            <div class="text-[11px] text-amber-300 font-medium">Bảo vệ toàn diện • Gold VIP + Video 60s + Bộ lọc • Chống thu hồi chứng chỉ Apple</div>
-                        </div>
-                    </div>
-                    <button class="text-xs bg-ocean-800 hover:bg-ocean-700 text-amber-300 px-3 py-1.5 rounded-lg border border-amber-500/30 font-semibold flex items-center gap-1.5 transition self-start sm:self-auto" onclick="copyToClipboard('https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig')">
-                        <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link DNS
-                    </button>
-                </div>
-                <p class="text-xs text-gray-300 leading-relaxed">
-                    Cấu hình kép bảo vệ toàn diện: Chặn thu hồi gói mua <strong>Locket Gold</strong> và <strong>Firebase Remote Config</strong> (giữ vĩnh viễn quay 60s, upload 60s, toàn bộ bộ lọc camera), đồng thời chặn máy chủ thu hồi chứng chỉ Apple (ESign, Scarlet...). Bấm nút bên dưới bằng trình duyệt <strong>Safari trên iPhone</strong> ➔ Cho phép ➔ Vào <strong>Cài đặt ➔ Đã tải về hồ sơ ➔ Cài đặt</strong> là hoàn tất!
-                </p>
-                <a href="https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig" class="btn-glow-gold w-full text-black font-black py-4 px-6 rounded-xl shadow-xl flex items-center justify-center gap-2.5 text-base tracking-wide">
-                    <i data-feather="download-cloud" class="w-5 h-5"></i>
-                    <span>Tải Hồ Sơ locketgold.mobileconfig Về iPhone</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- 📋 Bảng Sao Chép Thủ Công (Strictly from README.md) -->
-        <section class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border border-cyan-500/25 space-y-4" data-aos="fade-up">
-            <div class="border-b border-gray-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                    <h3 class="text-xl font-display font-black text-white flex items-center gap-2">
-                        <span class="text-cyan-glow">📋</span> Bảng Sao Chép Thủ Công
-                    </h3>
-                    <p class="text-xs text-gray-400">Dán thủ công vào Tab Cấu Hình / Module của Shadowrocket hoặc trình duyệt</p>
-                </div>
-                <span class="text-[11px] text-cyan-300 font-mono bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-full self-start sm:self-auto">
-                    3 File Cấu Hình Chính
-                </span>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs text-gray-300 border-collapse">
-                    <thead>
-                        <tr class="border-b border-gray-800 text-gray-400 font-mono text-[11px] uppercase">
-                            <th class="py-3 px-3">Mục cài đặt</th>
-                            <th class="py-3 px-3">Thao tác 1-Click</th>
-                            <th class="py-3 px-3">Liên kết chép thủ công</th>
-                            <th class="py-3 px-3 text-right">Sao chép</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-800/60 font-sans">
-                        <!-- Row 1 -->
-                        <tr class="hover:bg-ocean-800/40 transition">
-                            <td class="py-3 px-3 font-bold text-white flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-cyan-glow"></span>
-                                Module Locket (.sgmodule)
-                            </td>
-                            <td class="py-3 px-3">
-                                <a href="https://raw.githack.com/HexDen/locket_gold/main/module.html" target="_blank" class="text-cyan-glow hover:underline font-bold inline-flex items-center gap-1">
-                                    ⚡ Cài đặt Module ↗
-                                </a>
-                            </td>
-                            <td class="py-3 px-3 font-mono text-[11px] text-gray-400 max-w-xs truncate">
-                                https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule
-                            </td>
-                            <td class="py-3 px-3 text-right">
-                                <button onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.sgmodule')" class="bg-ocean-800 hover:bg-ocean-700 text-cyan-300 px-2.5 py-1 rounded-lg border border-cyan-500/30 text-[11px] font-semibold">
-                                    Chép
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr class="hover:bg-ocean-800/40 transition">
-                            <td class="py-3 px-3 font-bold text-white flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                Config Locket (.conf)
-                            </td>
-                            <td class="py-3 px-3">
-                                <a href="https://raw.githack.com/HexDen/locket_gold/main/conf.html" target="_blank" class="text-emerald-400 hover:underline font-bold inline-flex items-center gap-1">
-                                    🚀 Thêm Config ↗
-                                </a>
-                            </td>
-                            <td class="py-3 px-3 font-mono text-[11px] text-gray-400 max-w-xs truncate">
-                                https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf
-                            </td>
-                            <td class="py-3 px-3 text-right">
-                                <button onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.conf')" class="bg-ocean-800 hover:bg-ocean-700 text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-500/30 text-[11px] font-semibold">
-                                    Chép
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3 -->
-                        <tr class="hover:bg-ocean-800/40 transition">
-                            <td class="py-3 px-3 font-bold text-white flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                Hồ sơ DNS (.mobileconfig)
-                            </td>
-                            <td class="py-3 px-3">
-                                <a href="https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig" class="text-amber-400 hover:underline font-bold inline-flex items-center gap-1">
-                                    🛡️ Tải Profile DNS ↗
-                                </a>
-                            </td>
-                            <td class="py-3 px-3 font-mono text-[11px] text-gray-400 max-w-xs truncate">
-                                https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig
-                            </td>
-                            <td class="py-3 px-3 text-right">
-                                <button onclick="copyToClipboard('https://locket-gold-m1xo.onrender.com/locketgold.mobileconfig')" class="bg-ocean-800 hover:bg-ocean-700 text-amber-300 px-2.5 py-1 rounded-lg border border-amber-500/30 text-[11px] font-semibold">
-                                    Chép
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- ✨ Danh Sách Toàn Bộ Tính Năng Mở Khóa (Full 9 Features from README.md) -->
-        <section class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border border-cyan-500/25 space-y-5" data-aos="fade-up">
-            <div class="border-b border-gray-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                    <h3 class="text-xl font-display font-black text-white flex items-center gap-2">
-                        <span class="text-cyan-glow">✨</span> Danh Sách Toàn Bộ Tính Năng Mở Khóa
-                    </h3>
-                    <p class="text-xs text-gray-400">Chi tiết 9 đặc quyền VIP Locket Gold cao cấp nhất</p>
-                </div>
-                <span class="text-xs font-mono text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full self-start sm:self-auto font-bold">
-                    9/9 Features Unlocked 💛
-                </span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                <!-- 1: Gói VIP -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-xl shrink-0">💛</div>
-                        <div>
-                            <span class="text-[10px] text-amber-400 font-mono font-bold uppercase">Gói VIP</span>
-                            <h4 class="font-bold text-white text-sm">Gói Locket Gold 1 Năm</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Mở khóa gói đăng ký Locket Gold VIP 1 năm (Gia hạn tự động vĩnh viễn đến năm 9999).</p>
-                </div>
-
-                <!-- 2: Hồ sơ & Huy hiệu -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-glow/15 border border-cyan-glow/30 flex items-center justify-center text-xl shrink-0">👑</div>
-                        <div>
-                            <span class="text-[10px] text-cyan-glow font-mono font-bold uppercase">Hồ sơ & Huy hiệu</span>
-                            <h4 class="font-bold text-white text-sm">Huy Hiệu Gold Badge</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Huy hiệu vàng Gold Badge danh giá hiển thị trên trang cá nhân và bài đăng.</p>
-                </div>
-
-                <!-- 3: Giao diện & Icon -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-xl shrink-0">🎨</div>
-                        <div>
-                            <span class="text-[10px] text-blue-400 font-mono font-bold uppercase">Giao diện & Icon</span>
-                            <h4 class="font-bold text-white text-sm">App Icon & Camera Themes</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Toàn quyền chọn tất cả App Icon độc quyền và Chủ đề máy ảnh (Camera Themes).</p>
-                </div>
-
-                <!-- 4: Đăng tải & Camera -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-xl shrink-0">📹</div>
-                        <div>
-                            <span class="text-[10px] text-purple-400 font-mono font-bold uppercase">Đăng tải & Camera</span>
-                            <h4 class="font-bold text-white text-sm">Tải Album & Video 60s</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Tải ảnh trực tiếp từ Album/Thư viện (Camera Roll) không giới hạn; quay video dài 60s.</p>
-                </div>
-
-                <!-- 5: Tương tác & Xem -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-xl shrink-0">👀</div>
-                        <div>
-                            <span class="text-[10px] text-pink-400 font-mono font-bold uppercase">Tương tác & Xem</span>
-                            <h4 class="font-bold text-white text-sm">Locket Views</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Mở khóa tính năng Locket Views (Biết chính xác người bạn nào đã xem bài đăng của bạn).</p>
-                </div>
-
-                <!-- 6: Chú thích & Bạn bè -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-xl shrink-0">💬</div>
-                        <div>
-                            <span class="text-[10px] text-teal-400 font-mono font-bold uppercase">Chú thích & Bạn bè</span>
-                            <h4 class="font-bold text-white text-sm">Chú Thích Dài & Vô Hạn Bạn</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Viết chú thích dài (Long Captions) không bị giới hạn ký tự; kết bạn không giới hạn số lượng.</p>
-                </div>
-
-                <!-- 7: Tiện ích (Widgets) -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-xl shrink-0">🖼️</div>
-                        <div>
-                            <span class="text-[10px] text-indigo-400 font-mono font-bold uppercase">Tiện ích (Widgets)</span>
-                            <h4 class="font-bold text-white text-sm">Khung Viền Widget Cao Cấp</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Toàn quyền sử dụng tất cả Khung viền Widget (Custom Widget Frames) cao cấp ngoài màn hình chính.</p>
-                </div>
-
-                <!-- 8: Chuỗi bạn bè -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-xl shrink-0">🔥</div>
-                        <div>
-                            <span class="text-[10px] text-orange-400 font-mono font-bold uppercase">Chuỗi bạn bè</span>
-                            <h4 class="font-bold text-white text-sm">Khôi Phục Chuỗi (Streak)</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Tự động kích hoạt tính năng Khôi phục chuỗi (Streak Recovery) khi lỡ quên gửi locket.</p>
-                </div>
-
-                <!-- 9: Trải nghiệm -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800/80 flex flex-col justify-between space-y-2">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center text-xl shrink-0">🚫</div>
-                        <div>
-                            <span class="text-[10px] text-red-400 font-mono font-bold uppercase">Trải nghiệm</span>
-                            <h4 class="font-bold text-white text-sm">Xóa Sạch 100% Quảng Cáo</h4>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">Xóa sạch 100% quảng cáo và các pop-up mời chào mua gói phiền phức.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 📖 Hướng Dẫn Chi Tiết Bằng Hình Ảnh (7 Bước A - Z) -->
-        <section id="guide" class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border border-cyan-500/25 space-y-7" data-aos="fade-up">
-            <div class="border-b border-gray-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                    <h3 class="text-xl font-display font-black text-white flex items-center gap-2">
-                        <span class="text-cyan-glow">📖</span> Hướng Dẫn Chi Tiết Bằng Hình Ảnh (7 Bước A - Z)
-                    </h3>
-                    <p class="text-xs text-gray-400">💡 Chạm vào bất kỳ ảnh nào để phóng to xem rõ nét</p>
-                </div>
-                <span class="text-xs text-amber-300 font-mono bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full self-start sm:self-auto font-bold">
-                    Dành cho Shadowrocket iOS
-                </span>
-            </div>
-
-            <div class="space-y-6">
-                <!-- Bước 1 -->
-                <div class="glass-card rounded-2xl p-4 sm:p-5 border border-gray-800/90 space-y-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-cyan-glow/20 text-cyan-glow font-display font-black flex items-center justify-center text-sm border border-cyan-glow/40">1</span>
-                        <h4 class="font-bold text-white text-base">Bước 1: Tải và cài đặt ứng dụng Shadowrocket</h4>
-                    </div>
-                    <ul class="text-xs text-gray-300 pl-11 space-y-1 list-disc list-inside">
-                        <li>Mở App Store trên iPhone, tìm kiếm từ khóa <code class="text-cyan-glow font-mono">Shadowrocket</code> và bấm tải về.</li>
-                        <li><em>(Nếu chưa có tài khoản đã mua Shadowrocket, bạn có thể tìm kiếm các tài khoản chia sẻ miễn phí trên mạng hoặc cài đặt qua tệp IPA).</em></li>
-                    </ul>
-                    <div class="pl-11">
-                        <div class="rounded-xl overflow-hidden border border-gray-800 max-w-sm cursor-pointer hover:border-cyan-glow/60 transition shadow-lg group relative" onclick="openImageModal('./assets/steps/step1_download.jpg', 'Bước 1: Tải và cài đặt ứng dụng Shadowrocket')">
-                            <img src="./assets/steps/step1_download.jpg" alt="Bước 1: Tải Shadowrocket" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-cyan-glow font-bold text-xs gap-1.5">
-                                <i data-feather="zoom-in" class="w-4 h-4"></i> Phóng to ảnh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bước 2 -->
-                <div class="glass-card rounded-2xl p-4 sm:p-5 border border-gray-800/90 space-y-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-cyan-glow/20 text-cyan-glow font-display font-black flex items-center justify-center text-sm border border-cyan-glow/40">2</span>
-                        <h4 class="font-bold text-white text-base">Bước 2: Thêm Module hoặc Cấu hình vào Shadowrocket</h4>
-                    </div>
-                    <ul class="text-xs text-gray-300 pl-11 space-y-1 list-disc list-inside">
-                        <li>Bấm vào nút cài đặt nhanh ở mục <strong>Cài đặt nhanh 1-Click</strong> phía trên trình duyệt iPhone.</li>
-                        <li>Hệ thống sẽ hiện hộp thoại xác nhận <strong>Mở trong “Shadowrocket”?</strong> ➔ Bấm <strong>Mở</strong>.</li>
-                        <li>Trong Shadowrocket: cấu hình <code class="text-cyan-glow font-mono">locketgold.conf</code> đã được thêm tự động, chạm vào và bấm <strong>Sử dụng Config</strong>.</li>
-                    </ul>
-                    <div class="pl-11">
-                        <div class="rounded-xl overflow-hidden border border-gray-800 max-w-sm cursor-pointer hover:border-cyan-glow/60 transition shadow-lg group relative" onclick="openImageModal('./assets/steps/step2_add_config.jpg', 'Bước 2: Thêm Module hoặc Cấu hình vào Shadowrocket')">
-                            <img src="./assets/steps/step2_add_config.jpg" alt="Bước 2: Thêm cấu hình" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-cyan-glow font-bold text-xs gap-1.5">
-                                <i data-feather="zoom-in" class="w-4 h-4"></i> Phóng to ảnh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bước 3 -->
-                <div class="glass-card rounded-2xl p-4 sm:p-5 border border-gray-800/90 space-y-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-cyan-glow/20 text-cyan-glow font-display font-black flex items-center justify-center text-sm border border-cyan-glow/40">3</span>
-                        <h4 class="font-bold text-white text-base">Bước 3: Kích hoạt Giải mã HTTPS (HTTPS Decryption)</h4>
-                    </div>
-                    <ul class="text-xs text-gray-300 pl-11 space-y-1 list-disc list-inside">
-                        <li>Tại tab <strong>Cấu hình</strong>, bấm vào biểu tượng chữ <strong>(i)</strong> màu xanh bên cạnh file cấu hình <code class="text-cyan-glow font-mono">locketgold.conf</code>.</li>
-                        <li>Tìm đến mục <strong>Giải mã HTTPS (HTTPS Decryption)</strong> và gạt công tắc sang <strong>BẬT (Màu xanh)</strong>.</li>
-                    </ul>
-                    <div class="pl-11">
-                        <div class="rounded-xl overflow-hidden border border-gray-800 max-w-sm cursor-pointer hover:border-cyan-glow/60 transition shadow-lg group relative" onclick="openImageModal('./assets/steps/step3_enable_https.jpg', 'Bước 3: Bật Giải mã HTTPS (HTTPS Decryption)')">
-                            <img src="./assets/steps/step3_enable_https.jpg" alt="Bước 3: Bật Giải mã HTTPS" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-cyan-glow font-bold text-xs gap-1.5">
-                                <i data-feather="zoom-in" class="w-4 h-4"></i> Phóng to ảnh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bước 4 -->
-                <div class="glass-card rounded-2xl p-4 sm:p-5 border border-gray-800/90 space-y-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-cyan-glow/20 text-cyan-glow font-display font-black flex items-center justify-center text-sm border border-cyan-glow/40">4</span>
-                        <h4 class="font-bold text-white text-base">Bước 4: Tạo và tải Chứng chỉ CA mới</h4>
-                    </div>
-                    <ul class="text-xs text-gray-300 pl-11 space-y-1 list-disc list-inside">
-                        <li>Trong mục Chứng chỉ CA: bấm vào dòng <strong>Tạo Chứng chỉ CA mới</strong> ➔ Bấm xác nhận <strong>Tạo Chứng chỉ CA mới</strong>.</li>
-                        <li>Bấm tiếp dòng <strong>Cài đặt Chứng chỉ CA vào hệ thống</strong> ➔ Trình duyệt Safari sẽ hiện thông báo, bấm <strong>Cho phép</strong> để tải hồ sơ chứng chỉ về máy.</li>
-                    </ul>
-                    <div class="pl-11">
-                        <div class="rounded-xl overflow-hidden border border-gray-800 max-w-sm cursor-pointer hover:border-cyan-glow/60 transition shadow-lg group relative" onclick="openImageModal('./assets/steps/step4_generate_ca.jpg', 'Bước 4: Tạo và tải Chứng chỉ CA mới')">
-                            <img src="./assets/steps/step4_generate_ca.jpg" alt="Bước 4: Tạo và tải Chứng chỉ CA" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-cyan-glow font-bold text-xs gap-1.5">
-                                <i data-feather="zoom-in" class="w-4 h-4"></i> Phóng to ảnh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bước 5 -->
-                <div class="glass-card rounded-2xl p-4 sm:p-5 border border-gray-800/90 space-y-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-cyan-glow/20 text-cyan-glow font-display font-black flex items-center justify-center text-sm border border-cyan-glow/40">5</span>
-                        <h4 class="font-bold text-white text-base">Bước 5: Cài đặt hồ sơ chứng chỉ vào iPhone</h4>
-                    </div>
-                    <ul class="text-xs text-gray-300 pl-11 space-y-1 list-disc list-inside">
-                        <li>Mở ứng dụng <strong>Cài đặt</strong> của iPhone ➔ Chọn mục <strong>Đã tải về hồ sơ</strong> ở trên cùng (hoặc vào <em>Cài đặt chung ➔ Quản lý VPN & thiết bị</em>).</li>
-                        <li>Chọn hồ sơ chứng chỉ Shadowrocket vừa tải về ➔ Bấm nút <strong>Cài đặt</strong> ở góc trên bên phải màn hình và nhập mật mã máy nếu có.</li>
-                    </ul>
-                    <div class="pl-11">
-                        <div class="rounded-xl overflow-hidden border border-gray-800 max-w-sm cursor-pointer hover:border-cyan-glow/60 transition shadow-lg group relative" onclick="openImageModal('./assets/steps/step5_install_profile.jpg', 'Bước 5: Cài đặt hồ sơ chứng chỉ vào iPhone')">
-                            <img src="./assets/steps/step5_install_profile.jpg" alt="Bước 5: Cài đặt hồ sơ vào iPhone" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-cyan-glow font-bold text-xs gap-1.5">
-                                <i data-feather="zoom-in" class="w-4 h-4"></i> Phóng to ảnh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bước 6 (Quan Trọng Nhất) -->
-                <div class="glass-card rounded-2xl p-4 sm:p-5 border-2 border-amber-500/50 space-y-3 bg-gradient-to-r from-amber-500/10 to-transparent">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 font-display font-black flex items-center justify-center text-sm border border-amber-500/40">6</span>
-                        <div>
-                            <h4 class="font-bold text-amber-300 text-base">Bước 6: Bật quyền tin cậy chứng nhận gốc</h4>
-                            <span class="text-[11px] text-amber-400 font-bold uppercase tracking-wider">⚠️ BƯỚC QUAN TRỌNG NHẤT ĐỂ KÍCH HOẠT LOCKET GOLD</span>
-                        </div>
-                    </div>
-                    <ul class="text-xs text-gray-300 pl-11 space-y-1 list-disc list-inside">
-                        <li>Vào <strong>Cài đặt ➔ Cài đặt chung ➔ Giới thiệu</strong>.</li>
-                        <li>Kéo xuống dưới cùng, chọn dòng <strong>Cài đặt tin cậy chứng nhận</strong>.</li>
-                        <li>Tại mục <em>Bật tin cậy đầy đủ cho chứng nhận gốc</em>, gạt công tắc chứng chỉ <strong>Shadowrocket</strong> sang <strong>BẬT (Màu xanh)</strong> ➔ Hiện bảng cảnh báo, bấm <strong>Tiếp tục</strong>.</li>
-                    </ul>
-                    <div class="pl-11">
-                        <div class="rounded-xl overflow-hidden border border-amber-500/40 max-w-sm cursor-pointer hover:border-amber-400 transition shadow-lg group relative" onclick="openImageModal('./assets/steps/step6_trust_cert.jpg', 'Bước 6: Bật quyền tin cậy chứng nhận gốc (Bắt buộc)')">
-                            <img src="./assets/steps/step6_trust_cert.jpg" alt="Bước 6: Bật tin cậy chứng chỉ" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-amber-300 font-bold text-xs gap-1.5">
-                                <i data-feather="zoom-in" class="w-4 h-4"></i> Phóng to ảnh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bước 7 -->
-                <div class="glass-card rounded-2xl p-4 sm:p-5 border-2 border-emerald-500/50 space-y-3 bg-gradient-to-r from-emerald-500/10 to-transparent">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 font-display font-black flex items-center justify-center text-sm border border-emerald-500/40">7</span>
-                        <div>
-                            <h4 class="font-bold text-emerald-300 text-base">Bước 7: Bật kết nối VPN và tận hưởng Locket Gold</h4>
-                            <span class="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">🎉 KÍCH HOẠT THÀNH CÔNG VĨNH VIỄN</span>
-                        </div>
-                    </div>
-                    <ul class="text-xs text-gray-300 pl-11 space-y-1 list-disc list-inside">
-                        <li>Quay lại ứng dụng Shadowrocket, tại tab <strong>Nhà (Home)</strong> ở thanh dưới cùng:</li>
-                        <li>Gạt công tắc kết nối ở trên cùng sang <strong>BẬT</strong> ➔ Hiện bảng xác nhận, bấm <strong>Kết nối</strong> (hiện biểu tượng VPN trên thanh trạng thái).</li>
-                        <li><strong>Vuốt tắt hẳn ứng dụng Locket từ danh sách đa nhiệm</strong> (không để app chạy ngầm), sau đó mở lại app Locket.</li>
-                        <li>Tài khoản của bạn đã được kích hoạt <strong>Locket Gold VIP 💛</strong> thành công!</li>
-                    </ul>
-                    <div class="pl-11">
-                        <div class="rounded-xl overflow-hidden border border-emerald-500/40 max-w-sm cursor-pointer hover:border-emerald-400 transition shadow-lg group relative" onclick="openImageModal('./assets/steps/step7_connect_vpn.jpg', 'Bước 7: Bật kết nối VPN và tận hưởng Locket Gold')">
-                            <img src="./assets/steps/step7_connect_vpn.jpg" alt="Bước 7: Bật kết nối VPN" class="w-full h-auto object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-emerald-300 font-bold text-xs gap-1.5">
-                                <i data-feather="zoom-in" class="w-4 h-4"></i> Phóng to ảnh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 🛡️ Bước phụ: Chống thu hồi vĩnh viễn (Không cần bật VPN) -->
-        <section class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border-2 border-amber-500/40 space-y-4 bg-gradient-to-br from-amber-500/10 via-ocean-900/60 to-transparent" data-aos="fade-up">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🛡️</span>
-                <div>
-                    <h3 class="text-xl font-display font-black text-white">Bước Phụ: Chống Thu Hồi Vĩnh Viễn (Không Cần Bật VPN)</h3>
-                    <p class="text-xs text-amber-300">Giữ Gold trọn đời mà không tốn pin điện thoại</p>
-                </div>
-            </div>
-            
-            <p class="text-xs text-gray-300 leading-relaxed">
-                Sau khi Locket đã lên Gold thành công, nếu bạn không muốn bật VPN Shadowrocket liên tục làm tốn pin:
-            </p>
-
-            <ol class="space-y-2 text-xs text-gray-300 list-decimal list-inside pl-2 font-medium">
-                <li>Bạn có thể <strong>tắt VPN Shadowrocket đi</strong>.</li>
-                <li>Mở trình duyệt Safari trên iPhone, bấm nút <strong>Tải Cấu Hình DNS Chống Thu Hồi</strong> ở bảng cài đặt nhanh hoặc mở file <code class="text-cyan-glow font-mono">locketgold.mobileconfig</code>.</li>
-                <li>Vào <strong>Cài đặt ➔ Đã tải về hồ sơ ➔ Cài đặt</strong>.</li>
-                <li>Vào <strong>Cài đặt ➔ Cài đặt chung ➔ VPN & Quản lý thiết bị ➔ DNS ➔ Chọn "Locket Gold DNS (HexDen)"</strong>.</li>
-                <li>Bây giờ Locket Gold sẽ được giữ vĩnh viễn trên iPhone của bạn mà không cần bật VPN nữa!</li>
-            </ol>
-        </section>
-
-            </div>
-            <!-- KẾT THÚC NỘI DUNG GÓI 1 -->
-
-            <!-- 👑 NỘI DUNG GÓI 2: VIP SIÊU TỐC (CÀI TRỰC TIẾP TRÊN SAFARI KHÔNG CẦN APP) -->
-            <div id="content-g2" class="space-y-8 hidden">
-                <section class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-amber-400/80 space-y-6 bg-gradient-to-br from-amber-500/10 via-ocean-950/80 to-transparent relative overflow-hidden">
-                    <div class="absolute -top-24 right-0 w-80 h-80 bg-amber-400/15 rounded-full blur-3xl pointer-events-none"></div>
-
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-800 pb-4">
-                        <div>
-                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-400/30 mb-1">
-                                👑 ĐỘC QUYỀN VIP - 30 GIÂY HOÀN TẤT
-                            </div>
-                            <h3 class="text-2xl font-display font-black text-white flex items-center gap-2">
-                                <span class="text-amber-400 text-3xl">🚀</span> Cài Đặt Trực Tiếp Qua Safari (Không Cần App)
-                            </h3>
-                            <p class="text-xs text-gray-300 mt-1">
-                                Không cần mua app Shadowrocket • Không cần bật VPN • Lên Gold vĩnh viễn
-                            </p>
-                        </div>
-                        <span class="text-xs px-3.5 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-400/40 font-mono shrink-0 self-start sm:self-auto font-bold">
-                            ✨ Siêu Đơn Giản
-                        </span>
-                    </div>
-
-                    <!-- Tải Hồ Sơ Cấu Hình VIP -->
-                    <div class="glass-card rounded-2xl p-5 sm:p-6 border-2 border-amber-400/60 shadow-neon-gold space-y-4 bg-gradient-to-r from-amber-500/15 to-transparent">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <div class="flex items-center gap-2.5">
-                                <span class="text-3xl">📱</span>
-                                <div>
-                                    <h4 class="text-base sm:text-lg font-black text-white">Tải Hồ Sơ Cấu Hình VIP (.mobileconfig)</h4>
-                                    <span class="text-xs text-amber-300">Nhúng sẵn chứng chỉ HexDen Root CA & DoH Resolver</span>
-                                </div>
-                            </div>
-                            <button onclick="copyToClipboard('https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig')" class="text-xs bg-ocean-800 hover:bg-amber-400 hover:text-black text-amber-300 px-3 py-1.5 rounded-lg border border-amber-400/30 font-semibold flex items-center gap-1.5 transition self-start sm:self-auto">
-                                <i data-feather="copy" class="w-3.5 h-3.5"></i> Chép Link Tải
+                    <!-- Bottom Action -->
+                    <div class="pt-6 space-y-3">
+                        <button onclick="handlePackageAction('ios_profile')" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-yellow-btn flex items-center justify-center gap-1.5 transition active:scale-95">
+                            <span>Mua Locket Gold</span>
+                            <i data-feather="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <div class="text-center">
+                            <button onclick="openPreBuyGuide('ios_profile')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                <span>Xem hướng dẫn trước khi mua</span>
+                                <i data-feather="arrow-right" class="w-3 h-3"></i>
                             </button>
                         </div>
+                    </div>
+                </div>
 
-                        <p class="text-xs text-gray-300 leading-relaxed">
-                            Bấm nút bên dưới bằng trình duyệt <strong>Safari trên iPhone</strong> ➔ Chọn <strong>Cho phép (Allow)</strong> ➔ Làm theo 3 bước hướng dẫn cực nhanh bên dưới là Locket tự động lên Gold vĩnh viễn!
+                <!-- CARD 2: Locket Gold iOS (Username) -->
+                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-soft-card hover:shadow-hover-card transition-all duration-300 flex flex-col justify-between relative group hover:-translate-y-1">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-600 border border-sky-100">
+                                366 ngày
+                            </span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Locket Gold iOS</h3>
+                            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Mở khóa tính năng Locket Gold bằng Username</p>
+                        </div>
+
+                        <!-- Price Tag -->
+                        <div class="py-2">
+                            <div class="inline-block bg-locket-yellow text-slate-950 font-black text-2xl px-5 py-2 rounded-2xl shadow-sm">
+                                30 Xu
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium ml-2">~ 30.000 VNĐ</span>
+                        </div>
+
+                        <hr class="border-slate-100 my-2">
+
+                        <!-- Features -->
+                        <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Không cần đăng nhập iCloud</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Quay video</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Đăng ảnh từ thư viện</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Xem những ai đã xem tin của bạn</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Thay đổi biểu tượng ứng dụng</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Mở khóa giới hạn bạn bè</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-slate-400">
+                                <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                <span>Không có huy hiệu</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-slate-400">
+                                <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                <span>Bắt buộc cài DNS</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Bottom Action -->
+                    <div class="pt-6 space-y-3">
+                        <button onclick="handlePackageAction('ios_username')" class="w-full bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                            <span>Mua Locket Gold</span>
+                            <i data-feather="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <div class="text-center">
+                            <button onclick="openPreBuyGuide('ios_username')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                <span>Xem hướng dẫn trước khi mua</span>
+                                <i data-feather="arrow-right" class="w-3 h-3"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 3: Locket Gold Android (APK) -->
+                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-soft-card hover:shadow-hover-card transition-all duration-300 flex flex-col justify-between relative group hover:-translate-y-1">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-600 border border-sky-100">
+                                <span>📲</span> Tải App
+                            </span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Locket Gold Android</h3>
+                            <p class="text-xs text-slate-500 mt-1 leading-relaxed">Mở khóa tính năng Locket Gold bằng APK</p>
+                        </div>
+
+                        <!-- Price Tag -->
+                        <div class="py-2">
+                            <div class="inline-block bg-locket-yellow text-slate-950 font-black text-2xl px-5 py-2 rounded-2xl shadow-sm">
+                                30 Xu
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium ml-2">~ 30.000 VNĐ</span>
+                        </div>
+
+                        <hr class="border-slate-100 my-2">
+
+                        <!-- Features -->
+                        <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Cài đặt bằng APK</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Quay video</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Đăng ảnh từ thư viện</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Xem những ai đã xem tin của bạn</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Thay đổi biểu tượng ứng dụng</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Mở khóa giới hạn bạn bè</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                <span>Luôn cập nhật phiên bản mới nhất</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-slate-400">
+                                <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                <span>Không có huy hiệu</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Bottom Action -->
+                    <div class="pt-6 space-y-3">
+                        <button onclick="handlePackageAction('android_apk')" class="w-full bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                            <span>Mua Locket Gold</span>
+                            <i data-feather="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <div class="text-center">
+                            <button onclick="openPreBuyGuide('android_apk')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                <span>Xem hướng dẫn trước khi mua</span>
+                                <i data-feather="arrow-right" class="w-3 h-3"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Public Footer (Theo đúng ảnh 2) -->
+        <footer class="w-full border-t border-slate-100 bg-white mt-16 py-12 text-slate-500 text-xs">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-8">
+                    <!-- Brand info -->
+                    <div class="max-w-xs space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">💛</span>
+                            <span class="font-black text-base text-slate-900">Locket Gold</span>
+                        </div>
+                        <p class="text-slate-500 leading-relaxed text-xs">
+                            Mua và mở khóa tính năng Locket Gold nhanh chóng, bảo mật, tiện lợi.
                         </p>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                            <a href="https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig" class="btn-glow-gold text-black font-black py-4 px-5 rounded-2xl shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base tracking-wide transition text-center">
-                                <i data-feather="download" class="w-5 h-5 shrink-0"></i>
-                                <span>Bấm Để Tải Cấu Hình VIP Về iPhone</span>
-                            </a>
-                            <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="bg-ocean-800/90 hover:bg-ocean-700 text-amber-300 font-bold py-4 px-4 rounded-2xl border border-amber-400/40 flex items-center justify-center gap-2 text-sm transition text-center">
-                                <i data-feather="message-circle" class="w-5 h-5 shrink-0"></i>
-                                <span>Nhờ Văn Nguyên Cài Hộ Từ Xa (Miễn Phí)</span>
-                            </a>
+                        <div class="text-[11px] text-slate-400">
+                            Phát triển & Hỗ trợ bởi <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="font-bold text-slate-700 hover:underline">Trần Văn Nguyên</a>
                         </div>
                     </div>
 
-                    <!-- 3 Bước Cài Đặt Chi Tiết Bằng Thẻ Trực Quan -->
-                    <div class="space-y-4 pt-2">
-                        <h4 class="text-lg font-display font-black text-white flex items-center gap-2">
-                            <span>📋</span> 3 Bước Kích Hoạt Nhanh Trong 30 Giây:
-                        </h4>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <!-- Bước 1 -->
-                            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-amber-400/30 space-y-2.5">
-                                <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 font-display font-black flex items-center justify-center text-sm border border-amber-400/50">
-                                    1
-                                </div>
-                                <h5 class="font-bold text-white text-sm">Tải Hồ Sơ Cấu Hình</h5>
-                                <p class="text-xs text-gray-300 leading-relaxed">
-                                    Mở <strong>Safari</strong> trên iPhone, bấm nút vàng tải cấu hình ở trên ➔ Khi máy hỏi cho phép tải hồ sơ, bấm <strong>Cho phép (Allow)</strong> ➔ Sau đó bấm <strong>Đóng</strong>.
-                                </p>
-                            </div>
-
-                            <!-- Bước 2 -->
-                            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-amber-400/30 space-y-2.5">
-                                <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 font-display font-black flex items-center justify-center text-sm border border-amber-400/50">
-                                    2
-                                </div>
-                                <h5 class="font-bold text-white text-sm">Cài Đặt Vào iPhone</h5>
-                                <p class="text-xs text-gray-300 leading-relaxed">
-                                    Mở app <strong>Cài đặt (Settings)</strong> trên iPhone ➔ Bấm vào dòng <strong>"Đã tải về hồ sơ"</strong> ở ngay trên đầu ➔ Bấm <strong>Cài đặt (Install)</strong> ở góc trên bên phải ➔ Nhập mật mã mở máy.
-                                </p>
-                            </div>
-
-                            <!-- Bước 3 -->
-                            <div class="glass-card rounded-2xl p-4 sm:p-5 border border-amber-400/30 space-y-2.5">
-                                <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 font-display font-black flex items-center justify-center text-sm border border-amber-400/50">
-                                    3
-                                </div>
-                                <h5 class="font-bold text-white text-sm">Bật Tin Cậy & Mở Locket</h5>
-                                <p class="text-xs text-gray-300 leading-relaxed">
-                                    Vào <em>Cài đặt ➔ Cài đặt chung ➔ Giới thiệu ➔ Cài đặt tin cậy chứng nhận</em> ➔ Bật công tắc xanh cho <strong>HexDen Root CA</strong> ➔ Mở Locket lên là thành Gold vĩnh viễn!
-                                </p>
-                            </div>
+                    <!-- Footer Link Columns -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs">
+                        <div class="space-y-2">
+                            <a href="#pricing-section" class="block hover:text-slate-900 transition">Bảng giá Locket Gold</a>
+                            <a href="#pricing-section" class="block hover:text-slate-900 transition">Bảng giá 2026</a>
+                            <a href="#pricing-section" class="block hover:text-slate-900 transition">Cách mua Locket Gold</a>
+                        </div>
+                        <div class="space-y-2">
+                            <a href="#pricing-section" class="block hover:text-slate-900 transition">Locket Gold Android</a>
+                            <a href="#pricing-section" class="block hover:text-slate-900 transition">Locket Gold iOS</a>
+                            <a href="#pricing-section" class="block hover:text-slate-900 transition">Tính năng Gold</a>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="block hover:text-slate-900 transition cursor-pointer" onclick="showToast('Tính năng Celebrity Radar')">Celebrity Radar</span>
+                            <a href="#pricing-section" class="block hover:text-slate-900 transition">So sánh gói</a>
+                            <span class="block hover:text-slate-900 transition cursor-pointer" onclick="showToast('Bảo hành vĩnh viễn')">Thời hạn & Bảo hành</span>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="block hover:text-slate-900 transition cursor-pointer" onclick="showToast('Thanh toán an toàn qua VietQR')">Mua an toàn</span>
+                            <span class="block hover:text-slate-900 transition cursor-pointer" onclick="showToast('100% không yêu cầu mật khẩu iCloud')">Không cần mật khẩu</span>
+                            <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="block hover:text-slate-900 transition">Trợ giúp FB</a>
                         </div>
                     </div>
-                </section>
-            </div>
-            <!-- KẾT THÚC NỘI DUNG GÓI 2 -->
-        </section>
-        <!-- KẾT THÚC KHU VỰC HƯỚNG DẪN TỔNG -->
-
-        <!-- ❓ Câu hỏi thường gặp (FAQ) Accordion -->
-        <section class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border border-cyan-500/25 space-y-4" data-aos="fade-up">
-            <h3 class="text-xl font-display font-black text-white flex items-center gap-2">
-                <span class="text-cyan-glow">❓</span> Câu Hỏi Thường Gặp (FAQ)
-            </h3>
-
-            <div class="space-y-3 text-xs">
-                <!-- Q1 -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800">
-                    <button class="w-full flex items-center justify-between text-left font-bold text-white text-sm" onclick="toggleFaq(1)">
-                        <span>1. Tôi đã làm theo hướng dẫn nhưng vào Locket vẫn chưa có Gold?</span>
-                        <i id="faq-icon-1" data-feather="chevron-down" class="w-4 h-4 text-cyan-glow transition-transform duration-200"></i>
-                    </button>
-                    <div id="faq-ans-1" class="hidden mt-3 pt-3 border-t border-gray-800/80 text-gray-300 space-y-1.5">
-                        <p>• Kiểm tra xem bạn đã bật tin cậy chứng chỉ ở <em>Cài đặt ➔ Cài đặt chung ➔ Giới thiệu ➔ Cài đặt tin cậy chứng nhận</em> chưa.</p>
-                        <p>• Đảm bảo đã vuốt tắt hẳn app Locket chạy ngầm trước khi mở lại.</p>
-                        <p>• Vào Cài đặt trong Locket bấm nút "Khôi phục gói mua" (Restore Purchase).</p>
-                    </div>
                 </div>
 
-                <!-- Q2 -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800">
-                    <button class="w-full flex items-center justify-between text-left font-bold text-white text-sm" onclick="toggleFaq(2)">
-                        <span>2. Dùng DNS chống thu hồi này mạng có bị chậm hay lag không?</span>
-                        <i id="faq-icon-2" data-feather="chevron-down" class="w-4 h-4 text-cyan-glow transition-transform duration-200"></i>
-                    </button>
-                    <div id="faq-ans-2" class="hidden mt-3 pt-3 border-t border-gray-800/80 text-gray-300 leading-relaxed">
-                        <p>Hoàn toàn không! Cấu hình sử dụng công nghệ <strong>Split DNS</strong>, chỉ định tuyến duy nhất các yêu cầu kiểm tra của Locket về server chống thu hồi của HexDen (ID: <code>a2dd89</code>), còn toàn bộ mạng lướt web, Facebook, TikTok, YouTube... vẫn dùng 100% mạng gốc tốc độ cao.</p>
-                    </div>
-                </div>
-
-                <!-- Q3 -->
-                <div class="glass-card rounded-2xl p-4 border border-gray-800">
-                    <button class="w-full flex items-center justify-between text-left font-bold text-white text-sm" onclick="toggleFaq(3)">
-                        <span>3. Tôi có thể chia sẻ cho bạn bè dùng cùng không?</span>
-                        <i id="faq-icon-3" data-feather="chevron-down" class="w-4 h-4 text-cyan-glow transition-transform duration-200"></i>
-                    </button>
-                    <div id="faq-ans-3" class="hidden mt-3 pt-3 border-t border-gray-800/80 text-gray-300 leading-relaxed">
-                        <p>Có! Cấu hình này được tối ưu sẵn trên máy chủ NextDNS cá nhân của HexDen, bạn có thể gửi link này cho bất kỳ ai sử dụng hoàn toàn miễn phí.</p>
+                <div class="border-t border-slate-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400">
+                    <div>© 2026 Locket Gold. Mọi quyền được bảo lưu.</div>
+                    <div class="flex items-center gap-4">
+                        <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="hover:text-slate-700">Điều khoản</a>
+                        <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="hover:text-slate-700">Bảo mật</a>
+                        <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="hover:text-slate-700">Liên hệ</a>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- 👨‍💻 Thông tin phát triển & Footer -->
-        <footer class="text-center text-xs text-gray-400 py-8 space-y-3 border-t border-gray-800">
-            <div class="flex items-center justify-center flex-wrap gap-4 text-sm font-semibold">
-                <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1.5">
-                    <i data-feather="facebook" class="w-4 h-4"></i> Kênh Hỗ Trợ: Văn Nguyên (Facebook)
-                </a>
-            </div>
-            <p>Bản quyền & Phát triển bởi <strong class="text-white">Văn Nguyên</strong>. Phát hành miễn phí cho cộng đồng người dùng iOS.</p>
-            <p class="text-[11px] text-gray-600">Nghiêm cấm mọi hành vi sao chép nhằm mục đích thương mại.</p>
         </footer>
 
-    </main>
+    </div>
+    <!-- KẾT THÚC GIAO DIỆN CHƯA ĐĂNG NHẬP -->
 
-    <!-- Floating Back To Top Button -->
-    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 z-40 bg-ocean-800/90 hover:bg-cyan-500 hover:text-black text-cyan-300 p-3 rounded-2xl border border-cyan-500/40 shadow-xl opacity-0 pointer-events-none transition duration-300">
-        <i data-feather="arrow-up" class="w-5 h-5"></i>
-    </button>
 
-    <!-- Interactive Scripts -->
+    <!-- ========================================================================= -->
+    <!-- 2. GIAO DIỆN ĐÃ ĐĂNG NHẬP THÀNH CÔNG (DASHBOARD VIEW - Theo ảnh 1)        -->
+    <!-- ========================================================================= -->
+    <div id="dashboardView" class="w-full flex-1 hidden flex-row relative z-10 min-h-screen">
+        
+        <!-- Left Sidebar (Desktop Fixed / Mobile Drawer) -->
+        <aside id="sidebarEl" class="w-64 bg-white border-r border-slate-100 flex flex-col justify-between p-4 shrink-0 transition-transform duration-300 z-50">
+            <!-- Brand & Nav -->
+            <div class="space-y-6">
+                <!-- Logo -->
+                <div class="flex items-center justify-between px-2 py-1">
+                    <a href="#" class="flex items-center gap-2">
+                        <span class="text-2xl">💛</span>
+                        <span class="font-extrabold text-lg text-slate-900 tracking-tight">Locket Gold</span>
+                    </a>
+                    <!-- Mobile close button -->
+                    <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-400 hover:text-slate-700 p-1">
+                        <i data-feather="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Main Menu Links -->
+                <div class="space-y-1">
+                    <button onclick="switchDashboardTab('overview')" id="nav-btn-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition">
+                        <i data-feather="home" class="w-4 h-4 text-slate-400"></i>
+                        <span>Tổng quan</span>
+                    </button>
+                    
+                    <button onclick="switchDashboardTab('pricing')" id="nav-btn-pricing" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold bg-amber-50 text-amber-900 border border-amber-200/60 shadow-sm transition">
+                        <i data-feather="shopping-bag" class="w-4 h-4 text-amber-600"></i>
+                        <span>Mua gói</span>
+                    </button>
+                    
+                    <button onclick="switchDashboardTab('wallet')" id="nav-btn-wallet" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition">
+                        <i data-feather="credit-card" class="w-4 h-4 text-slate-400"></i>
+                        <span>Ví Xu</span>
+                    </button>
+                    
+                    <button onclick="switchDashboardTab('my_packages')" id="nav-btn-my_packages" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition">
+                        <i data-feather="layers" class="w-4 h-4 text-slate-400"></i>
+                        <span>Của tôi</span>
+                    </button>
+                </div>
+
+                <!-- Section: TIỆN ÍCH -->
+                <div class="pt-2">
+                    <div class="px-3 pb-2 text-[10px] font-black uppercase tracking-wider text-slate-400 font-mono">
+                        TIỆN ÍCH
+                    </div>
+                    <div class="space-y-1 text-xs">
+                        <button onclick="showToast('Tiện ích Celebrity Radar đang tải dữ liệu...')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
+                            <i data-feather="radio" class="w-4 h-4 text-slate-400"></i>
+                            <span>Celebrity Radar</span>
+                        </button>
+                        <button onclick="switchDashboardTab('history')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
+                            <i data-feather="file-text" class="w-4 h-4 text-slate-400"></i>
+                            <span>Lịch sử mua</span>
+                        </button>
+                        <button onclick="openReferralModal()" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
+                            <i data-feather="gift" class="w-4 h-4 text-slate-400"></i>
+                            <span>Giới thiệu</span>
+                        </button>
+                        <button onclick="showToast('Không có thông báo mới.')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
+                            <i data-feather="bell" class="w-4 h-4 text-slate-400"></i>
+                            <span>Thông báo</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Info at Bottom Left (Theo đúng ảnh 1) -->
+            <div class="pt-4 border-t border-slate-100 space-y-2">
+                <div class="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 border border-slate-100">
+                    <!-- Avatar "T" -->
+                    <div class="w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
+                        T
+                    </div>
+                    <div class="overflow-hidden leading-tight flex-1">
+                        <div id="userEmailDisplay" class="text-xs font-bold text-slate-900 truncate" title="tranvannguyen991@gmail.com">
+                            tranvannguyen991@gmail.com
+                        </div>
+                        <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                            <span>ID:</span>
+                            <span id="userCodeDisplay" class="font-bold text-slate-600">gTSxCJPL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action row: Logout or Switch to Public -->
+                <div class="flex items-center justify-between px-1 text-[11px]">
+                    <button onclick="switchView('public')" class="text-slate-500 hover:text-slate-800 font-medium">
+                        ← Xem trang chủ
+                    </button>
+                    <button onclick="logout()" class="text-rose-500 hover:text-rose-700 font-bold">
+                        Đăng xuất
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Main View -->
+        <div class="flex-1 flex flex-col min-w-0 bg-[#fbfbfe]">
+            
+            <!-- Dashboard Top Header -->
+            <header class="w-full h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
+                <div class="flex items-center gap-3">
+                    <!-- Mobile Hamburger -->
+                    <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100">
+                        <i data-feather="menu" class="w-5 h-5"></i>
+                    </button>
+                    <span class="text-sm font-extrabold text-slate-900 hidden sm:inline-block">Cổng Dịch Vụ Locket Gold</span>
+                </div>
+
+                <!-- Header Actions (Theo đúng ảnh 1: + Nạp Xu, Chuông, Số dư 0 Xu) -->
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <!-- + Nạp Xu Button -->
+                    <button onclick="openRechargeModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black text-xs sm:text-sm px-4 py-2 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
+                        <i data-feather="plus-circle" class="w-4 h-4"></i>
+                        <span>Nạp Xu</span>
+                    </button>
+
+                    <!-- Notification Bell -->
+                    <button onclick="showToast('Bạn không có thông báo chưa đọc nào.')" class="w-9 h-9 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 transition">
+                        <i data-feather="bell" class="w-4 h-4"></i>
+                    </button>
+
+                    <!-- Số dư 0 Xu Badge -->
+                    <div class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-700">
+                        <span class="text-slate-400">Số dư:</span>
+                        <span id="userBalanceDisplay" class="font-black text-slate-900 font-mono">0 Xu</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content Container -->
+            <main class="flex-1 p-4 sm:p-8 max-w-6xl w-full mx-auto space-y-8">
+                
+                <!-- Tab: MUA GÓI (Default Active in Screenshot 1) -->
+                <div id="dashTab-pricing" class="space-y-8">
+                    <!-- Hero Header -->
+                    <div class="text-center max-w-2xl mx-auto space-y-2 pt-2">
+                        <div class="text-[11px] font-extrabold tracking-widest uppercase text-slate-400 font-mono">
+                            BẢNG GIÁ LOCKET GOLD
+                        </div>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                            Mua gói Locket Gold<br/>phù hợp với bạn
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium">
+                            Tất cả giá được hiển thị bằng Xu và quyền lợi sẽ được xác nhận trước khi thanh toán.
+                        </p>
+                    </div>
+
+                    <!-- 3 Pricing Cards with "Chọn gói ➔" buttons (Theo đúng ảnh 1) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 items-stretch">
+                        
+                        <!-- CARD 1: Locket Gold iOS [Mới] -->
+                        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-soft-card hover:shadow-hover-card transition-all duration-300 flex flex-col justify-between relative group hover:-translate-y-1">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-600 border border-sky-100">
+                                        365 ngày
+                                    </span>
+                                    <span class="popular-badge inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100/80 text-amber-900 border border-amber-200">
+                                        <span>⭐</span> Phổ biến
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Locket Gold iOS [Mới]</h3>
+                                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Profile DNS HTTPS cho Locket Gold trên iOS/iPadOS.</p>
+                                </div>
+
+                                <div class="py-2">
+                                    <div class="inline-block bg-locket-yellow text-slate-950 font-black text-2xl px-5 py-2 rounded-2xl shadow-sm">
+                                        30 Xu
+                                    </div>
+                                    <span class="text-xs text-slate-400 font-medium ml-2">~ 30.000 VNĐ</span>
+                                </div>
+
+                                <hr class="border-slate-100 my-2">
+
+                                <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Không cần đăng nhập iCloud</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Quay video 30s</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Đăng ảnh/video từ thư viện</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Chụp ảnh filter</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Thay đổi biểu tượng ứng dụng</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Mở khóa giới hạn bạn bè</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5 text-slate-400">
+                                        <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                        <span>Cần cài Root CA và profile DNS</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="pt-6 space-y-3">
+                                <button onclick="buyPackageLoggedIn('ios_profile')" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-yellow-btn flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <span>Chọn gói</span>
+                                    <i data-feather="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                                <div class="text-center">
+                                    <button onclick="openPreBuyGuide('ios_profile')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                        <span>Xem hướng dẫn trước khi mua</span>
+                                        <i data-feather="arrow-right" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 2: Locket Gold iOS (Username) -->
+                        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-soft-card hover:shadow-hover-card transition-all duration-300 flex flex-col justify-between relative group hover:-translate-y-1">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-600 border border-sky-100">
+                                        366 ngày
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Locket Gold iOS</h3>
+                                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Mở khóa tính năng Locket Gold bằng Username</p>
+                                </div>
+
+                                <div class="py-2">
+                                    <div class="inline-block bg-locket-yellow text-slate-950 font-black text-2xl px-5 py-2 rounded-2xl shadow-sm">
+                                        30 Xu
+                                    </div>
+                                    <span class="text-xs text-slate-400 font-medium ml-2">~ 30.000 VNĐ</span>
+                                </div>
+
+                                <hr class="border-slate-100 my-2">
+
+                                <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Không cần đăng nhập iCloud</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Quay video</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Đăng ảnh từ thư viện</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Xem những ai đã xem tin của bạn</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Thay đổi biểu tượng ứng dụng</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Mở khóa giới hạn bạn bè</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5 text-slate-400">
+                                        <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                        <span>Không có huy hiệu</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5 text-slate-400">
+                                        <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                        <span>Bắt buộc cài DNS</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="pt-6 space-y-3">
+                                <button onclick="buyPackageLoggedIn('ios_username')" class="w-full bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <span>Chọn gói</span>
+                                    <i data-feather="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                                <div class="text-center">
+                                    <button onclick="openPreBuyGuide('ios_username')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                        <span>Xem hướng dẫn trước khi mua</span>
+                                        <i data-feather="arrow-right" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 3: Locket Gold Android (APK) -->
+                        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-soft-card hover:shadow-hover-card transition-all duration-300 flex flex-col justify-between relative group hover:-translate-y-1">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-600 border border-sky-100">
+                                        <span>📲</span> Tải App
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Locket Gold Android</h3>
+                                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Mở khóa tính năng Locket Gold bằng APK</p>
+                                </div>
+
+                                <div class="py-2">
+                                    <div class="inline-block bg-locket-yellow text-slate-950 font-black text-2xl px-5 py-2 rounded-2xl shadow-sm">
+                                        30 Xu
+                                    </div>
+                                    <span class="text-xs text-slate-400 font-medium ml-2">~ 30.000 VNĐ</span>
+                                </div>
+
+                                <hr class="border-slate-100 my-2">
+
+                                <ul class="space-y-2.5 text-xs text-slate-700 font-medium">
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Cài đặt bằng APK</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Quay video</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Đăng ảnh từ thư viện</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Xem những ai đã xem tin của bạn</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Thay đổi biểu tượng ứng dụng</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Mở khóa giới hạn bạn bè</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5">
+                                        <i data-feather="check" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                                        <span>Luôn cập nhật phiên bản mới nhất</span>
+                                    </li>
+                                    <li class="flex items-start gap-2.5 text-slate-400">
+                                        <i data-feather="x" class="w-4 h-4 text-rose-500 shrink-0 mt-0.5"></i>
+                                        <span>Không có huy hiệu</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="pt-6 space-y-3">
+                                <button onclick="buyPackageLoggedIn('android_apk')" class="w-full bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 font-extrabold text-sm py-3.5 px-4 rounded-full shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <span>Chọn gói</span>
+                                    <i data-feather="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                                <div class="text-center">
+                                    <button onclick="openPreBuyGuide('android_apk')" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1">
+                                        <span>Xem hướng dẫn trước khi mua</span>
+                                        <i data-feather="arrow-right" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Tab: TỔNG QUAN -->
+                <div id="dashTab-overview" class="hidden space-y-6">
+                    <h3 class="text-xl font-extrabold text-slate-900">Tổng Quan Tài Khoản</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-soft-card">
+                            <div class="text-xs text-slate-400 font-bold uppercase">Số dư hiện tại</div>
+                            <div id="overviewBalance" class="text-3xl font-black text-amber-500 mt-2 font-mono">0 Xu</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-soft-card">
+                            <div class="text-xs text-slate-400 font-bold uppercase">Gói đang kích hoạt</div>
+                            <div id="overviewPkgCount" class="text-3xl font-black text-slate-900 mt-2">0</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-soft-card">
+                            <div class="text-xs text-slate-400 font-bold uppercase">Mã giới thiệu</div>
+                            <div class="text-xl font-black text-sky-600 mt-2 font-mono">gTSxCJPL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: VÍ XU -->
+                <div id="dashTab-wallet" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-soft-card space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-xl font-extrabold text-slate-900">Ví Xu Của Bạn</h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Dùng Xu để mở khóa và gia hạn các gói Locket Gold</p>
+                            </div>
+                            <button onclick="openRechargeModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black text-sm px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-2">
+                                <i data-feather="plus" class="w-4 h-4"></i>
+                                <span>Nạp Thêm Xu</span>
+                            </button>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-amber-50/60 border border-amber-200/60 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-amber-800 font-bold uppercase">Số dư khả dụng:</span>
+                                <div id="walletBalanceBig" class="text-3xl font-black text-slate-950 font-mono mt-1">0 Xu</div>
+                            </div>
+                            <div class="text-right text-xs text-slate-500">
+                                <div>Tỷ giá quy đổi:</div>
+                                <div class="font-bold text-slate-800">1 Xu = 1.000 VNĐ</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: CỦA TÔI (Gói đã mua) -->
+                <div id="dashTab-my_packages" class="hidden space-y-6">
+                    <h3 class="text-xl font-extrabold text-slate-900">Gói Dịch Vụ Của Tôi</h3>
+                    <div id="myPackagesContainer" class="space-y-4">
+                        <div class="bg-white rounded-3xl p-8 border border-slate-100 text-center space-y-3">
+                            <span class="text-4xl">📦</span>
+                            <div class="font-bold text-slate-700">Bạn chưa mua gói Locket Gold nào.</div>
+                            <p class="text-xs text-slate-400">Hãy chọn một trong các gói bên tab "Mua gói" để bắt đầu nâng cấp Locket Gold.</p>
+                            <button onclick="switchDashboardTab('pricing')" class="bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-xs px-5 py-2.5 rounded-full mt-2 inline-flex items-center gap-1.5 shadow-yellow-btn">
+                                <span>Đi đến Mua Gói</span>
+                                <i data-feather="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: LỊCH SỬ MUA -->
+                <div id="dashTab-history" class="hidden space-y-6">
+                    <h3 class="text-xl font-extrabold text-slate-900">Lịch Sử Giao Dịch</h3>
+                    <div id="orderHistoryContainer" class="bg-white rounded-3xl p-6 border border-slate-100 shadow-soft-card">
+                        <div class="text-center py-6 text-slate-400 text-xs">Chưa có giao dịch phát sinh.</div>
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+    <!-- KẾT THÚC GIAO DIỆN ĐÃ ĐĂNG NHẬP -->
+
+
+    <!-- ========================================================================= -->
+    <!-- 3. MODALS HỆ THỐNG: ĐĂNG NHẬP, NẠP XU VIETQR, HƯỚNG DẪN CÀI ĐẶT           -->
+    <!-- ========================================================================= -->
+
+    <!-- Modal Đăng Nhập -->
+    <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5 relative">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <span class="text-3xl">💛</span>
+                <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Đăng Nhập Locket Gold</h3>
+                <p class="text-xs text-slate-500">Quản lý ví Xu và các gói Locket Gold của bạn</p>
+            </div>
+
+            <!-- Form -->
+            <div class="space-y-3 pt-1">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Email của bạn</label>
+                    <input id="loginEmailInput" type="email" value="tranvannguyen991@gmail.com" placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu</label>
+                    <input id="loginPassInput" type="password" value="••••••••" placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                </div>
+
+                <button onclick="performLogin()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2">
+                    Đăng Nhập Ngay
+                </button>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 text-center">
+                <button onclick="performDemoLogin()" class="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline">
+                    ⚡ Đăng nhập nhanh tài khoản demo (Trần Văn Nguyên)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nạp Xu (VietQR MB Bank) -->
+    <div id="rechargeModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-4 max-h-[95vh] overflow-y-auto relative">
+            <button onclick="closeRechargeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-900 text-xs font-extrabold border border-amber-200">
+                    💳 Nạp Xu Tự Động VietQR
+                </span>
+                <h3 class="text-xl font-extrabold text-slate-900">Quét Mã Chuyển Khoản</h3>
+                <p class="text-xs text-slate-500">Tỷ lệ quy đổi: <strong>1.000 VNĐ = 1 Xu</strong> (Nạp 30K = 30 Xu)</p>
+            </div>
+
+            <!-- Gói nạp nhanh -->
+            <div class="grid grid-cols-3 gap-2 pt-1">
+                <button onclick="selectRechargeAmount(30)" class="recharge-btn py-2 rounded-xl border-2 border-locket-yellow bg-yellow-50 text-slate-900 font-black text-xs text-center transition" data-amount="30">
+                    30 Xu<br><span class="text-[10px] text-slate-500 font-normal">30.000 đ</span>
+                </button>
+                <button onclick="selectRechargeAmount(50)" class="recharge-btn py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 font-black text-xs text-center transition" data-amount="50">
+                    50 Xu<br><span class="text-[10px] text-slate-500 font-normal">50.000 đ</span>
+                </button>
+                <button onclick="selectRechargeAmount(100)" class="recharge-btn py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 font-black text-xs text-center transition" data-amount="100">
+                    100 Xu<br><span class="text-[10px] text-slate-500 font-normal">100.000 đ</span>
+                </button>
+            </div>
+
+            <!-- VietQR Image -->
+            <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200/80 flex flex-col items-center justify-center max-w-[240px] mx-auto">
+                <img id="rechargeQrImg" src="" alt="VietQR MB Bank" class="w-full h-auto rounded-lg shadow-sm">
+                <span class="text-[10px] text-slate-500 font-bold mt-1.5">Quét bằng ứng dụng ngân hàng bất kỳ</span>
+            </div>
+
+            <!-- Account Details -->
+            <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-200/80 space-y-2 text-xs">
+                <div class="flex items-center justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-500">Ngân hàng:</span>
+                    <span class="font-extrabold text-blue-700">MB Bank (Quân Đội)</span>
+                </div>
+                <div class="flex items-center justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-500">Số tài khoản:</span>
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-mono font-black text-slate-900 text-sm">6012072005</span>
+                        <button onclick="copyText('6012072005')" class="px-2 py-0.5 rounded-md bg-white border border-slate-300 text-[10px] font-bold text-slate-700 hover:bg-slate-100">
+                            Sao chép
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-500">Chủ tài khoản:</span>
+                    <span class="font-extrabold text-slate-900 uppercase">TRẦN VĂN NGUYÊN</span>
+                </div>
+                <div class="flex items-center justify-between py-1">
+                    <span class="text-slate-500">Nội dung CK:</span>
+                    <div class="flex items-center gap-1.5">
+                        <span id="rechargeContentText" class="font-mono font-black text-amber-700 text-xs">NAPXU 8391</span>
+                        <button onclick="copyText(document.getElementById('rechargeContentText').textContent)" class="px-2 py-0.5 rounded-md bg-white border border-slate-300 text-[10px] font-bold text-amber-700 hover:bg-slate-100">
+                            Sao chép
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmation Action -->
+            <div class="space-y-2 pt-1">
+                <button onclick="confirmRecharge()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black py-3 rounded-full shadow-yellow-btn flex items-center justify-center gap-1.5 text-sm transition">
+                    <i data-feather="check-circle" class="w-4 h-4"></i>
+                    <span>Tôi Đã Chuyển Khoản ➔ Cộng Xu</span>
+                </button>
+                <div class="text-center">
+                    <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="text-xs text-slate-500 hover:text-slate-800 transition">
+                        Cần hỗ trợ giao dịch? Nhắn tin Văn Nguyên qua FB
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Xem Hướng Dẫn Trước Khi Mua -->
+    <div id="preBuyModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto relative">
+            <button onclick="closePreBuyGuide()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">📖</span>
+                <div>
+                    <h3 id="preBuyTitle" class="text-lg font-extrabold text-slate-900">Hướng Dẫn Trước Khi Mua</h3>
+                    <p class="text-xs text-slate-500">Các thông tin quan trọng cần biết trước khi nâng cấp</p>
+                </div>
+            </div>
+
+            <div id="preBuyContent" class="text-xs text-slate-600 space-y-3 leading-relaxed border-t border-slate-100 pt-3">
+                <!-- Nội dung hướng dẫn động theo từng gói -->
+            </div>
+
+            <div class="pt-2">
+                <button onclick="closePreBuyGuide()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2.5 rounded-xl text-xs transition">
+                    Đã Hiểu & Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Hướng Dẫn Cài Đặt Sau Khi Mua Thành Công (Gói iOS Profile Mới) -->
+    <div id="installGuideModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5 max-h-[92vh] overflow-y-auto relative">
+            <button onclick="closeInstallGuideModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="text-center space-y-1">
+                <span class="text-3xl">🎉</span>
+                <h3 class="text-2xl font-black text-slate-900">Kích Hoạt Locket Gold Thành Công!</h3>
+                <p class="text-xs text-slate-500">Làm theo 3 bước nhanh dưới đây trên iPhone để hoàn tất lên Gold</p>
+            </div>
+
+            <!-- Download Button -->
+            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center space-y-3">
+                <div class="text-xs font-bold text-amber-900">Bước 1: Mở bằng Safari để tải hồ sơ cấu hình DNS</div>
+                <a href="https://raw.githubusercontent.com/HexDen/locket_gold/refs/heads/main/locketgold.mobileconfig" class="inline-flex items-center justify-center gap-2 bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black px-6 py-3 rounded-full text-sm shadow-yellow-btn transition">
+                    <i data-feather="download" class="w-4 h-4"></i>
+                    <span>Tải Hồ Sơ Cấu Hình VIP Về iPhone</span>
+                </a>
+            </div>
+
+            <!-- 3 Bước Cài Đặt -->
+            <div class="space-y-3 text-xs text-slate-700">
+                <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                    <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-black flex items-center justify-center shrink-0 text-xs">1</span>
+                    <div>
+                        <strong class="text-slate-900">Tải cấu hình:</strong> Bấm nút tải ở trên bằng trình duyệt <strong>Safari</strong> ➔ Bấm <strong>Cho phép (Allow)</strong> ➔ Bấm <strong>Đóng</strong>.
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                    <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-black flex items-center justify-center shrink-0 text-xs">2</span>
+                    <div>
+                        <strong class="text-slate-900">Cài đặt vào máy:</strong> Mở app <strong>Cài đặt</strong> trên iPhone ➔ Bấm dòng <strong>Đã tải về hồ sơ</strong> ở trên đầu ➔ Bấm <strong>Cài đặt</strong> góc trên ➔ Nhập mật mã iPhone.
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/80">
+                    <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-black flex items-center justify-center shrink-0 text-xs">3</span>
+                    <div>
+                        <strong class="text-slate-900">Bật chứng chỉ & Mở Locket:</strong> Vào <em>Cài đặt ➔ Cài đặt chung ➔ Giới thiệu ➔ Cài đặt tin cậy chứng nhận</em> ➔ Bật công tắc xanh cho <strong>HexDen Root CA</strong> ➔ Tắt hẳn Locket mở lại là lên Gold vĩnh viễn!
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-2 text-center">
+                <button onclick="closeInstallGuideModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-full text-xs transition">
+                    Hoàn Tất Cài Đặt
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Toast Notification -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 opacity-0 translate-y-3 pointer-events-none transition-all duration-300">
+        <span id="toastIcon">✨</span>
+        <span id="toastMsg">Thông báo</span>
+    </div>
+
+    <!-- Floating Help Button (Bottom Right) -->
+    <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="fixed bottom-6 right-6 z-40 bg-sky-500 hover:bg-sky-600 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition hover:scale-105" title="Hỗ trợ Facebook">
+        <i data-feather="send" class="w-5 h-5"></i>
+    </a>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. JAVASCRIPT ĐIỀU KHIỂN LOGIC, XU, TÀI KHOẢN VÀ CÁC GÓI                   -->
+    <!-- ========================================================================= -->
     <script>
-        AOS.init({ once: true, duration: 600 });
-        feather.replace();
+        // System State
+        var appState = {
+            isLoggedIn: false,
+            user: {
+                email: 'tranvannguyen991@gmail.com',
+                code: 'gTSxCJPL',
+                balance: 0,
+                packages: []
+            },
+            currentRechargeAmount: 30
+        };
 
-        // Payment & Package State
-        var currentSelectedPkg = 'g2';
+        // Load saved state from localStorage
+        function initApp() {
+            var saved = localStorage.getItem('locket_gold_app_state');
+            if (saved) {
+                try {
+                    var parsed = JSON.parse(saved);
+                    appState = Object.assign(appState, parsed);
+                } catch(e) {}
+            }
+            updateUI();
+            feather.replace();
+        }
 
-        function openPaymentModal(pkg) {
-            currentSelectedPkg = pkg;
-            var pkgNameEl = document.getElementById('payPkgName');
-            var pkgPriceEl = document.getElementById('payPkgPrice');
-            var qrImgEl = document.getElementById('qrImage');
-            var payContentEl = document.getElementById('payContent');
-            var modal = document.getElementById('paymentModal');
+        function saveState() {
+            localStorage.setItem('locket_gold_app_state', JSON.stringify(appState));
+            updateUI();
+        }
 
-            var randSuffix = Math.floor(1000 + Math.random() * 9000);
-            var amount = 49000;
-            var content = 'LOCKET G2 ' + randSuffix;
-            var pkgTitle = 'Gói VIP Siêu Tốc (Trực Tiếp)';
+        function updateUI() {
+            var publicView = document.getElementById('publicView');
+            var dashboardView = document.getElementById('dashboardView');
+            var userBalanceDisplay = document.getElementById('userBalanceDisplay');
+            var overviewBalance = document.getElementById('overviewBalance');
+            var walletBalanceBig = document.getElementById('walletBalanceBig');
+            var overviewPkgCount = document.getElementById('overviewPkgCount');
+            var userEmailDisplay = document.getElementById('userEmailDisplay');
+            var userCodeDisplay = document.getElementById('userCodeDisplay');
 
-            if (pkg === 'g1') {
-                amount = 29000;
-                content = 'LOCKET G1 ' + randSuffix;
-                pkgTitle = 'Gói Cơ Bản (Shadowrocket)';
+            if (appState.isLoggedIn) {
+                publicView.classList.add('hidden');
+                dashboardView.classList.remove('hidden');
+                dashboardView.classList.add('flex');
+            } else {
+                publicView.classList.remove('hidden');
+                dashboardView.classList.add('hidden');
+                dashboardView.classList.remove('flex');
             }
 
-            pkgNameEl.textContent = pkgTitle;
-            pkgPriceEl.textContent = amount.toLocaleString('vi-VN') + ' VNĐ';
-            payContentEl.textContent = content;
+            // Sync user data
+            if (userBalanceDisplay) userBalanceDisplay.textContent = appState.user.balance + ' Xu';
+            if (overviewBalance) overviewBalance.textContent = appState.user.balance + ' Xu';
+            if (walletBalanceBig) walletBalanceBig.textContent = appState.user.balance + ' Xu';
+            if (overviewPkgCount) overviewPkgCount.textContent = (appState.user.packages || []).length;
+            if (userEmailDisplay) userEmailDisplay.textContent = appState.user.email;
+            if (userCodeDisplay) userCodeDisplay.textContent = appState.user.code;
 
-            var qrUrl = 'https://img.vietqr.io/image/MB-6012072005-compact2.png?amount=' + amount + '&addInfo=' + encodeURIComponent(content) + '&accountName=' + encodeURIComponent('TRAN VAN NGUYEN');
-            qrImgEl.src = qrUrl;
+            renderMyPackages();
+            feather.replace();
+        }
+
+        // Switch View
+        function switchView(view) {
+            if (view === 'public') {
+                document.getElementById('publicView').classList.remove('hidden');
+                document.getElementById('dashboardView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('flex');
+            } else if (view === 'dashboard' && appState.isLoggedIn) {
+                document.getElementById('publicView').classList.add('hidden');
+                document.getElementById('dashboardView').classList.remove('hidden');
+                document.getElementById('dashboardView').classList.add('flex');
+            }
+            feather.replace();
+        }
+
+        // Dashboard Tabs
+        function switchDashboardTab(tabId) {
+            var tabs = ['pricing', 'overview', 'wallet', 'my_packages', 'history'];
+            tabs.forEach(function(t) {
+                var el = document.getElementById('dashTab-' + t);
+                var btn = document.getElementById('nav-btn-' + t);
+                if (el) el.classList.add('hidden');
+                if (btn) {
+                    btn.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition';
+                }
+            });
+
+            var activeEl = document.getElementById('dashTab-' + tabId);
+            var activeBtn = document.getElementById('nav-btn-' + tabId);
+            if (activeEl) activeEl.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold bg-amber-50 text-amber-900 border border-amber-200/60 shadow-sm transition';
+            }
+            feather.replace();
+        }
+
+        // Mobile Sidebar Toggle
+        function toggleMobileSidebar() {
+            var sidebar = document.getElementById('sidebarEl');
+            sidebar.classList.toggle('hidden');
+        }
+
+        // Auth
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('loginModal').classList.add('flex');
+            feather.replace();
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('flex');
+        }
+
+        function performLogin() {
+            var email = document.getElementById('loginEmailInput').value.trim() || 'tranvannguyen991@gmail.com';
+            appState.isLoggedIn = true;
+            appState.user.email = email;
+            saveState();
+            closeLoginModal();
+            showToast('Đăng nhập thành công! Chào mừng ' + email);
+        }
+
+        function performDemoLogin() {
+            appState.isLoggedIn = true;
+            appState.user.email = 'tranvannguyen991@gmail.com';
+            appState.user.code = 'gTSxCJPL';
+            saveState();
+            closeLoginModal();
+            showToast('Đăng nhập thành công với tài khoản Trần Văn Nguyên!');
+        }
+
+        function logout() {
+            appState.isLoggedIn = false;
+            saveState();
+            showToast('Đã đăng xuất tài khoản.');
+        }
+
+        // Package Handling
+        function handlePackageAction(pkgType) {
+            if (!appState.isLoggedIn) {
+                // If not logged in, prompt login or quick flow
+                openLoginModal();
+            } else {
+                buyPackageLoggedIn(pkgType);
+            }
+        }
+
+        function buyPackageLoggedIn(pkgType) {
+            // Check if username package
+            if (pkgType === 'ios_username') {
+                showToast('ℹ️ Gói kích hoạt bằng Username đang đồng bộ máy chủ và sẽ mở tính năng nhập username sau!');
+                return;
+            }
+
+            // Check balance
+            if (appState.user.balance < 30) {
+                showToast('⚠️ Số dư không đủ 30 Xu. Vui lòng nạp thêm Xu!');
+                openRechargeModal(30);
+                return;
+            }
+
+            // Deduct balance and add package
+            appState.user.balance -= 30;
+            var pkgName = pkgType === 'ios_profile' ? 'Locket Gold iOS [Mới]' : 'Locket Gold Android APK';
+            appState.user.packages = appState.user.packages || [];
+            appState.user.packages.push({
+                type: pkgType,
+                name: pkgName,
+                date: new Date().toLocaleDateString('vi-VN'),
+                expires: '365 ngày'
+            });
+            saveState();
+
+            if (pkgType === 'ios_profile') {
+                openInstallGuideModal();
+            } else {
+                showToast('✅ Mở khóa thành công gói ' + pkgName + '! Kiểm tra tab "Của tôi" để lấy link tải APK.');
+                switchDashboardTab('my_packages');
+            }
+        }
+
+        function renderMyPackages() {
+            var container = document.getElementById('myPackagesContainer');
+            if (!container) return;
+
+            var pkgs = appState.user.packages || [];
+            if (pkgs.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-3xl p-8 border border-slate-100 text-center space-y-3">
+                        <span class="text-4xl">📦</span>
+                        <div class="font-bold text-slate-700">Bạn chưa mua gói Locket Gold nào.</div>
+                        <p class="text-xs text-slate-400">Hãy chọn một trong các gói bên tab "Mua gói" để bắt đầu nâng cấp Locket Gold.</p>
+                        <button onclick="switchDashboardTab('pricing')" class="bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-xs px-5 py-2.5 rounded-full mt-2 inline-flex items-center gap-1.5 shadow-yellow-btn">
+                            <span>Đi đến Mua Gói</span>
+                            <i data-feather="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            var html = '';
+            pkgs.forEach(function(pkg, idx) {
+                html += `
+                    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-soft-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg font-black text-slate-900">${pkg.name}</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800">Đang hoạt động</span>
+                            </div>
+                            <div class="text-xs text-slate-400">Kích hoạt ngày: ${pkg.date} • Hạn dùng: ${pkg.expires}</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${pkg.type === 'ios_profile' ? `
+                                <button onclick="openInstallGuideModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-xs px-4 py-2 rounded-xl shadow-sm flex items-center gap-1.5">
+                                    <i data-feather="download" class="w-3.5 h-3.5"></i>
+                                    <span>Tải Cấu Hình</span>
+                                </button>
+                            ` : `
+                                <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5">
+                                    <i data-feather="download" class="w-3.5 h-3.5"></i>
+                                    <span>Tải File APK</span>
+                                </a>
+                            `}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Recharge (VietQR) Modal Controller
+        function openRechargeModal(defaultAmount) {
+            var modal = document.getElementById('rechargeModal');
+            selectRechargeAmount(defaultAmount || 30);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            feather.replace();
+        }
+
+        function closeRechargeModal() {
+            var modal = document.getElementById('rechargeModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function selectRechargeAmount(xu) {
+            appState.currentRechargeAmount = xu;
+            var vnd = xu * 1000;
+            var randomCode = Math.floor(1000 + Math.random() * 9000);
+            var content = 'NAPXU ' + randomCode;
+
+            document.getElementById('rechargeContentText').textContent = content;
+
+            var qrImg = document.getElementById('rechargeQrImg');
+            var qrUrl = 'https://img.vietqr.io/image/MB-6012072005-compact2.png?amount=' + vnd + '&addInfo=' + encodeURIComponent(content) + '&accountName=TRAN%20VAN%20NGUYEN';
+            qrImg.src = qrUrl;
+
+            // Highlight buttons
+            var buttons = document.querySelectorAll('.recharge-btn');
+            buttons.forEach(function(b) {
+                var amt = parseInt(b.getAttribute('data-amount'), 10);
+                if (amt === xu) {
+                    b.className = 'recharge-btn py-2 rounded-xl border-2 border-locket-yellow bg-yellow-50 text-slate-900 font-black text-xs text-center transition';
+                } else {
+                    b.className = 'recharge-btn py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 font-black text-xs text-center transition';
+                }
+            });
+        }
+
+        function confirmRecharge() {
+            var added = appState.currentRechargeAmount || 30;
+            appState.user.balance = (appState.user.balance || 0) + added;
+            saveState();
+            closeRechargeModal();
+            showToast('🎉 Nạp thành công ' + added + ' Xu vào ví! Số dư mới: ' + appState.user.balance + ' Xu');
+        }
+
+        // Pre-Buy Guides
+        function openPreBuyGuide(type) {
+            var modal = document.getElementById('preBuyModal');
+            var titleEl = document.getElementById('preBuyTitle');
+            var contentEl = document.getElementById('preBuyContent');
+
+            if (type === 'ios_profile') {
+                titleEl.textContent = 'Hướng Dẫn: Locket Gold iOS [Mới]';
+                contentEl.innerHTML = `
+                    <p>• <strong>Điều kiện thiết bị:</strong> Dành cho iPhone/iPad chạy iOS 15.0 trở lên.</p>
+                    <p>• <strong>Cách hoạt động:</strong> Bạn tải trực tiếp 1 file cấu hình DNS bảo mật (.mobileconfig) từ Safari và cài đặt vào máy. Cấu hình này tự động chuyển đổi tài khoản Locket của bạn thành Locket Gold VIP vĩnh viễn.</p>
+                    <p>• <strong>Ưu điểm:</strong> Không cần nhập mật khẩu Apple ID / iCloud, không cần giữ VPN bật liên tục, không gây hao pin hay lag mạng.</p>
+                    <p>• <strong>Yêu cầu nhỏ:</strong> Bạn chỉ cần bật tin cậy chứng chỉ Root CA trong phần Cài đặt của iPhone theo 3 bước hướng dẫn cực kỳ nhanh gọn.</p>
+                `;
+            } else if (type === 'ios_username') {
+                titleEl.textContent = 'Hướng Dẫn: Locket Gold iOS (Username)';
+                contentEl.innerHTML = `
+                    <p>• <strong>Cách hoạt động:</strong> Mở khóa tính năng thông qua Username tài khoản Locket của bạn.</p>
+                    <p>• <strong>Trạng thái:</strong> Hệ thống phân chia gói đã sẵn sàng. Tính năng nhập Username và kích hoạt tự động sẽ được mở trong đợt cập nhật tiếp theo.</p>
+                    <p>• <strong>Lưu ý:</strong> Gói này không bao gồm huy hiệu Gold trên profile nhưng vẫn mở khóa đầy đủ tính năng quay video, tải ảnh thư viện, xem ai đã xem tin.</p>
+                `;
+            } else if (type === 'android_apk') {
+                titleEl.textContent = 'Hướng Dẫn: Locket Gold Android';
+                contentEl.innerHTML = `
+                    <p>• <strong>Điều kiện thiết bị:</strong> Tất cả điện thoại Android (Samsung, Xiaomi, Oppo, Vivo, Realme, v.v.).</p>
+                    <p>• <strong>Cách hoạt động:</strong> Cài đặt trực tiếp file APK Locket Gold đã được mod sẵn tính năng. Đăng nhập tài khoản Locket bình thường là có ngay tính năng Gold.</p>
+                    <p>• <strong>Cập nhật:</strong> Khi Locket ra phiên bản mới, bạn chỉ cần tải bản APK cập nhật từ hệ thống để tiếp tục sử dụng.</p>
+                `;
+            } else {
+                titleEl.textContent = 'Quy Định Bảng Giá Locket Gold';
+                contentEl.innerHTML = `
+                    <p>• <strong>Tỷ lệ Xu:</strong> 1 Xu = 1.000 VNĐ. Tất cả các gói đều có giá niêm yết rõ ràng là 30 Xu (~30.000 VNĐ).</p>
+                    <p>• <strong>Thời hạn sử dụng:</strong> Gói iOS có giá trị 365 ngày (kèm hỗ trợ kỹ thuật và chống thu hồi vĩnh viễn).</p>
+                    <p>• <strong>Bảo mật:</strong> Tuyệt đối không thu thập mật khẩu, thông tin cá nhân hay tài khoản iCloud của người dùng.</p>
+                `;
+            }
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             feather.replace();
         }
 
-        function closePaymentModal() {
-            var modal = document.getElementById('paymentModal');
+        function closePreBuyGuide() {
+            var modal = document.getElementById('preBuyModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
 
-        function confirmPayment() {
-            closePaymentModal();
-            showToast('✅ Đã xác nhận thanh toán! Đang mở hướng dẫn cài đặt...');
-            switchTab(currentSelectedPkg);
-            var targetEl = document.getElementById('instructions-area');
-            if (targetEl) {
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
-        function switchTab(tab) {
-            currentSelectedPkg = tab;
-            var contentG1 = document.getElementById('content-g1');
-            var contentG2 = document.getElementById('content-g2');
-            var tabBtnG1 = document.getElementById('tab-btn-g1');
-            var tabBtnG2 = document.getElementById('tab-btn-g2');
-
-            if (tab === 'g1') {
-                contentG1.classList.remove('hidden');
-                contentG2.classList.add('hidden');
-                tabBtnG1.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-gradient-to-r from-cyan-glow to-blue-600 text-black shadow-lg shadow-cyan-500/30 flex items-center gap-2 justify-center';
-                tabBtnG2.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-ocean-900/60 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 justify-center';
-            } else {
-                contentG2.classList.remove('hidden');
-                contentG1.classList.add('hidden');
-                tabBtnG2.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 btn-glow-gold text-black shadow-lg shadow-amber-500/30 flex items-center gap-2 justify-center';
-                tabBtnG1.className = 'flex-1 py-3 px-5 rounded-2xl font-display font-black text-sm sm:text-base transition-all duration-300 bg-ocean-900/60 text-gray-300 hover:text-white border border-gray-800 flex items-center gap-2 justify-center';
-            }
+        // Install Guide Modal Controller
+        function openInstallGuideModal() {
+            var modal = document.getElementById('installGuideModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
             feather.replace();
         }
 
-        // Copy to clipboard with toast notification
-        function copyToClipboard(text) {
+        function closeInstallGuideModal() {
+            var modal = document.getElementById('installGuideModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Referral Modal
+        function openReferralModal() {
+            showToast('🎁 Mã giới thiệu của bạn là: ' + appState.user.code + ' (Nhận 5 Xu cho mỗi bạn bè giới thiệu thành công)');
+        }
+
+        // Toast
+        function showToast(msg) {
+            var toast = document.getElementById('toastNotification');
+            var msgEl = document.getElementById('toastMsg');
+            msgEl.textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(function() {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Clipboard Copy
+        function copyText(text) {
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text).then(function() {
-                    showToast("Đã sao chép liên kết vào bộ nhớ tạm!");
-                }).catch(function() {
-                    fallbackCopy(text);
+                    showToast('Đã sao chép: ' + text);
                 });
             } else {
-                fallbackCopy(text);
+                var input = document.createElement('input');
+                input.value = text;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast('Đã sao chép: ' + text);
             }
         }
 
-        function fallbackCopy(text) {
-            var input = document.createElement("input");
-            input.value = text;
-            document.body.appendChild(input);
-            input.select();
-            document.execCommand("copy");
-            document.body.removeChild(input);
-            showToast("Đã sao chép liên kết vào bộ nhớ tạm!");
-        }
-
-        // Toast controller
-        function showToast(msg) {
-            var toast = document.getElementById("toastContent");
-            var msgEl = document.getElementById("toastMessage");
-            msgEl.textContent = msg;
-            toast.classList.remove("opacity-0", "translate-y-3");
-            toast.classList.add("opacity-100", "translate-y-0");
-            setTimeout(function() {
-                toast.classList.remove("opacity-100", "translate-y-0");
-                toast.classList.add("opacity-0", "translate-y-3");
-            }, 2500);
-        }
-
-        // Lightbox Modal Controller
-        function openImageModal(src, caption) {
-            var modal = document.getElementById("imageModal");
-            var img = document.getElementById("modalImg");
-            var cap = document.getElementById("modalCaption");
-            img.src = src;
-            cap.textContent = caption;
-            modal.classList.remove("hidden");
-            modal.classList.add("flex");
-            feather.replace();
-        }
-
-        function closeImageModal() {
-            var modal = document.getElementById("imageModal");
-            modal.classList.add("hidden");
-            modal.classList.remove("flex");
-        }
-
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape") {
-                closeImageModal();
-            }
-        });
-
-        // FAQ Toggle Controller
-        function toggleFaq(id) {
-            var ans = document.getElementById("faq-ans-" + id);
-            var icon = document.getElementById("faq-icon-" + id);
-            if (ans.classList.contains("hidden")) {
-                ans.classList.remove("hidden");
-                icon.style.transform = "rotate(180deg)";
-            } else {
-                ans.classList.add("hidden");
-                icon.style.transform = "rotate(0deg)";
-            }
-        }
-
-        // Back to top scroll button
-        window.addEventListener("scroll", function() {
-            var btn = document.getElementById("backToTop");
-            if (window.scrollY > 400) {
-                btn.classList.remove("opacity-0", "pointer-events-none");
-                btn.classList.add("opacity-100");
-            } else {
-                btn.classList.add("opacity-0", "pointer-events-none");
-                btn.classList.remove("opacity-100");
-            }
-        });
+        // Run on load
+        window.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
