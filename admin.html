@@ -1715,6 +1715,14 @@
                     showAdminToast(`🎉 Đã cấp thành công ${pkgName} cho ${email}!`);
                     closeModalManualGrant();
                     loadAllAdminData();
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
+
                 } else {
                     alert('Lỗi: ' + res.error);
                 }

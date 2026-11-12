@@ -351,38 +351,62 @@ async function dbCreateOrder(orderData) {
 // =========================================================================
 
 
-// Lấy toàn bộ đơn nạp tiền
+// Lấy toàn bộ đơn nạp tiền (Hợp nhất Cloud Firestore + Local Storage)
 async function dbAdminGetAllRecharges() {
+    var itemMap = {};
+    
+    // 1. Nạp từ Local Storage trước
+    try {
+        var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+        localRecharges.forEach(function(r) {
+            if (r && r.id) itemMap[r.id] = r;
+        });
+    } catch(e) {}
+
+    // 2. Nạp thêm từ Cloud Firestore nếu có
     if (isUsingCloudDB && firestoreDB) {
         try {
-            var snapshot = await firestoreDB.collection('recharges').get();
-            var list = [];
-            snapshot.forEach(doc => list.push(doc.data()));
-            return list.reverse();
+            var snapshot = await runWithTimeout(firestoreDB.collection('recharges').get(), 2500);
+            snapshot.forEach(function(doc) {
+                var d = doc.data();
+                if (d && d.id) itemMap[d.id] = Object.assign(itemMap[d.id] || {}, d);
+            });
         } catch(e) {
-            console.error("Firestore dbAdminGetAllRecharges error:", e);
-            return JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+            console.warn("Firestore dbAdminGetAllRecharges fallback:", e);
         }
-    } else {
-        return JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
     }
+
+    var list = Object.values(itemMap);
+    return list.reverse();
 }
 
-// Lấy toàn bộ đơn mua gói
+// Lấy toàn bộ đơn mua gói (Hợp nhất Cloud Firestore + Local Storage)
 async function dbAdminGetAllOrders() {
+    var itemMap = {};
+
+    // 1. Nạp từ Local Storage trước
+    try {
+        var localOrders = JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+        localOrders.forEach(function(o) {
+            if (o && o.id) itemMap[o.id] = o;
+        });
+    } catch(e) {}
+
+    // 2. Nạp thêm từ Cloud Firestore nếu có
     if (isUsingCloudDB && firestoreDB) {
         try {
-            var snapshot = await firestoreDB.collection('orders').get();
-            var list = [];
-            snapshot.forEach(doc => list.push(doc.data()));
-            return list.reverse();
+            var snapshot = await runWithTimeout(firestoreDB.collection('orders').get(), 2500);
+            snapshot.forEach(function(doc) {
+                var d = doc.data();
+                if (d && d.id) itemMap[d.id] = Object.assign(itemMap[d.id] || {}, d);
+            });
         } catch(e) {
-            console.error("Firestore dbAdminGetAllOrders error:", e);
-            return JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+            console.warn("Firestore dbAdminGetAllOrders fallback:", e);
         }
-    } else {
-        return JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
     }
+
+    var list = Object.values(itemMap);
+    return list.reverse();
 }
 
 // Duyệt nạp tiền (Cộng Xu cho khách)
@@ -566,20 +590,39 @@ async function dbAdminGrantPackage(email, pkgType, pkgName) {
     }
 }
 
+// Lấy toàn bộ khách hàng (Hợp nhất Cloud Firestore + Local Storage)
 async function dbAdminGetAllUsers() {
+    var userMap = {};
+
+    // 1. Luôn nạp toàn bộ khách hàng từ Local Storage trước (Siêu tốc & Chắc chắn không mất dữ liệu)
+    try {
+        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+        Object.values(localUsers).forEach(function(u) {
+            if (u && u.email) {
+                userMap[u.email.toLowerCase()] = u;
+            }
+        });
+    } catch(e) {
+        console.warn("Local users read error:", e);
+    }
+
+    // 2. Hợp nhất thêm khách hàng từ Cloud Firestore nếu kết nối
     if (isUsingCloudDB && firestoreDB) {
         try {
-            var snapshot = await firestoreDB.collection('users').get();
-            var list = [];
-            snapshot.forEach(doc => list.push(doc.data()));
-            return list;
+            var snapshot = await runWithTimeout(firestoreDB.collection('users').get(), 2500);
+            snapshot.forEach(function(doc) {
+                var d = doc.data();
+                if (d && d.email) {
+                    var k = d.email.toLowerCase();
+                    userMap[k] = Object.assign(userMap[k] || {}, d);
+                }
+            });
         } catch(e) {
-            return [];
+            console.warn("Firestore dbAdminGetAllUsers fallback:", e);
         }
-    } else {
-        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-        return Object.values(localUsers);
     }
+
+    return Object.values(userMap);
 }
 
 // Lưu cấu hình Firebase tùy chỉnh người dùng nhập vào
