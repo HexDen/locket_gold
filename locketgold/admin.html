@@ -1231,6 +1231,13 @@
 
         // 1. Session & Auth Gate
         function checkAdminSession() {
+            var isLocked = sessionStorage.getItem('locket_admin_locked');
+            if (isLocked === 'true') {
+                document.getElementById('adminLockScreen').classList.remove('hidden');
+                document.getElementById('adminMainPortal').classList.add('hidden');
+                return;
+            }
+
             var isAuth = sessionStorage.getItem('locket_admin_authenticated');
             var localAdmin = false;
 
@@ -1256,7 +1263,7 @@
             }
         }
 
-        function handleAdminLogin(e) {
+        async function handleAdminLogin(e) {
             e.preventDefault();
             var pinInput = document.getElementById('adminPinInput');
             var pin = pinInput.value.trim();
@@ -1269,7 +1276,7 @@
                 return;
             }
 
-            // 2. Cho phép đăng nhập bằng mật khẩu của tài khoản Admin hiện có
+            // 2. Cho phép đăng nhập bằng mật khẩu của tài khoản Admin hiện có trong LocalStorage
             try {
                 var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
                 var matchedAdmin = Object.values(localUsers).find(function(u) {
@@ -1285,12 +1292,35 @@
                 }
             } catch(err) {}
 
+            // 3. Cho phép đăng nhập bằng mật khẩu của Quản Trị Viên lưu trên Cloud Firestore
+            if (typeof isUsingCloudDB !== "undefined" && isUsingCloudDB && typeof firestoreDB !== "undefined" && firestoreDB) {
+                try {
+                    var snap = await runWithTimeout(firestoreDB.collection('users').get(), 3000);
+                    var foundAdmin = null;
+                    snap.forEach(function(doc) {
+                        var d = doc.data();
+                        if (d && (d.role === 'admin' || (typeof checkIsAdmin === "function" && checkIsAdmin(d))) && d.password === pin) {
+                            foundAdmin = d;
+                        }
+                    });
+                    if (foundAdmin) {
+                        sessionStorage.setItem('locket_admin_authenticated', 'true');
+                        sessionStorage.setItem('locket_admin_email', foundAdmin.email);
+                        sessionStorage.setItem('locket_admin_name', foundAdmin.name || foundAdmin.email);
+                        showAdminToast('🎉 Mở khóa quyền Quản Trị thành công!');
+                        unlockAdminPortal();
+                        return;
+                    }
+                } catch(err) {}
+            }
+
             showAdminToast('⚠️ Mã PIN hoặc mật khẩu Admin không đúng. Mặc định: 888888 hoặc admin123!');
             pinInput.focus();
         }
 
         function unlockAdminPortal() {
             adminState.authenticated = true;
+            try { sessionStorage.removeItem('locket_admin_locked'); } catch(e) {}
             document.getElementById('adminLockScreen').classList.add('hidden');
             document.getElementById('adminMainPortal').classList.remove('hidden');
 
@@ -1307,6 +1337,7 @@
         }
 
         function lockAdminSession() {
+            try { sessionStorage.setItem('locket_admin_locked', 'true'); } catch(e) {}
             sessionStorage.removeItem('locket_admin_authenticated');
             sessionStorage.removeItem('locket_admin_email');
             sessionStorage.removeItem('locket_admin_name');
@@ -1769,7 +1800,7 @@
                 var res = await dbAdminToggleRole(email, newRole);
                 if (res.success) {
                     showAdminToast(`🎉 Đã cập nhật quyền thành công: ${email} ➔ ${roleLabel}!`);
-                    loadAllAdminData();
+                    setTimeout(loadAllAdminData, 400);
                 } else {
                     showAdminToast('⚠️ Lỗi: ' + (res.error || 'Không thể đổi quyền'));
                 }
@@ -1797,16 +1828,26 @@
             // 2. Cập nhật Cloud Firestore
             if (typeof isUsingCloudDB !== "undefined" && isUsingCloudDB && typeof firestoreDB !== "undefined" && firestoreDB) {
                 try {
-                    var snap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+                    var snap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 3000);
                     if (!snap.empty) {
                         for (var i = 0; i < snap.docs.length; i++) {
                             await snap.docs[i].ref.update({ password: newPass }).catch(function(){});
+                        }
+                    } else {
+                        var allSnap = await runWithTimeout(firestoreDB.collection('users').get(), 3000);
+                        for (var j = 0; j < allSnap.docs.length; j++) {
+                            var doc = allSnap.docs[j];
+                            var d = doc.data();
+                            if (d && (d.email || '').trim().toLowerCase() === email) {
+                                await doc.ref.update({ password: newPass }).catch(function(){});
+                            }
                         }
                     }
                 } catch(e) {}
             }
 
             showAdminToast(`🎉 Đã đổi mật khẩu cho ${email} thành: ${newPass}`);
+            setTimeout(loadAllAdminData, 400);
         }
 
         // 9. Actions: Approve & Reject Recharges

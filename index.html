@@ -2322,6 +2322,7 @@
                 var isAdmin = (typeof checkIsAdmin === "function" && checkIsAdmin(user)) || (user && user.role === 'admin');
                 if (isAdmin) {
                     user.role = 'admin';
+                    try { sessionStorage.removeItem('locket_admin_locked'); } catch(e) {}
                     sessionStorage.setItem('locket_admin_authenticated', 'true');
                     sessionStorage.setItem('locket_admin_email', user.email);
                     sessionStorage.setItem('locket_admin_name', user.name || user.email);
@@ -2434,6 +2435,7 @@
                 var isAdmin = (typeof checkIsAdmin === "function" && checkIsAdmin(user)) || (user && user.role === 'admin');
                 if (isAdmin) {
                     user.role = 'admin';
+                    try { sessionStorage.removeItem('locket_admin_locked'); } catch(e) {}
                     sessionStorage.setItem('locket_admin_authenticated', 'true');
                     sessionStorage.setItem('locket_admin_email', user.email);
                     sessionStorage.setItem('locket_admin_name', user.name || user.email);

@@ -119,31 +119,109 @@ function runWithTimeout(promise, ms) {
     });
 }
 
-// Đăng nhập tài khoản
+// Đăng nhập tài khoản (Kiểm tra cả Local Storage & Cloud Firestore thời gian thực)
 async function dbLoginUser(email, password) {
     email = (email || '').trim().toLowerCase();
+    password = (password || '').trim();
 
-    // 1. Kiểm tra Local Storage trước tiên (Siêu tốc 0.001s)
+    if (!email) {
+        return { success: false, error: 'Vui lòng nhập địa chỉ email của bạn!' };
+    }
+    if (!password) {
+        return { success: false, error: 'Vui lòng nhập mật khẩu đăng nhập!' };
+    }
+
     var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
     var matchedKey = Object.keys(localUsers).find(function(k) {
         return k.toLowerCase() === email;
     });
     var localUser = matchedKey ? localUsers[matchedKey] : null;
 
+    // 1. Kiểm tra nhanh trong Local Storage nếu có và đúng mật khẩu
     if (localUser && localUser.password && localUser.password === password) {
-        if (localUser.role === 'user' && email !== 'tranvannguyen991@gmail.com') {
-            localUser.role = 'user';
-        } else if (localUser.role === 'admin' || checkIsAdmin(localUser)) {
-            localUser.role = 'admin';
-        } else {
-            localUser.role = 'user';
-        }
+        var isLocalAdmin = (localUser.role === 'admin') || (typeof checkIsAdmin === "function" && checkIsAdmin(localUser));
+        localUser.role = isLocalAdmin ? 'admin' : 'user';
         localUsers[matchedKey] = localUser;
         localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+
+        // Nạp thêm bản mới nhất từ Cloud Firestore trong nền nếu có
+        if (isUsingCloudDB && firestoreDB) {
+            firestoreDB.collection('users').where('email', '==', email).get().then(function(snap) {
+                if (!snap.empty) {
+                    var latest = snap.docs[0].data();
+                    var merged = Object.assign({}, localUser, latest);
+                    localUsers[matchedKey] = merged;
+                    localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+                }
+            }).catch(function(){});
+        }
         return { success: true, user: localUser };
     }
 
-    // 2. Thử Firebase Cloud Auth nếu đã cấu hình (có giới hạn timeout 2.5s)
+    // 2. Tra cứu trực tiếp trên Cloud Firestore (Đảm bảo luôn tìm thấy tài khoản trên thiết bị mới / Vercel)
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var cloudUser = null;
+            var cloudDocRef = null;
+
+            // Truy vấn chính xác theo email
+            var snap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 3000);
+            if (!snap.empty) {
+                cloudUser = snap.docs[0].data();
+                cloudDocRef = snap.docs[0].ref;
+            } else {
+                // Fallback: Quét case-insensitive nếu email lưu chữ hoa chữ thường
+                var allSnap = await runWithTimeout(firestoreDB.collection('users').get(), 3000);
+                allSnap.forEach(function(doc) {
+                    var d = doc.data();
+                    if (d && (d.email || '').trim().toLowerCase() === email) {
+                        cloudUser = d;
+                        cloudDocRef = doc.ref;
+                    }
+                });
+            }
+
+            if (cloudUser) {
+                // Kiểm tra mật khẩu tài khoản
+                if (cloudUser.password && cloudUser.password !== password) {
+                    return { 
+                        success: false, 
+                        error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại hoặc bấm "Quên mật khẩu?"' 
+                    };
+                }
+
+                // Nếu tài khoản trên Firestore chưa có trường mật khẩu, lưu luôn mật khẩu vừa nhập
+                if (!cloudUser.password) {
+                    cloudUser.password = password;
+                    if (cloudDocRef) {
+                        cloudDocRef.update({ password: password }).catch(function(){});
+                    }
+                }
+
+                // Xác định quyền Admin hoặc Khách Hàng
+                var isCloudAdmin = (cloudUser.role === 'admin') || (typeof checkIsAdmin === "function" && checkIsAdmin(cloudUser));
+                cloudUser.role = isCloudAdmin ? 'admin' : 'user';
+
+                // Đồng bộ và lưu cache vào Local Storage
+                localUsers[email] = cloudUser;
+                localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+
+                return { success: true, user: cloudUser };
+            }
+        } catch(cloudErr) {
+            console.warn("Firestore dbLoginUser lookup warn:", cloudErr);
+        }
+    }
+
+    // 3. Nếu tài khoản có trong Local Storage nhưng sai mật khẩu
+    if (localUser && localUser.password && localUser.password !== password) {
+        return { 
+            success: false, 
+            error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại hoặc bấm "Quên mật khẩu?"' 
+        };
+    }
+
+    // 4. Thử qua Firebase Auth nếu được kích hoạt
     if (isUsingCloudDB && firebaseAuth) {
         try {
             var userCredential = await runWithTimeout(firebaseAuth.signInWithEmailAndPassword(email, password), 2500);
@@ -154,6 +232,7 @@ async function dbLoginUser(email, password) {
                 uid: uid,
                 name: userCredential.user.displayName || email.split('@')[0],
                 email: email,
+                password: password,
                 role: isAdminRole ? 'admin' : 'user',
                 balance: 0,
                 code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
@@ -162,80 +241,28 @@ async function dbLoginUser(email, password) {
                 createdAt: new Date().toISOString()
             };
 
-            // Lưu local cache
             localUsers[email] = defaultData;
             localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
 
-            // Thử lấy dữ liệu Firestore không block
             if (firestoreDB) {
-                firestoreDB.collection('users').doc(uid).get().then(function(doc) {
-                    if (doc.exists) {
-                        var cloudData = doc.data();
-                        if (checkIsAdmin(cloudData) || checkIsAdmin(email)) {
-                            cloudData.role = 'admin';
-                        } else {
-                            cloudData.role = cloudData.role || 'user';
-                        }
-                        localUsers[email] = cloudData;
-                        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-                    } else {
-                        firestoreDB.collection('users').doc(uid).set(defaultData).catch(function(){});
-                    }
-                }).catch(function(){});
+                firestoreDB.collection('users').doc(uid).set(defaultData, { merge: true }).catch(function(){});
             }
 
             return { success: true, user: defaultData };
         } catch (err) {
             console.warn("Firebase Auth signIn catch:", err.code || err.message);
 
-            if (err.message === 'TIMEOUT' || err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed' || err.code === 'auth/network-request-failed') {
-                if (localUser) {
-                    if (localUser.password && localUser.password !== password) {
-                        return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
-                    }
-                    if (checkIsAdmin(localUser) || checkIsAdmin(email)) {
-                        localUser.role = 'admin';
-                    } else {
-                        localUser.role = localUser.role || 'user';
-                    }
-                    localUsers[matchedKey] = localUser;
-                    localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-                    return { success: true, user: localUser };
-                }
-                return { success: false, error: 'Tài khoản chưa tồn tại hoặc sai mật khẩu. Vui lòng bấm Đăng ký tài khoản mới!' };
+            if (err.code === 'auth/wrong-password') {
+                return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại hoặc bấm Quên mật khẩu.' };
             }
-
-            var errMsg = 'Đăng nhập không thành công.';
-            if (err.code === 'auth/user-not-found') {
-                errMsg = 'Tài khoản chưa tồn tại. Vui lòng bấm Đăng ký tài khoản mới!';
-            } else if (err.code === 'auth/wrong-password') {
-                errMsg = 'Mật khẩu không chính xác! Vui lòng thử lại hoặc bấm Quên mật khẩu.';
-            } else if (err.code === 'auth/invalid-email') {
-                errMsg = 'Địa chỉ email không đúng định dạng.';
-            } else if (err.code === 'auth/too-many-requests') {
-                errMsg = 'Đã thử sai quá nhiều lần. Vui lòng đợi vài phút hoặc bấm Quên mật khẩu!';
-            } else {
-                errMsg = err.message || errMsg;
-            }
-            return { success: false, error: errMsg };
         }
     }
 
-    if (localUser) {
-        if (localUser.password && localUser.password !== password) {
-            return { success: false, error: 'Mật khẩu không chính xác! Vui lòng kiểm tra lại.' };
-        }
-        if (checkIsAdmin(localUser) || checkIsAdmin(email)) {
-            localUser.role = 'admin';
-        } else {
-            localUser.role = localUser.role || 'user';
-        }
-        localUsers[matchedKey] = localUser;
-        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-        return { success: true, user: localUser };
-    }
-
-    return { success: false, error: 'Tài khoản chưa tồn tại trên hệ thống! Vui lòng bấm tab Đăng Ký để tạo tài khoản mới.' };
+    // 5. Nếu không tìm thấy ở bất cứ đâu
+    return { 
+        success: false, 
+        error: 'Tài khoản chưa tồn tại hoặc sai thông tin! Vui lòng kiểm tra lại hoặc bấm tab Đăng Ký để tạo tài khoản mới.' 
+    };
 }
 
 // Đăng ký tài khoản mới (Siêu tốc & Chống treo tuyệt đối)
@@ -1000,19 +1027,20 @@ async function dbAdminToggleRole(email, newRole) {
     // 4. Cập nhật trên Cloud Firestore nếu có kết nối
     if (isUsingCloudDB && firestoreDB) {
         try {
-            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 3000);
             if (!userSnap.empty) {
                 for (var i = 0; i < userSnap.docs.length; i++) {
                     await userSnap.docs[i].ref.update({ role: newRole }).catch(function(){});
                 }
             } else {
-                var allSnap = await runWithTimeout(firestoreDB.collection('users').get(), 2500);
-                allSnap.forEach(function(doc) {
+                var allSnap = await runWithTimeout(firestoreDB.collection('users').get(), 3000);
+                for (var j = 0; j < allSnap.docs.length; j++) {
+                    var doc = allSnap.docs[j];
                     var data = doc.data();
                     if (data && (data.email || '').toLowerCase() === email) {
-                        doc.ref.update({ role: newRole }).catch(function(){});
+                        await doc.ref.update({ role: newRole }).catch(function(){});
                     }
-                });
+                }
             }
         } catch(e) {
             console.warn("Firestore dbAdminToggleRole warn:", e);
