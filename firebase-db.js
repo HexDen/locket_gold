@@ -1140,6 +1140,7 @@ var DEFAULT_VOUCHERS = [
         usedCount: 0,
         description: 'Giảm ngay 5 Xu cho mọi đơn mua gói',
         active: true,
+        isActive: true,
         createdAt: '2026-11-12T00:00:00.000Z'
     },
     {
@@ -1150,6 +1151,7 @@ var DEFAULT_VOUCHERS = [
         usedCount: 0,
         description: 'Giảm 20% tổng tiền gói Locket Gold',
         active: true,
+        isActive: true,
         createdAt: '2026-11-12T00:00:00.000Z'
     },
     {
@@ -1160,6 +1162,7 @@ var DEFAULT_VOUCHERS = [
         usedCount: 0,
         description: 'Voucher đặc quyền giảm 10 Xu từ Văn Nguyên',
         active: true,
+        isActive: true,
         createdAt: '2026-11-12T00:00:00.000Z'
     }
 ];
@@ -1203,7 +1206,12 @@ async function dbGetAllVouchers() {
         }
     }
 
-    var list = Object.values(vouchersMap);
+    var list = Object.values(vouchersMap).map(function(v) {
+        var act = (v.active !== undefined) ? v.active : (v.isActive !== undefined ? v.isActive : true);
+        v.active = act;
+        v.isActive = act;
+        return v;
+    });
     try {
         localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
     } catch(e) {}
@@ -1216,6 +1224,7 @@ async function dbAdminCreateVoucher(voucherData) {
         return { success: false, error: 'Thiếu mã voucher!' };
     }
     var code = voucherData.code.trim().toUpperCase();
+    var act = voucherData.active !== false && voucherData.isActive !== false;
     var newVoucher = {
         code: code,
         type: voucherData.type === 'percent' ? 'percent' : 'fixed',
@@ -1223,7 +1232,8 @@ async function dbAdminCreateVoucher(voucherData) {
         maxUses: Number(voucherData.maxUses) || 0,
         usedCount: Number(voucherData.usedCount) || 0,
         description: voucherData.description || ('Mã giảm giá ' + code),
-        active: voucherData.active !== false,
+        active: act,
+        isActive: act,
         createdAt: new Date().toISOString()
     };
 
@@ -1279,23 +1289,40 @@ async function dbAdminToggleVoucher(code) {
     // 1. Local
     try {
         var list = JSON.parse(localStorage.getItem('locket_gold_vouchers_db') || '[]');
+        var found = false;
         list.forEach(function(v) {
             if ((v.code || '').toUpperCase() === code) {
-                v.active = !v.active;
+                var curr = (v.active !== undefined) ? v.active : (v.isActive !== undefined ? v.isActive : true);
+                v.active = !curr;
+                v.isActive = v.active;
                 updatedStatus = v.active;
+                found = true;
             }
         });
-        localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
+        if (found) {
+            localStorage.setItem('locket_gold_vouchers_db', JSON.stringify(list));
+        }
     } catch(e) {}
 
     // 2. Cloud Firestore
     if (isUsingCloudDB && firestoreDB) {
         try {
-            await firestoreDB.collection('vouchers').doc(code).update({ active: updatedStatus }).catch(function(){});
-        } catch(e) {}
+            var docRef = firestoreDB.collection('vouchers').doc(code);
+            var snap = await runWithTimeout(docRef.get(), 2500).catch(function(){ return null; });
+            if (snap && snap.exists) {
+                var d = snap.data();
+                var currCloud = (d.active !== undefined) ? d.active : (d.isActive !== undefined ? d.isActive : true);
+                updatedStatus = !currCloud;
+                await runWithTimeout(docRef.update({ active: updatedStatus, isActive: updatedStatus }), 2500).catch(function(){});
+            } else {
+                await runWithTimeout(docRef.set({ code: code, active: updatedStatus, isActive: updatedStatus }, { merge: true }), 2500).catch(function(){});
+            }
+        } catch(e) {
+            console.warn("Firestore toggle voucher error:", e);
+        }
     }
 
-    return { success: true, active: updatedStatus };
+    return { success: true, active: updatedStatus, isActive: updatedStatus };
 }
 
 // Áp dụng và Kiểm tra Voucher cho đơn hàng

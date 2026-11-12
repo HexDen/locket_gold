@@ -2239,8 +2239,10 @@
             try {
                 if (typeof dbAdminToggleVoucher === "function") {
                     var res = await dbAdminToggleVoucher(code);
-                    if (res.success) {
-                        showAdminToast(`Đã chuyển voucher [${code}] sang ${res.isActive ? 'Bật' : 'Tắt'}!`);
+                    if (res && res.success) {
+                        var isNowActive = (res.active !== undefined) ? res.active : res.isActive;
+                        var stateText = isNowActive ? 'Bật (Đang hoạt động)' : 'Tắt';
+                        showAdminToast(`Đã chuyển voucher [${code}] sang ${stateText}!`);
                         await loadAllAdminData();
                     }
                 }
@@ -2275,20 +2277,21 @@
             }
 
             var rowsHtml = vouchers.map(function(v) {
+                var isAct = (v.active !== undefined) ? v.active : (v.isActive !== undefined ? v.isActive : true);
                 var isExpired = v.maxUses > 0 && (v.usedCount || 0) >= v.maxUses;
                 var discountStr = v.type === 'percent' ? `Giảm ${v.value}%` : `Giảm ${v.value} Xu`;
                 var statusBadge = '';
 
-                if (!v.isActive) {
-                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-500 border border-slate-700">Đã tắt</span>';
+                if (!isAct) {
+                    statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">Đã tắt</span>';
                 } else if (isExpired) {
                     statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">Hết lượt</span>';
                 } else {
                     statusBadge = '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Đang hoạt động</span>';
                 }
 
-                var toggleBtnText = v.isActive ? 'Tắt' : 'Bật';
-                var toggleBtnClass = v.isActive ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30';
+                var toggleBtnText = isAct ? 'Tắt' : 'Bật';
+                var toggleBtnClass = isAct ? 'bg-slate-800 hover:bg-slate-700 text-slate-300' : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black shadow-sm';
 
                 return `
                     <tr class="border-b border-slate-800/80 hover:bg-slate-800/30 transition text-xs">
