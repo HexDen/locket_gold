@@ -94,20 +94,61 @@
             z-index: 0;
         }
 
-        /* Custom scrollbar */
+        /* Custom scrollbar - Transparent & Sleek */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: rgba(148, 163, 184, 0.3);
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: rgba(148, 163, 184, 0.6);
+        }
+
+        /* Ẩn hoàn toàn thanh cuộn trên tất cả các Modal, Popup và Hướng dẫn */
+        .no-scrollbar,
+        .hide-scrollbar,
+        #directVipGuideModal,
+        #directVipGuideModal > div,
+        #shadowGuideModal,
+        #shadowGuideModal > div,
+        #modalOrderConfirm,
+        #modalOrderConfirm > div,
+        #preBuyModal,
+        #preBuyModal > div,
+        #loginModal,
+        #loginModal > div,
+        #rechargeModal,
+        #rechargeModal > div,
+        #imageModal,
+        #firebaseConfigModal > div {
+            scrollbar-width: none !important; /* Firefox */
+            -ms-overflow-style: none !important; /* IE & Edge */
+        }
+        .no-scrollbar::-webkit-scrollbar,
+        .hide-scrollbar::-webkit-scrollbar,
+        #directVipGuideModal::-webkit-scrollbar,
+        #directVipGuideModal > div::-webkit-scrollbar,
+        #shadowGuideModal::-webkit-scrollbar,
+        #shadowGuideModal > div::-webkit-scrollbar,
+        #modalOrderConfirm::-webkit-scrollbar,
+        #modalOrderConfirm > div::-webkit-scrollbar,
+        #preBuyModal::-webkit-scrollbar,
+        #preBuyModal > div::-webkit-scrollbar,
+        #loginModal::-webkit-scrollbar,
+        #loginModal > div::-webkit-scrollbar,
+        #rechargeModal::-webkit-scrollbar,
+        #rechargeModal > div::-webkit-scrollbar,
+        #imageModal::-webkit-scrollbar,
+        #firebaseConfigModal > div::-webkit-scrollbar {
+            display: none !important; /* Chrome, Safari, Edge */
+            width: 0 !important;
+            height: 0 !important;
         }
 
         /* Subtle pulse for popular badge */
@@ -1218,7 +1259,7 @@
 
     <!-- MODAL XÁC NHẬN ĐẶT MUA GÓI & NHẬP VOUCHER -->
     <div id="modalOrderConfirm" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4" onclick="if(event.target===this)closeOrderConfirmModal()">
-        <div class="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-7 shadow-2xl border border-slate-100 space-y-5 max-h-[95vh] overflow-y-auto" onclick="event.stopPropagation()">
+        <div class="relative w-full max-w-lg bg-white rounded-3xl p-5 sm:p-7 shadow-2xl border border-slate-100 space-y-5 max-h-[95vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
             <!-- Header -->
             <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div class="flex items-center gap-3">
@@ -1330,7 +1371,7 @@
 
     <!-- Modal Xem Hướng Dẫn Trước Khi Mua -->
     <div id="preBuyModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto relative">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar relative">
             <button onclick="closePreBuyGuide()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
                 <i data-feather="x" class="w-4 h-4"></i>
             </button>
@@ -1358,7 +1399,7 @@
     
     <!-- MODAL HƯỚNG DẪN CÀI ĐẶT CHI TIẾT GÓI 1 (SHADOWROCKET - ĐẦY ĐỦ 7 BƯỚC HÌNH ẢNH A-Z & 1-CLICK) -->
     <div id="shadowGuideModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-2 sm:p-4 overflow-y-auto" onclick="if(event.target===this)closeShadowGuideModal()">
-        <div class="relative w-full max-w-5xl bg-[#020817] text-white rounded-3xl border-2 border-cyan-500/50 shadow-2xl p-4 sm:p-7 md:p-8 space-y-6 my-auto max-h-[94vh] overflow-y-auto" onclick="event.stopPropagation()">
+        <div class="relative w-full max-w-5xl bg-[#020817] text-white rounded-3xl border-2 border-cyan-500/50 shadow-2xl p-4 sm:p-7 md:p-8 space-y-6 my-auto max-h-[94vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
             
             <!-- Modal Sticky Header -->
             <div class="sticky -top-4 -mx-4 sm:-top-7 sm:-mx-7 md:-top-8 md:-mx-8 bg-[#020817]/95 backdrop-blur-md px-6 py-4 border-b border-gray-800 z-30 flex items-center justify-between gap-4">
@@ -1925,7 +1966,7 @@
 
     <!-- MODAL HƯỚNG DẪN CÀI ĐẶT CHI TIẾT GÓI 2 (VIP SIÊU TỐC - CÀI TRỰC TIẾP SAFARI) -->
     <div id="directVipGuideModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-2 sm:p-4 overflow-y-auto" onclick="if(event.target===this)closeDirectVipGuideModal()">
-        <div class="relative w-full max-w-4xl bg-[#04112c] text-white rounded-3xl border-2 border-amber-400/60 shadow-2xl p-4 sm:p-7 md:p-8 space-y-6 my-auto max-h-[94vh] overflow-y-auto" onclick="event.stopPropagation()">
+        <div class="relative w-full max-w-4xl bg-[#04112c] text-white rounded-3xl border-2 border-amber-400/60 shadow-2xl p-4 sm:p-7 md:p-8 space-y-6 my-auto max-h-[94vh] overflow-y-auto no-scrollbar" onclick="event.stopPropagation()">
             <!-- Top Header -->
             <div class="sticky -top-4 -mx-4 sm:-top-7 sm:-mx-7 md:-top-8 md:-mx-8 bg-[#04112c]/95 backdrop-blur-md px-6 py-4 border-b border-gray-800 z-30 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">

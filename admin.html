@@ -389,11 +389,34 @@
             background-color: #0b1329;
             color: #f1f5f9;
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0b1329; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        /* Custom scrollbar - Transparent & Sleek */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.25); border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
+
+        /* Ẩn hoàn toàn thanh cuộn ở Sidebar và các modal */
+        aside,
+        .no-scrollbar,
+        .hide-scrollbar,
+        #modalCreateVoucher,
+        #modalCreateVoucher > div,
+        #modalManualGrant,
+        #modalManualGrant > div {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+        aside::-webkit-scrollbar,
+        .no-scrollbar::-webkit-scrollbar,
+        .hide-scrollbar::-webkit-scrollbar,
+        #modalCreateVoucher::-webkit-scrollbar,
+        #modalCreateVoucher > div::-webkit-scrollbar,
+        #modalManualGrant::-webkit-scrollbar,
+        #modalManualGrant > div::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950">
