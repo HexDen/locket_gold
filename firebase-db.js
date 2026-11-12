@@ -1050,6 +1050,58 @@ async function dbAdminToggleRole(email, newRole) {
     return { success: true, role: newRole };
 }
 
+// Xóa tài khoản khách hàng (Hợp nhất Local Storage & Cloud Firestore)
+async function dbAdminDeleteUser(email) {
+    email = (email || '').trim().toLowerCase();
+    if (!email) return { success: false, error: 'Thiếu email tài khoản cần xóa!' };
+
+    // Bảo vệ tuyệt đối tài khoản Quản Trị Viên Tối Cao
+    if (email === 'tranvannguyen991@gmail.com') {
+        return { success: false, error: 'Không thể xóa tài khoản Quản Trị Viên Gốc!' };
+    }
+
+    // 1. Cập nhật Local Storage
+    try {
+        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+        var matchedKey = Object.keys(localUsers).find(function(k) { return k.toLowerCase() === email; });
+        if (matchedKey) {
+            delete localUsers[matchedKey];
+            localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+        }
+
+        var customAdmins = JSON.parse(localStorage.getItem('locket_custom_admin_emails') || '[]');
+        customAdmins = customAdmins.filter(function(e) { return (e || '').toLowerCase() !== email; });
+        localStorage.setItem('locket_custom_admin_emails', JSON.stringify(customAdmins));
+    } catch(e) {
+        console.warn("Delete local user warn:", e);
+    }
+
+    // 2. Cập nhật Cloud Firestore nếu có kết nối
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 3000);
+            if (!userSnap.empty) {
+                for (var i = 0; i < userSnap.docs.length; i++) {
+                    await userSnap.docs[i].ref.delete().catch(function(){});
+                }
+            } else {
+                var allSnap = await runWithTimeout(firestoreDB.collection('users').get(), 3000);
+                for (var j = 0; j < allSnap.docs.length; j++) {
+                    var doc = allSnap.docs[j];
+                    var d = doc.data();
+                    if (d && (d.email || '').trim().toLowerCase() === email) {
+                        await doc.ref.delete().catch(function(){});
+                    }
+                }
+            }
+        } catch(e) {
+            console.warn("Delete firestore user warn:", e);
+        }
+    }
+
+    return { success: true };
+}
+
 // Lưu cấu hình Firebase tùy chỉnh người dùng nhập vào
 function saveCustomFirebaseConfig(config) {
     try {

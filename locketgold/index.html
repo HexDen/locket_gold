@@ -476,15 +476,15 @@
     <!-- ========================================================================= -->
     <div id="dashboardView" class="w-full flex-1 hidden flex-row relative z-10 min-h-screen">
         
-        <!-- Left Sidebar (Desktop Fixed / Mobile Drawer) -->
-        <aside id="sidebarEl" class="w-64 bg-white border-r border-slate-100 flex flex-col justify-between p-4 shrink-0 transition-transform duration-300 z-50">
+        <!-- Left Sidebar (Compact, Scrollable & Always visible Logout) -->
+        <aside id="sidebarEl" class="w-60 bg-white border-r border-slate-100 flex flex-col justify-between p-3.5 shrink-0 transition-transform duration-300 z-50 sticky top-0 h-screen overflow-y-auto">
             <!-- Brand & Nav -->
-            <div class="space-y-6">
+            <div class="space-y-4">
                 <!-- Logo -->
                 <div class="flex items-center justify-between px-2 py-1">
                     <a href="#" class="flex items-center gap-2">
                         <span class="text-2xl">💛</span>
-                        <span class="font-extrabold text-lg text-slate-900 tracking-tight">Locket Gold</span>
+                        <span class="font-extrabold text-base text-slate-900 tracking-tight">Locket Gold</span>
                     </a>
                     <!-- Mobile close button -->
                     <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-400 hover:text-slate-700 p-1">
@@ -494,67 +494,66 @@
 
                 <!-- Main Menu Links -->
                 <div class="space-y-1">
-                    <button onclick="switchDashboardTab('overview')" id="nav-btn-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition">
+                    <button onclick="switchDashboardTab('overview')" id="nav-btn-overview" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
                         <i data-feather="home" class="w-4 h-4 text-slate-400"></i>
                         <span>Tổng quan</span>
                     </button>
                     
-                    <button onclick="switchDashboardTab('pricing')" id="nav-btn-pricing" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold bg-amber-50 text-amber-900 border border-amber-200/60 shadow-sm transition">
+                    <button onclick="switchDashboardTab('pricing')" id="nav-btn-pricing" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200/60 shadow-sm transition">
                         <i data-feather="shopping-bag" class="w-4 h-4 text-amber-600"></i>
                         <span>Mua gói</span>
                     </button>
                     
-                    <button onclick="switchDashboardTab('wallet')" id="nav-btn-wallet" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition">
+                    <button onclick="switchDashboardTab('wallet')" id="nav-btn-wallet" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
                         <i data-feather="credit-card" class="w-4 h-4 text-slate-400"></i>
                         <span>Ví Xu</span>
                     </button>
                     
-                    <button onclick="switchDashboardTab('my_packages')" id="nav-btn-my_packages" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition">
+                    <button onclick="switchDashboardTab('my_packages')" id="nav-btn-my_packages" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
                         <i data-feather="layers" class="w-4 h-4 text-slate-400"></i>
                         <span>Của tôi</span>
                     </button>
                 </div>
 
                 <!-- Section: TIỆN ÍCH -->
-                <div class="pt-2">
-                    <div class="px-3 pb-2 text-[10px] font-black uppercase tracking-wider text-slate-400 font-mono">
+                <div class="pt-1">
+                    <div class="px-3 pb-1.5 text-[9px] font-black uppercase tracking-wider text-slate-400 font-mono">
                         TIỆN ÍCH
                     </div>
                     <div class="space-y-1 text-xs">
-                        <button onclick="showToast('Tiện ích Celebrity Radar đang tải dữ liệu...')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
-                            <i data-feather="radio" class="w-4 h-4 text-slate-400"></i>
+                        <button onclick="showToast('Tiện ích Celebrity Radar đang tải dữ liệu...')" class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition text-xs">
+                            <i data-feather="radio" class="w-3.5 h-3.5 text-slate-400"></i>
                             <span>Celebrity Radar</span>
                         </button>
-                        <button onclick="switchDashboardTab('history')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
-                            <i data-feather="file-text" class="w-4 h-4 text-slate-400"></i>
+                        <button onclick="switchDashboardTab('history')" class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition text-xs">
+                            <i data-feather="file-text" class="w-3.5 h-3.5 text-slate-400"></i>
                             <span>Lịch sử mua</span>
                         </button>
-                        <button onclick="openReferralModal()" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
-                            <i data-feather="gift" class="w-4 h-4 text-slate-400"></i>
+                        <button onclick="openReferralModal()" class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition text-xs">
+                            <i data-feather="gift" class="w-3.5 h-3.5 text-slate-400"></i>
                             <span>Giới thiệu</span>
                         </button>
-                        <button onclick="showToast('Không có thông báo mới.')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition">
-                            <i data-feather="bell" class="w-4 h-4 text-slate-400"></i>
+                        <button onclick="showToast('Không có thông báo mới.')" class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold transition text-xs">
+                            <i data-feather="bell" class="w-3.5 h-3.5 text-slate-400"></i>
                             <span>Thông báo</span>
                         </button>
-
                     </div>
                 </div>
             </div>
 
-            <!-- User Info at Bottom Left (Theo đúng ảnh 1) -->
-            <div class="pt-4 border-t border-slate-100 space-y-2">
-                <div class="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 border border-slate-100">
+            <!-- User Info at Bottom Left (Luôn nhìn thấy nút Đăng xuất) -->
+            <div class="pt-3 border-t border-slate-100 space-y-2 shrink-0">
+                <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
                     <!-- Avatar "T" -->
-                    <div id="userAvatarBadge" class="w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
+                    <div id="userAvatarBadge" class="w-8 h-8 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-sm shrink-0">
                         T
                     </div>
                     <div class="overflow-hidden leading-tight flex-1">
-                        <div class="flex items-center gap-1.5">
-                            <div id="userEmailDisplay" class="text-xs font-bold text-slate-900 truncate" title="tranvannguyen991@gmail.com">
-                                tranvannguyen991@gmail.com
+                        <div class="flex items-center gap-1">
+                            <div id="userEmailDisplay" class="text-xs font-bold text-slate-900 truncate" title="User">
+                                User
                             </div>
-                            <span id="userRoleBadge" class="hidden text-[9px] px-1.5 py-0.5 rounded-full bg-amber-400/20 text-amber-800 font-black border border-amber-400/40 shrink-0">👑 Admin</span>
+                            <span id="userRoleBadge" class="hidden text-[8px] px-1 py-0.5 rounded-full bg-amber-400/20 text-amber-800 font-black border border-amber-400/40 shrink-0">👑 Admin</span>
                         </div>
                         <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1 mt-0.5">
                             <span>ID:</span>
@@ -565,19 +564,21 @@
 
                 <!-- Admin Quick Link Button (Tự động hiển thị khi tài khoản là Admin) -->
                 <div id="adminPortalLinkBox" class="hidden">
-                    <a href="admin.html" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-md shadow-amber-400/25 transition active:scale-98">
+                    <a href="admin.html" class="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-sm transition active:scale-98">
                         <span>👑</span>
-                        <span>Đến Trang Quản Trị Admin</span>
+                        <span>Trang Quản Trị Admin</span>
                     </a>
                 </div>
 
-                <!-- Action row: Logout or Switch to Public -->
-                <div class="flex items-center justify-between px-1 text-[11px]">
-                    <button onclick="switchView('public')" class="text-slate-500 hover:text-slate-800 font-medium">
+                <!-- Nút Đăng Xuất Nổi Bật -->
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs border border-rose-200/80 transition active:scale-98">
+                    <i data-feather="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Đăng Xuất</span>
+                </button>
+
+                <div class="text-center pt-0.5">
+                    <button onclick="switchView('public')" class="text-slate-400 hover:text-slate-700 font-medium text-[11px] transition">
                         ← Xem trang chủ
-                    </button>
-                    <button onclick="logout()" class="text-rose-500 hover:text-rose-700 font-bold">
-                        Đăng xuất
                     </button>
                 </div>
             </div>
@@ -586,41 +587,53 @@
         <!-- Right Main View -->
         <div class="flex-1 flex flex-col min-w-0 bg-[#fbfbfe]">
             
-            <!-- Dashboard Top Header -->
-            <header class="w-full h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
-                <div class="flex items-center gap-3">
+            <!-- Dashboard Top Header (Luôn có nút Đăng xuất trên thanh điều hướng) -->
+            <header class="w-full h-14 sm:h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 px-3 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+                <div class="flex items-center gap-2 sm:gap-3">
                     <!-- Mobile Hamburger -->
-                    <button onclick="toggleMobileSidebar()" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100">
+                    <button onclick="toggleMobileSidebar()" class="md:hidden p-1.5 rounded-xl text-slate-600 hover:bg-slate-100">
                         <i data-feather="menu" class="w-5 h-5"></i>
                     </button>
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-sm font-extrabold text-slate-900 hidden sm:inline-block">Cổng Dịch Vụ Locket Gold</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs sm:text-sm font-extrabold text-slate-900 hidden sm:inline-block">Cổng Dịch Vụ Locket Gold</span>
                     </div>
                 </div>
 
-                <!-- Header Actions (Theo đúng ảnh 1: + Nạp Xu, Chuông, Số dư) -->
-                <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Header Actions (+ Nạp Xu, Số dư, Avatar & Đăng xuất) -->
+                <div class="flex items-center gap-2 sm:gap-3">
                     <!-- + Nạp Xu Button -->
-                    <button onclick="openRechargeModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black text-xs sm:text-sm px-4 py-2 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
-                        <i data-feather="plus-circle" class="w-4 h-4"></i>
+                    <button onclick="openRechargeModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black text-xs sm:text-sm px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
+                        <i data-feather="plus-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                         <span>Nạp Xu</span>
-                    </button>
-
-                    <!-- Notification Bell -->
-                    <button onclick="showToast('Bạn không có thông báo chưa đọc nào.')" class="w-9 h-9 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 transition">
-                        <i data-feather="bell" class="w-4 h-4"></i>
                     </button>
 
                     <!-- Số dư Xu Badge -->
                     <div class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-xs font-bold text-slate-700">
-                        <span class="text-slate-400">Số dư:</span>
+                        <span class="text-slate-400 hidden sm:inline">Số dư:</span>
                         <span id="userBalanceDisplay" class="font-black text-slate-900 font-mono">0 Xu</span>
+                    </div>
+
+                    <!-- User & Logout Button Ngay Trên Header -->
+                    <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+                        <div class="hidden md:flex items-center gap-2">
+                            <div id="topUserAvatar" class="w-7 h-7 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-sm shrink-0">
+                                T
+                            </div>
+                            <div class="text-left leading-tight hidden lg:block">
+                                <div id="topUserEmail" class="text-xs font-bold text-slate-800 max-w-[130px] truncate" title="User">User</div>
+                                <div id="topUserRole" class="text-[9px] text-slate-400 font-medium">Khách Hàng</div>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="px-2.5 sm:px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Đăng xuất khỏi tài khoản">
+                            <i data-feather="log-out" class="w-3.5 h-3.5"></i>
+                            <span class="hidden sm:inline">Đăng xuất</span>
+                        </button>
                     </div>
                 </div>
             </header>
 
-            <!-- Dashboard Content Container (Thoáng đãng, không bị che tiêu đề) -->
-            <main class="flex-1 p-4 sm:p-8 max-w-5xl w-full mx-auto space-y-8">
+            <!-- Dashboard Content Container (Gọn gàng, vừa vặn màn hình) -->
+            <main class="flex-1 p-3 sm:p-6 max-w-4xl w-full mx-auto space-y-6">
                 
                 <!-- Tab: MUA GÓI (2 GÓI VĨNH VIỄN 2099) -->
                 <div id="dashTab-pricing" class="space-y-8 pt-2">
@@ -1238,7 +1251,7 @@
                     <div>
                         <h2 class="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
                             <span>Kích Hoạt Locket Gold (Shadowrocket)</span>
-                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono font-bold">♾️ Vĩnh Viễn 2099</span>
+                            <span id="shadowHeaderBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono font-bold">♾️ Vĩnh Viễn 2099</span>
                         </h2>
                         <p class="text-xs text-gray-400">Trọn bộ hướng dẫn chi tiết A - Z với 7 bước hình ảnh thực tế và cấu hình 1-Click</p>
                     </div>
@@ -1251,6 +1264,9 @@
             <!-- Full 504 Lines Content from previous guide -->
             <div id="shadowGuideContent" class="space-y-8">
 <div id="content-g1" class="space-y-8">
+
+    <!-- CÁC LINK CÀI ĐẶT BẢN QUYỀN 1-CLICK (CHỈ MỞ KHI ĐÃ MUA GÓI) -->
+    <div class="shadow-secret-section space-y-8">
 
         <!-- 🚀 Cài Đặt Nhanh 1-Click (Dành Cho iOS) -->
         <section id="install" class="glass-panel rounded-3xl p-6 sm:p-7 shadow-2xl border-2 border-cyan-glow/50 space-y-6 relative overflow-hidden">
@@ -1562,6 +1578,29 @@
                 </div>
             </div>
         </section>
+    </div> <!-- KẾT THÚC KHỐI BẢN QUYỀN SHADOW-SECRET-SECTION -->
+
+        <!-- BANNER XEM TRƯỚC (BẢO VỆ LINK CHO CHỦ SHOP) -->
+        <div id="shadowPreviewBanner" class="hidden glass-panel rounded-3xl p-5 sm:p-6 border-2 border-amber-400/80 bg-gradient-to-r from-amber-500/20 via-slate-900 to-transparent space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <span class="text-3xl">🔒</span>
+                    <div>
+                        <div class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-full mb-1">
+                            Chế Độ Xem Trước Quy Trình
+                        </div>
+                        <h4 class="text-base sm:text-lg font-black text-white">Link Cài 1-Click & File Kích Hoạt Đang Bị Khóa</h4>
+                        <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                            Bạn đang xem trước 7 bước cài đặt. <strong>Toàn bộ link cài 1-Click tự động & cấu hình bản quyền</strong> sẽ mở khóa ngay sau khi mua gói!
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeShadowGuideModal(); buyPackageLoggedIn('g1_shadowrocket')" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-5 py-3 rounded-2xl text-xs sm:text-sm transition shrink-0 shadow-lg flex items-center justify-center gap-2 active:scale-95">
+                    <span>⚡ Mua Gói (29 Xu) Để Lấy Link</span>
+                    <i data-feather="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
 
         <!-- 📖 Hướng Dẫn Chi Tiết Bằng Hình Ảnh (7 Bước A - Z) -->
         <section id="guide" class="glass-panel rounded-3xl p-6 sm:p-7 shadow-xl border border-cyan-500/25 space-y-7" data-aos="fade-up">
@@ -1778,7 +1817,7 @@
                     <div>
                         <h2 class="text-lg sm:text-2xl font-black text-white flex items-center gap-2">
                             <span>Kích Hoạt Locket Gold VIP [Siêu Tốc]</span>
-                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 font-mono font-bold">♾️ Vĩnh Viễn 2099</span>
+                            <span id="vipHeaderBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 font-mono font-bold">♾️ Vĩnh Viễn 2099</span>
                         </h2>
                         <p class="text-xs text-amber-200/80">Cài trực tiếp qua Safari bằng Profile DNS HTTPS • Không cần Shadowrocket • Không cần bật VPN</p>
                     </div>
@@ -1811,8 +1850,30 @@
                         </span>
                     </div>
 
-                    <!-- Tải Hồ Sơ Cấu Hình VIP -->
-                    <div class="glass-card rounded-2xl p-5 sm:p-6 border-2 border-amber-400/60 shadow-neon-gold space-y-4 bg-gradient-to-r from-amber-500/15 to-transparent">
+                    <!-- BANNER XEM TRƯỚC GÓI VIP -->
+                    <div id="directVipPreviewBanner" class="hidden glass-panel rounded-3xl p-5 sm:p-6 border-2 border-amber-400/80 bg-gradient-to-r from-amber-500/20 via-slate-900 to-transparent space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex items-center gap-3.5">
+                                <span class="text-3xl">🔒</span>
+                                <div>
+                                    <div class="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-full mb-1">
+                                        Chế Độ Xem Trước Quy Trình
+                                    </div>
+                                    <h4 class="text-base sm:text-lg font-black text-white">Link Tải Cấu Hình VIP (.mobileconfig) Đang Bị Khóa</h4>
+                                    <p class="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                                        Bạn đang xem trước 3 bước kích hoạt siêu tốc. <strong>Link tải cấu hình trực tiếp về Safari</strong> sẽ mở khóa ngay sau khi mua gói!
+                                    </p>
+                                </div>
+                            </div>
+                            <button onclick="closeDirectVipGuideModal(); buyPackageLoggedIn('g2_direct_vip')" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-5 py-3 rounded-2xl text-xs sm:text-sm transition shrink-0 shadow-lg flex items-center justify-center gap-2 active:scale-95">
+                                <span>⚡ Mua Gói VIP (49 Xu) Để Lấy Link</span>
+                                <i data-feather="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tải Hồ Sơ Cấu Hình VIP (CHỈ MỞ KHI ĐÃ MUA GÓI) -->
+                    <div class="vip-secret-section glass-card rounded-2xl p-5 sm:p-6 border-2 border-amber-400/60 shadow-neon-gold space-y-4 bg-gradient-to-r from-amber-500/15 to-transparent">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <div class="flex items-center gap-2.5">
                                 <span class="text-3xl">📱</span>
@@ -2115,10 +2176,29 @@
                 var firstLetter = (appState.user.name || appState.user.email || 'U').charAt(0).toUpperCase();
                 userAvatarBadge.textContent = firstLetter;
                 if (isAdmin) {
-                    userAvatarBadge.className = "w-9 h-9 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-sm shadow-md shadow-amber-400/20 shrink-0";
+                    userAvatarBadge.className = "w-8 h-8 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow-md shadow-amber-400/20 shrink-0";
                 } else {
-                    userAvatarBadge.className = "w-9 h-9 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0";
+                    userAvatarBadge.className = "w-8 h-8 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-sm shrink-0";
                 }
+            }
+
+            // Sync top header user info
+            var topUserAvatar = document.getElementById('topUserAvatar');
+            var topUserEmail = document.getElementById('topUserEmail');
+            var topUserRole = document.getElementById('topUserRole');
+            if (topUserAvatar) {
+                topUserAvatar.textContent = (appState.user.name || appState.user.email || 'U').charAt(0).toUpperCase();
+                topUserAvatar.className = isAdmin 
+                    ? "w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black flex items-center justify-center text-xs shadow-sm shrink-0"
+                    : "w-7 h-7 rounded-full bg-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-sm shrink-0";
+            }
+            if (topUserEmail) {
+                topUserEmail.textContent = appState.user.email || 'Khách Hàng';
+                topUserEmail.title = appState.user.email || '';
+            }
+            if (topUserRole) {
+                topUserRole.textContent = isAdmin ? '👑 Quản Trị' : 'Khách Hàng';
+                topUserRole.className = isAdmin ? 'text-[9px] text-amber-600 font-bold' : 'text-[9px] text-slate-400 font-medium';
             }
 
             if (appState.isLoggedIn) {
@@ -2881,10 +2961,10 @@
             saveState();
             if (pkgType === 'g1_shadowrocket') {
                 showToast('🎉 Mua thành công Gói Shadowrocket! Đang mở hướng dẫn chi tiết...');
-                openShadowGuideModal();
+                openShadowGuideModal(false);
             } else {
                 showToast('🎉 Mua thành công Gói VIP Siêu Tốc! Đang mở hướng dẫn cài đặt...');
-                openDirectVipGuideModal();
+                openDirectVipGuideModal(false);
             }
         }
 
@@ -3218,11 +3298,34 @@
         }
 
                 // Full Guide Modal Controllers
-        function openShadowGuideModal() {
+        function openShadowGuideModal(isPreview) {
             var modal = document.getElementById('shadowGuideModal');
             if (modal) {
+                var secretSections = modal.querySelectorAll('.shadow-secret-section');
+                var previewBanner = document.getElementById('shadowPreviewBanner');
+                var headerBadge = document.getElementById('shadowHeaderBadge');
+
+                if (isPreview) {
+                    secretSections.forEach(function(el) { el.classList.add('hidden'); });
+                    if (previewBanner) previewBanner.classList.remove('hidden');
+                    if (headerBadge) {
+                        headerBadge.textContent = '👁️ Xem Trước Hướng Dẫn';
+                        headerBadge.className = 'text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-bold';
+                    }
+                } else {
+                    secretSections.forEach(function(el) { el.classList.remove('hidden'); });
+                    if (previewBanner) previewBanner.classList.add('hidden');
+                    if (headerBadge) {
+                        headerBadge.textContent = '♾️ Vĩnh Viễn 2099';
+                        headerBadge.className = 'text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono font-bold';
+                    }
+                }
+
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
+                modal.scrollTop = 0;
+                var innerBox = modal.querySelector('div');
+                if (innerBox) innerBox.scrollTop = 0;
                 feather.replace();
             }
         }
@@ -3235,11 +3338,34 @@
             }
         }
 
-        function openDirectVipGuideModal() {
+        function openDirectVipGuideModal(isPreview) {
             var modal = document.getElementById('directVipGuideModal');
             if (modal) {
+                var secretSections = modal.querySelectorAll('.vip-secret-section');
+                var previewBanner = document.getElementById('directVipPreviewBanner');
+                var headerBadge = document.getElementById('vipHeaderBadge');
+
+                if (isPreview) {
+                    secretSections.forEach(function(el) { el.classList.add('hidden'); });
+                    if (previewBanner) previewBanner.classList.remove('hidden');
+                    if (headerBadge) {
+                        headerBadge.textContent = '👁️ Xem Trước Hướng Dẫn';
+                        headerBadge.className = 'text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-bold';
+                    }
+                } else {
+                    secretSections.forEach(function(el) { el.classList.remove('hidden'); });
+                    if (previewBanner) previewBanner.classList.add('hidden');
+                    if (headerBadge) {
+                        headerBadge.textContent = '♾️ Vĩnh Viễn 2099';
+                        headerBadge.className = 'text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 font-mono font-bold';
+                    }
+                }
+
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
+                modal.scrollTop = 0;
+                var innerBox = modal.querySelector('div');
+                if (innerBox) innerBox.scrollTop = 0;
                 feather.replace();
             }
         }
@@ -3252,12 +3378,12 @@
             }
         }
 
-        // Install Guide Modal Controller
+        // Install Guide Modal Controller (Dành cho khách ĐÃ MUA GÓI trong tab Của Tôi -> Mở toàn bộ link)
         function openInstallGuideModal(pkgType) {
             if (pkgType === 'g1_shadowrocket') {
-                openShadowGuideModal();
+                openShadowGuideModal(false);
             } else {
-                openDirectVipGuideModal();
+                openDirectVipGuideModal(false);
             }
         }
 
@@ -3266,14 +3392,14 @@
             closeDirectVipGuideModal();
         }
 
-        // Pre-Buy Guides
+        // Pre-Buy Guides (Dành cho khách bấm "Xem hướng dẫn trước khi mua" -> Ẩn toàn bộ link kích hoạt)
         function openPreBuyGuide(type) {
             if (type === 'g1_shadowrocket') {
-                openShadowGuideModal();
+                openShadowGuideModal(true);
                 return;
             }
             if (type === 'g2_direct_vip') {
-                openDirectVipGuideModal();
+                openDirectVipGuideModal(true);
                 return;
             }
             var modal = document.getElementById('preBuyModal');

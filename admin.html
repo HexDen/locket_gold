@@ -482,7 +482,7 @@
                     <button onclick="switchTab('products')" id="nav-products" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
                         <div class="flex items-center gap-3">
                             <i data-feather="link-2" class="w-4 h-4 text-amber-400"></i>
-                            <span>Kho Link & Nâng Bạn Bè</span>
+                            <span>Kho Link</span>
                         </div>
                         <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">PRO</span>
                     </button>
@@ -1596,17 +1596,23 @@
                         <td class="py-3 px-3 font-mono font-bold text-amber-300">+${r.xu} Xu</td>
                         <td class="py-3 px-3 text-slate-400 text-[11px]">${r.date}</td>
                         <td class="py-3 px-3">${statusBadge}</td>
-                        <td class="py-3 px-3 text-right space-x-1.5">
-                            ${r.status !== 'Thành công' ? `
-                                <button onclick="approveRechargeAction('${r.id}', '${r.userEmail}', ${r.xu})" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">
+                        <td class="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
+                            ${r.status === 'Thành công' ? `
+                                <span class="inline-flex items-center gap-1 text-emerald-400 font-bold text-[11px] bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg">
+                                    <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Đã duyệt Xu
+                                </span>
+                            ` : r.status === 'Đã từ chối' ? `
+                                <span class="inline-flex items-center gap-1 text-rose-400/80 font-medium text-[11px] bg-rose-500/10 border border-rose-500/25 px-2.5 py-1 rounded-lg">
+                                    <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Đã từ chối
+                                </span>
+                            ` : `
+                                <button onclick="approveRechargeAction('${r.id}', '${r.userEmail}', ${r.xu})" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[11px] transition shadow-sm">
                                     Duyệt (+${r.xu} Xu)
                                 </button>
-                            ` : ''}
-                            ${r.status !== 'Đã từ chối' ? `
-                                <button onclick="rejectRechargeAction('${r.id}')" class="bg-slate-800 hover:bg-rose-500/20 text-rose-400 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">
+                                <button onclick="rejectRechargeAction('${r.id}')" class="bg-slate-800 hover:bg-rose-500/20 text-rose-400 font-bold px-2.5 py-1 rounded-lg text-[11px] transition border border-rose-500/30">
                                     Từ chối
                                 </button>
-                            ` : ''}
+                            `}
                         </td>
                     </tr>
                 `;
@@ -1768,6 +1774,11 @@
                             <button onclick="adminQuickResetPassword('${u.email}')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-bold transition" title="Đặt lại mật khẩu cho tài khoản này">
                                 🔑 Đặt MK
                             </button>
+                            ${!isRootAdmin ? `
+                                <button onclick="adminDeleteUserAction('${u.email}')" class="bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold transition inline-flex items-center gap-1" title="Xóa tài khoản khách hàng này">
+                                    🗑️ Xóa
+                                </button>
+                            ` : ''}
                         </td>
                     </tr>
                 `;
@@ -1848,6 +1859,30 @@
 
             showAdminToast(`🎉 Đã đổi mật khẩu cho ${email} thành: ${newPass}`);
             setTimeout(loadAllAdminData, 400);
+        }
+
+        // Admin xóa vĩnh viễn tài khoản khách hàng
+        async function adminDeleteUserAction(email) {
+            email = (email || '').trim().toLowerCase();
+            if (!confirm(`⚠️ CẢNH BÁO XÓA TÀI KHOẢN:\n\nBạn có chắc chắn muốn XÓA VĨNH VIỄN tài khoản:\n${email}?\n\nToàn bộ số dư Xu, lịch sử và gói VIP của khách này sẽ bị xóa khỏi hệ thống!`)) {
+                return;
+            }
+
+            // Xóa tạm trong UI để giao diện phản hồi 0.001s
+            adminState.users = adminState.users.filter(function(u) {
+                return (u.email || '').toLowerCase() !== email;
+            });
+            renderUsersTable();
+
+            if (typeof dbAdminDeleteUser === "function") {
+                var res = await dbAdminDeleteUser(email);
+                if (res.success) {
+                    showAdminToast(`🗑️ Đã xóa vĩnh viễn tài khoản: ${email}`);
+                    setTimeout(loadAllAdminData, 400);
+                } else {
+                    showAdminToast('⚠️ Lỗi: ' + (res.error || 'Không thể xóa'));
+                }
+            }
         }
 
         // 9. Actions: Approve & Reject Recharges
