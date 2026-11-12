@@ -931,8 +931,11 @@
                         </div>
                     </div>
 
-                    <button onclick="performLogin()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98">
-                        Đăng Nhập Ngay
+                    <!-- Hộp thông báo lỗi/thành công Đăng Nhập -->
+                    <div id="loginAlertBox" class="hidden p-3.5 rounded-2xl text-xs font-semibold"></div>
+
+                    <button id="loginSubmitBtn" onclick="performLogin()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98 flex items-center justify-center gap-2">
+                        <span>Đăng Nhập Ngay</span>
                     </button>
                 </div>
 
@@ -980,8 +983,11 @@
                         </div>
                     </div>
 
-                    <button onclick="performRegister()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98">
-                        Tạo Tài Khoản Ngay
+                    <!-- Hộp thông báo lỗi/thành công Đăng Ký -->
+                    <div id="registerAlertBox" class="hidden p-3.5 rounded-2xl text-xs font-semibold"></div>
+
+                    <button id="registerSubmitBtn" onclick="performRegister()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98 flex items-center justify-center gap-2">
+                        <span>Tạo Tài Khoản Ngay</span>
                     </button>
                 </div>
 
@@ -2054,7 +2060,11 @@
             var viewRegister = document.getElementById('authViewRegister');
             var viewForgot = document.getElementById('authViewForgot');
             var forgotResult = document.getElementById('forgotResultBox');
+            var loginAlert = document.getElementById('loginAlertBox');
+            var regAlert = document.getElementById('registerAlertBox');
             if (forgotResult) forgotResult.classList.add('hidden');
+            if (loginAlert) loginAlert.classList.add('hidden');
+            if (regAlert) regAlert.classList.add('hidden');
 
             if (tab === 'login') {
                 if (tabHeader) tabHeader.classList.remove('hidden');
@@ -2130,19 +2140,38 @@
         async function performLogin() {
             var email = document.getElementById('loginEmailInput').value.trim();
             var pass = document.getElementById('loginPassInput').value;
+            var alertBox = document.getElementById('loginAlertBox');
+            var btn = document.getElementById('loginSubmitBtn');
+
+            function showLoginError(msg) {
+                if (alertBox) {
+                    alertBox.className = "p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-start gap-2 shadow-sm animate-pulse";
+                    alertBox.innerHTML = '<span class="text-base leading-none">⚠️</span> <div><div class="font-bold text-red-900">Đăng nhập thất bại</div><div class="text-[11px] text-red-700 mt-0.5">' + msg + '</div></div>';
+                    alertBox.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Đăng Nhập Ngay</span>';
+                }
+                showToast('⚠️ ' + msg);
+            }
 
             if (!email) {
-                showToast('⚠️ Vui lòng nhập địa chỉ email!');
+                showLoginError('Vui lòng nhập địa chỉ email của bạn!');
                 return;
             }
             if (!pass) {
-                showToast('⚠️ Vui lòng nhập mật khẩu!');
+                showLoginError('Vui lòng nhập mật khẩu tài khoản!');
                 return;
             }
 
-            showToast('Đang đăng nhập vào hệ thống...');
-            var res = { success: true, user: { email: email, balance: 0, code: 'gTSxCJPL', packages: [], history: [] } };
+            if (alertBox) alertBox.classList.add('hidden');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="inline-flex items-center gap-2 font-bold"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang xác thực...</span>';
+            }
 
+            var res = { success: false };
             if (typeof dbLoginUser === "function") {
                 try {
                     res = await dbLoginUser(email, pass);
@@ -2150,13 +2179,24 @@
                     console.error("DB Login error:", e);
                     res = { success: false, error: e.message };
                 }
+            } else {
+                res = { success: true, user: { email: email, balance: 0, code: 'gTSxCJPL', packages: [], history: [] } };
             }
 
             if (res.success) {
+                if (alertBox) {
+                    alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black flex items-center gap-2 shadow-sm";
+                    alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Đăng nhập thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (res.user.name || email) + '</div></div>';
+                    alertBox.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.className = "w-full bg-emerald-500 text-white font-extrabold text-sm py-3 rounded-full transition flex items-center justify-center gap-2";
+                    btn.innerHTML = '<span>✓ Đã Đăng Nhập Thành Công!</span>';
+                }
+
                 appState.isLoggedIn = true;
                 appState.user = Object.assign(appState.user, res.user);
                 saveState();
-                closeLoginModal();
                 showToast('🎉 Đăng nhập thành công! Chào mừng ' + (res.user.name || email));
 
                 if (isUsingCloudDB && res.user.uid && typeof dbSubscribeUser === "function") {
@@ -2168,8 +2208,18 @@
                         }
                     });
                 }
+
+                setTimeout(function() {
+                    closeLoginModal();
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.className = "w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98 flex items-center justify-center gap-2";
+                        btn.innerHTML = '<span>Đăng Nhập Ngay</span>';
+                    }
+                    if (alertBox) alertBox.classList.add('hidden');
+                }, 1000);
             } else {
-                showToast('⚠️ ' + (res.error || 'Lỗi đăng nhập!'));
+                showLoginError(res.error || 'Email hoặc mật khẩu không chính xác!');
             }
         }
 
@@ -2178,28 +2228,47 @@
             var email = document.getElementById('registerEmailInput').value.trim();
             var pass = document.getElementById('registerPassInput').value;
             var confirmPass = document.getElementById('registerConfirmPassInput').value;
+            var alertBox = document.getElementById('registerAlertBox');
+            var btn = document.getElementById('registerSubmitBtn');
+
+            function showRegError(msg) {
+                if (alertBox) {
+                    alertBox.className = "p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-start gap-2 shadow-sm animate-pulse";
+                    alertBox.innerHTML = '<span class="text-base leading-none">⚠️</span> <div><div class="font-bold text-red-900">Không thể tạo tài khoản</div><div class="text-[11px] text-red-700 mt-0.5">' + msg + '</div></div>';
+                    alertBox.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Tạo Tài Khoản Ngay</span>';
+                }
+                showToast('⚠️ ' + msg);
+            }
 
             if (!email) {
-                showToast('⚠️ Vui lòng nhập địa chỉ email!');
+                showRegError('Vui lòng nhập địa chỉ email của bạn!');
                 return;
             }
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                showToast('⚠️ Địa chỉ email không đúng định dạng!');
+                showRegError('Địa chỉ email không đúng định dạng (Ví dụ: name@gmail.com)!');
                 return;
             }
             if (!pass || pass.length < 6) {
-                showToast('⚠️ Mật khẩu phải có ít nhất 6 ký tự!');
+                showRegError('Mật khẩu quá ngắn! Mật khẩu phải có ít nhất 6 ký tự.');
                 return;
             }
             if (pass !== confirmPass) {
-                showToast('⚠️ Mật khẩu xác nhận không khớp! Vui lòng kiểm tra lại.');
+                showRegError('Mật khẩu xác nhận không khớp! Vui lòng kiểm tra lại.');
                 return;
             }
 
-            showToast('Đang tạo tài khoản mới...');
-            var res = { success: false };
+            if (alertBox) alertBox.classList.add('hidden');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="inline-flex items-center gap-2 font-bold"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang khởi tạo tài khoản...</span>';
+            }
 
+            var res = { success: false };
             if (typeof dbRegisterUser === "function") {
                 try {
                     res = await dbRegisterUser(name, email, pass);
@@ -2212,10 +2281,19 @@
             }
 
             if (res.success) {
+                if (alertBox) {
+                    alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-black flex items-center gap-2 shadow-sm";
+                    alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-900">Tạo tài khoản thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Chào mừng ' + (res.user.name || email) + ' đến với Locket Gold VIP!</div></div>';
+                    alertBox.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.className = "w-full bg-emerald-500 text-white font-extrabold text-sm py-3 rounded-full transition flex items-center justify-center gap-2";
+                    btn.innerHTML = '<span>✓ Đã Tạo Tài Khoản Thành Công!</span>';
+                }
+
                 appState.isLoggedIn = true;
                 appState.user = Object.assign(appState.user, res.user);
                 saveState();
-                closeLoginModal();
                 showToast('🎉 Đăng ký thành công! Chào mừng ' + (res.user.name || email));
 
                 if (isUsingCloudDB && res.user.uid && typeof dbSubscribeUser === "function") {
@@ -2227,8 +2305,18 @@
                         }
                     });
                 }
+
+                setTimeout(function() {
+                    closeLoginModal();
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.className = "w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98 flex items-center justify-center gap-2";
+                        btn.innerHTML = '<span>Tạo Tài Khoản Ngay</span>';
+                    }
+                    if (alertBox) alertBox.classList.add('hidden');
+                }, 1200);
             } else {
-                showToast('⚠️ ' + (res.error || 'Lỗi đăng ký tài khoản!'));
+                showRegError(res.error || 'Có lỗi xảy ra khi tạo tài khoản, vui lòng thử lại!');
             }
         }
 
@@ -2238,13 +2326,18 @@
             var btn = document.getElementById('forgotSubmitBtn');
 
             if (!email) {
+                if (resultBox) {
+                    resultBox.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold";
+                    resultBox.innerHTML = "⚠️ Vui lòng nhập địa chỉ email của bạn!";
+                    resultBox.classList.remove('hidden');
+                }
                 showToast('⚠️ Vui lòng nhập địa chỉ email!');
                 return;
             }
 
             if (btn) {
                 btn.disabled = true;
-                btn.innerText = 'Đang xử lý...';
+                btn.innerHTML = '<span class="inline-flex items-center gap-2"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang xử lý yêu cầu...</span>';
             }
 
             var res = { success: false };
@@ -2260,26 +2353,20 @@
 
             if (btn) {
                 btn.disabled = false;
-                btn.innerText = 'Gửi Yêu Cầu Khôi Phục';
+                btn.innerHTML = '<span>Gửi Yêu Cầu Khôi Phục</span>';
             }
 
             if (resultBox) {
                 resultBox.classList.remove('hidden');
                 if (res.success) {
-                    resultBox.className = "p-3.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200";
+                    resultBox.className = "p-3.5 rounded-2xl text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 shadow-sm";
                     resultBox.innerHTML = "✅ " + (res.message || 'Thao tác thành công!');
                 } else {
-                    resultBox.className = "p-3.5 rounded-xl text-xs font-semibold bg-red-50 text-red-800 border border-red-200";
+                    resultBox.className = "p-3.5 rounded-2xl text-xs font-semibold bg-red-50 text-red-900 border border-red-200 shadow-sm animate-pulse";
                     resultBox.innerHTML = "⚠️ " + (res.error || 'Có lỗi xảy ra, vui lòng thử lại.');
                 }
             }
             if (typeof feather !== "undefined") feather.replace();
-        }
-
-        async function performDemoLogin() {
-            document.getElementById('loginEmailInput').value = 'tranvannguyen991@gmail.com';
-            document.getElementById('loginPassInput').value = '123456';
-            await performLogin();
         }
 
         function logout() {
