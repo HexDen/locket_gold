@@ -1734,6 +1734,9 @@
                             <button onclick="openManualGrantModal('${u.email}')" class="bg-amber-400 hover:bg-amber-300 text-slate-950 px-2.5 py-1 rounded-lg text-[11px] font-black transition">
                                 + Cấp VIP
                             </button>
+                            <button onclick="adminQuickResetPassword('${u.email}')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-bold transition" title="Đặt lại mật khẩu cho tài khoản này">
+                                🔑 Đặt MK
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -1771,6 +1774,39 @@
                     showAdminToast('⚠️ Lỗi: ' + (res.error || 'Không thể đổi quyền'));
                 }
             }
+        }
+
+        // Admin đặt lại mật khẩu nhanh cho khách hàng
+        async function adminQuickResetPassword(email) {
+            email = (email || '').trim().toLowerCase();
+            var newPass = prompt(`Nhập mật khẩu mới cho tài khoản:\n${email}`, '123456');
+            if (!newPass) return;
+            if (newPass.length < 6) {
+                alert('Mật khẩu phải có tối thiểu 6 ký tự!');
+                return;
+            }
+
+            // 1. Cập nhật Local Storage
+            var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+            var matchedKey = Object.keys(localUsers).find(function(k) { return k.toLowerCase() === email; });
+            if (matchedKey) {
+                localUsers[matchedKey].password = newPass;
+                localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+            }
+
+            // 2. Cập nhật Cloud Firestore
+            if (typeof isUsingCloudDB !== "undefined" && isUsingCloudDB && typeof firestoreDB !== "undefined" && firestoreDB) {
+                try {
+                    var snap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+                    if (!snap.empty) {
+                        for (var i = 0; i < snap.docs.length; i++) {
+                            await snap.docs[i].ref.update({ password: newPass }).catch(function(){});
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            showAdminToast(`🎉 Đã đổi mật khẩu cho ${email} thành: ${newPass}`);
         }
 
         // 9. Actions: Approve & Reject Recharges

@@ -1024,26 +1024,83 @@
                 </div>
             </div>
 
-            <!-- ================= VIEW 3: QUÊN MẬT KHẨU ================= -->
+            <!-- ================= VIEW 3: QUÊN MẬT KHẨU (XÁC THỰC MÃ OTP) ================= -->
             <div id="authViewForgot" class="space-y-4 hidden">
-                <div class="text-center space-y-1">
-                    <span class="text-3xl">🔑</span>
-                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Khôi Phục Mật Khẩu</h3>
-                    <p class="text-xs text-slate-500">Nhập email của bạn để nhận liên kết đặt lại mật khẩu</p>
-                </div>
 
-                <div class="space-y-3 pt-1">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Email đăng ký của bạn</label>
-                        <input id="forgotEmailInput" type="email" placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                <!-- BƯỚC 1: NHẬP EMAIL ĐỂ GỬI MÃ OTP -->
+                <div id="forgotStep1" class="space-y-3">
+                    <div class="text-center space-y-1">
+                        <span class="text-3xl">🔑</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Khôi Phục Mật Khẩu</h3>
+                        <p class="text-xs text-slate-500">Nhập email tài khoản của bạn để nhận mã OTP xác minh</p>
                     </div>
 
-                    <!-- Hộp thông báo kết quả -->
-                    <div id="forgotResultBox" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+                    <div class="space-y-3 pt-1">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Email đăng ký của bạn</label>
+                            <input id="forgotEmailInput" type="email" placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                        </div>
 
-                    <button id="forgotSubmitBtn" onclick="performForgotPassword()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98">
-                        Gửi Yêu Cầu Khôi Phục
-                    </button>
+                        <!-- Hộp thông báo kết quả Bước 1 -->
+                        <div id="forgotResultBox" class="hidden p-3.5 rounded-2xl text-xs font-semibold shadow-sm"></div>
+
+                        <button id="forgotSendOtpBtn" onclick="handleSendForgotOtp()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98 flex items-center justify-center gap-2">
+                            <span>Gửi Mã OTP Đến Email</span>
+                            <i data-feather="send" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BƯỚC 2: NHẬP MÃ OTP & ĐẶT MẬT KHẨU MỚI -->
+                <div id="forgotStep2" class="space-y-3 hidden">
+                    <div class="text-center space-y-1">
+                        <span class="text-3xl">📩</span>
+                        <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Xác Thực Mã OTP</h3>
+                        <p class="text-xs text-slate-500">
+                            Mã 6 chữ số đã gửi tới: <strong id="forgotTargetEmailDisplay" class="text-amber-600 font-mono font-bold"></strong>
+                            <button type="button" onclick="backToForgotStep1()" class="ml-1 text-[11px] text-slate-400 hover:text-slate-700 underline font-semibold">(Đổi email)</button>
+                        </p>
+                    </div>
+
+                    <div class="space-y-3 pt-1">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block text-xs font-bold text-slate-700">Mã Xác Nhận OTP (6 Số)</label>
+                                <button type="button" id="forgotResendOtpBtn" onclick="handleResendForgotOtp()" class="text-[11px] font-bold text-amber-600 hover:text-amber-800 transition">
+                                    Gửi lại mã
+                                </button>
+                            </div>
+                            <input id="forgotOtpInput" type="text" maxlength="6" placeholder="• • • • • •" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-center text-lg font-mono font-black tracking-[0.25em] focus:outline-none focus:border-yellow-400 placeholder:text-slate-300">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu mới (Tối thiểu 6 ký tự)</label>
+                            <div class="relative">
+                                <input id="forgotNewPassInput" type="password" placeholder="Nhập mật khẩu mới..." class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                                <button type="button" onclick="togglePassVisibility('forgotNewPassInput', 'eyeForgotNewPassIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                                    <i id="eyeForgotNewPassIcon" data-feather="eye" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Xác nhận mật khẩu mới</label>
+                            <div class="relative">
+                                <input id="forgotConfirmPassInput" type="password" placeholder="Nhập lại mật khẩu mới..." class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                                <button type="button" onclick="togglePassVisibility('forgotConfirmPassInput', 'eyeForgotConfirmPassIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                                    <i id="eyeForgotConfirmPassIcon" data-feather="eye" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Hộp thông báo kết quả Bước 2 -->
+                        <div id="forgotStep2AlertBox" class="hidden p-3.5 rounded-2xl text-xs font-semibold shadow-sm"></div>
+
+                        <button id="forgotConfirmResetBtn" onclick="handleConfirmResetPassword()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98 flex items-center justify-center gap-2">
+                            <span>Xác Nhận & Đổi Mật Khẩu</span>
+                            <i data-feather="check-circle" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="pt-2 border-t border-slate-100 text-center">
@@ -2169,6 +2226,7 @@
                 if (viewLogin) viewLogin.classList.add('hidden');
                 if (viewRegister) viewRegister.classList.add('hidden');
                 if (viewForgot) viewForgot.classList.remove('hidden');
+                if (typeof backToForgotStep1 === "function") backToForgotStep1();
                 var loginEmail = (document.getElementById('loginEmailInput').value || '').trim();
                 if (loginEmail && document.getElementById('forgotEmailInput')) {
                     document.getElementById('forgotEmailInput').value = loginEmail;
@@ -2480,53 +2538,268 @@
             }
         }
 
-        async function performForgotPassword() {
-            var email = document.getElementById('forgotEmailInput').value.trim();
-            var resultBox = document.getElementById('forgotResultBox');
-            var btn = document.getElementById('forgotSubmitBtn');
+        // ================= XỬ LÝ QUÊN MẬT KHẨU QUA MÃ OTP =================
+        var forgotOtpTimer = null;
+        var forgotOtpCountdown = 60;
+        var forgotTargetEmail = '';
+
+        function backToForgotStep1() {
+            var s1 = document.getElementById('forgotStep1');
+            var s2 = document.getElementById('forgotStep2');
+            if (s1) s1.classList.remove('hidden');
+            if (s2) s2.classList.add('hidden');
+            if (forgotOtpTimer) clearInterval(forgotOtpTimer);
+            if (typeof feather !== "undefined") feather.replace();
+        }
+
+        async function handleSendForgotOtp() {
+            var emailInput = document.getElementById('forgotEmailInput');
+            var email = (emailInput ? emailInput.value : '').trim().toLowerCase();
+            var alertBox = document.getElementById('forgotResultBox');
+            var btn = document.getElementById('forgotSendOtpBtn');
+
+            function showStep1Error(msg) {
+                if (alertBox) {
+                    alertBox.className = "p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-start gap-2 shadow-sm animate-pulse";
+                    alertBox.innerHTML = '<span class="text-base leading-none">⚠️</span> <div><div class="font-bold text-red-900">Không thể gửi mã OTP</div><div class="text-[11px] text-red-700 mt-0.5">' + msg + '</div></div>';
+                    alertBox.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Gửi Mã OTP Đến Email</span> <i data-feather="send" class="w-4 h-4"></i>';
+                }
+                if (typeof feather !== "undefined") feather.replace();
+                showToast('⚠️ ' + msg);
+            }
 
             if (!email) {
-                if (resultBox) {
-                    resultBox.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold";
-                    resultBox.innerHTML = "⚠️ Vui lòng nhập địa chỉ email của bạn!";
-                    resultBox.classList.remove('hidden');
-                }
-                showToast('⚠️ Vui lòng nhập địa chỉ email!');
+                showStep1Error('Vui lòng nhập địa chỉ email của bạn!');
+                return;
+            }
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showStep1Error('Địa chỉ email không đúng định dạng (Ví dụ: name@gmail.com)!');
                 return;
             }
 
+            if (alertBox) alertBox.classList.add('hidden');
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<span class="inline-flex items-center gap-2"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang xử lý yêu cầu...</span>';
+                btn.innerHTML = '<span class="inline-flex items-center gap-2"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang kiểm tra & gửi mã OTP...</span>';
             }
 
             var res = { success: false };
-            if (typeof dbResetPassword === "function") {
+            if (typeof dbSendPasswordResetOtp === "function") {
                 try {
-                    res = await dbResetPassword(email);
+                    res = await dbSendPasswordResetOtp(email);
                 } catch(e) {
                     res = { success: false, error: e.message };
                 }
             } else {
-                res = { success: true, message: 'Đã gửi yêu cầu đặt lại mật khẩu cho ' + email };
+                res = { success: false, error: 'Chức năng gửi OTP chưa sẵn sàng!' };
             }
 
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = '<span>Gửi Yêu Cầu Khôi Phục</span>';
+                btn.innerHTML = '<span>Gửi Mã OTP Đến Email</span> <i data-feather="send" class="w-4 h-4"></i>';
+                if (typeof feather !== "undefined") feather.replace();
             }
 
-            if (resultBox) {
-                resultBox.classList.remove('hidden');
-                if (res.success) {
-                    resultBox.className = "p-3.5 rounded-2xl text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 shadow-sm";
-                    resultBox.innerHTML = "✅ " + (res.message || 'Thao tác thành công!');
-                } else {
-                    resultBox.className = "p-3.5 rounded-2xl text-xs font-semibold bg-red-50 text-red-900 border border-red-200 shadow-sm animate-pulse";
-                    resultBox.innerHTML = "⚠️ " + (res.error || 'Có lỗi xảy ra, vui lòng thử lại.');
+            if (res.success) {
+                forgotTargetEmail = email;
+                var emailDisplay = document.getElementById('forgotTargetEmailDisplay');
+                if (emailDisplay) emailDisplay.textContent = email;
+                
+                // Chuyển sang Bước 2
+                var s1 = document.getElementById('forgotStep1');
+                var s2 = document.getElementById('forgotStep2');
+                if (s1) s1.classList.add('hidden');
+                if (s2) s2.classList.remove('hidden');
+
+                // Hiển thị thông báo hướng dẫn bước 2
+                var step2Alert = document.getElementById('forgotStep2AlertBox');
+                if (step2Alert) {
+                    step2Alert.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium space-y-1";
+                    step2Alert.innerHTML = `
+                        <div class="font-bold text-amber-950 flex items-center gap-1.5">
+                            <span>📧</span> Đã gửi mã OTP đến email của bạn!
+                        </div>
+                        <div class="text-[11px] text-amber-800">
+                            Vui lòng kiểm tra hộp thư đến hoặc mục <strong>Thư Rác (Spam)</strong> của ${email}.
+                        </div>
+                        ${res.otp ? `<div class="text-[11px] text-amber-700 bg-amber-100/80 p-2 rounded-xl mt-1 font-mono">💡 Gợi ý thử nghiệm nhanh: Mã OTP của bạn là <strong>${res.otp}</strong></div>` : ''}
+                    `;
+                    step2Alert.classList.remove('hidden');
                 }
+
+                showToast('📧 Đã gửi mã OTP 6 số đến email của bạn!');
+                startForgotOtpCountdown();
+                
+                var otpInp = document.getElementById('forgotOtpInput');
+                if (otpInp) {
+                    otpInp.value = '';
+                    otpInp.focus();
+                }
+                if (typeof feather !== "undefined") feather.replace();
+            } else {
+                showStep1Error(res.error || 'Không tìm thấy tài khoản với email này trên hệ thống!');
             }
-            if (typeof feather !== "undefined") feather.replace();
+        }
+
+        function startForgotOtpCountdown() {
+            var resendBtn = document.getElementById('forgotResendOtpBtn');
+            if (!resendBtn) return;
+            forgotOtpCountdown = 60;
+            resendBtn.disabled = true;
+            resendBtn.className = "text-[11px] font-bold text-slate-400 cursor-not-allowed";
+            resendBtn.textContent = 'Gửi lại mã (' + forgotOtpCountdown + 's)';
+
+            if (forgotOtpTimer) clearInterval(forgotOtpTimer);
+            forgotOtpTimer = setInterval(function() {
+                forgotOtpCountdown--;
+                if (forgotOtpCountdown <= 0) {
+                    clearInterval(forgotOtpTimer);
+                    resendBtn.disabled = false;
+                    resendBtn.className = "text-[11px] font-bold text-amber-600 hover:text-amber-800 transition cursor-pointer";
+                    resendBtn.textContent = 'Gửi lại mã OTP';
+                } else {
+                    resendBtn.textContent = 'Gửi lại mã (' + forgotOtpCountdown + 's)';
+                }
+            }, 1000);
+        }
+
+        async function handleResendForgotOtp() {
+            var resendBtn = document.getElementById('forgotResendOtpBtn');
+            if (resendBtn && resendBtn.disabled) return;
+            if (!forgotTargetEmail) return;
+
+            if (resendBtn) {
+                resendBtn.disabled = true;
+                resendBtn.textContent = 'Đang gửi...';
+            }
+
+            var res = await dbSendPasswordResetOtp(forgotTargetEmail);
+            if (res.success) {
+                showToast('📧 Đã gửi lại mã OTP mới đến email!');
+                startForgotOtpCountdown();
+                var step2Alert = document.getElementById('forgotStep2AlertBox');
+                if (step2Alert) {
+                    step2Alert.className = "p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium space-y-1";
+                    step2Alert.innerHTML = `
+                        <div class="font-bold text-amber-950 flex items-center gap-1.5">
+                            <span>📧</span> Mã OTP mới đã được gửi!
+                        </div>
+                        <div class="text-[11px] text-amber-800">
+                            Vui lòng kiểm tra hộp thư đến hoặc mục <strong>Thư Rác (Spam)</strong> của ${forgotTargetEmail}.
+                        </div>
+                        ${res.otp ? `<div class="text-[11px] text-amber-700 bg-amber-100/80 p-2 rounded-xl mt-1 font-mono">💡 Gợi ý thử nghiệm nhanh: Mã OTP mới là <strong>${res.otp}</strong></div>` : ''}
+                    `;
+                    step2Alert.classList.remove('hidden');
+                }
+            } else {
+                showToast('⚠️ Lỗi: ' + (res.error || 'Không thể gửi lại mã OTP'));
+            }
+        }
+
+        async function handleConfirmResetPassword() {
+            var email = forgotTargetEmail || (document.getElementById('forgotEmailInput').value || '').trim().toLowerCase();
+            var otp = (document.getElementById('forgotOtpInput').value || '').trim();
+            var newPass = document.getElementById('forgotNewPassInput').value;
+            var confirmPass = document.getElementById('forgotConfirmPassInput').value;
+            var alertBox = document.getElementById('forgotStep2AlertBox');
+            var btn = document.getElementById('forgotConfirmResetBtn');
+
+            function showStep2Error(msg) {
+                if (alertBox) {
+                    alertBox.className = "p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-start gap-2 shadow-sm animate-pulse";
+                    alertBox.innerHTML = '<span class="text-base leading-none">⚠️</span> <div><div class="font-bold text-red-900">Không thể đổi mật khẩu</div><div class="text-[11px] text-red-700 mt-0.5">' + msg + '</div></div>';
+                    alertBox.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Xác Nhận & Đổi Mật Khẩu</span> <i data-feather="check-circle" class="w-4 h-4"></i>';
+                }
+                if (typeof feather !== "undefined") feather.replace();
+                showToast('⚠️ ' + msg);
+            }
+
+            if (!otp || otp.length < 6) {
+                showStep2Error('Vui lòng nhập đầy đủ 6 chữ số mã OTP xác nhận!');
+                return;
+            }
+            if (!newPass || newPass.length < 6) {
+                showStep2Error('Mật khẩu mới phải có ít nhất 6 ký tự!');
+                return;
+            }
+            if (newPass !== confirmPass) {
+                showStep2Error('Xác nhận mật khẩu không khớp! Vui lòng kiểm tra lại.');
+                return;
+            }
+
+            if (alertBox) alertBox.classList.add('hidden');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="inline-flex items-center gap-2"><svg class="animate-spin w-4 h-4 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang cập nhật mật khẩu mới...</span>';
+            }
+
+            var res = { success: false };
+            if (typeof dbVerifyOtpAndChangePassword === "function") {
+                try {
+                    res = await dbVerifyOtpAndChangePassword(email, otp, newPass);
+                } catch(e) {
+                    res = { success: false, error: e.message };
+                }
+            } else {
+                res = { success: false, error: 'Chức năng xác thực OTP chưa sẵn sàng!' };
+            }
+
+            if (res.success) {
+                if (alertBox) {
+                    alertBox.className = "p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-bold flex items-center gap-2 shadow-sm";
+                    alertBox.innerHTML = '<span class="text-base leading-none">🎉</span> <div><div class="font-black text-emerald-950">Đổi mật khẩu thành công!</div><div class="text-[11px] text-emerald-700 font-medium mt-0.5">Mật khẩu mới đã được cập nhật. Đang chuyển về Đăng Nhập...</div></div>';
+                    alertBox.classList.remove('hidden');
+                }
+                if (btn) {
+                    btn.className = "w-full bg-emerald-500 text-white font-extrabold text-sm py-3 rounded-full transition flex items-center justify-center gap-2";
+                    btn.innerHTML = '<span>✓ Đã Đổi Mật Khẩu Thành Công!</span>';
+                }
+                showToast('🎉 Đổi mật khẩu thành công! Đang chuyển về Đăng Nhập...');
+
+                // Điền sẵn email vào tab đăng nhập
+                var loginEmailInp = document.getElementById('loginEmailInput');
+                if (loginEmailInp) loginEmailInp.value = email;
+                var loginPassInp = document.getElementById('loginPassInput');
+                if (loginPassInp) {
+                    loginPassInp.value = '';
+                    loginPassInp.focus();
+                }
+
+                // Xóa trắng các input forgot
+                var otpInp = document.getElementById('forgotOtpInput');
+                if (otpInp) otpInp.value = '';
+                var newPassInp = document.getElementById('forgotNewPassInput');
+                if (newPassInp) newPassInp.value = '';
+                var confPassInp = document.getElementById('forgotConfirmPassInput');
+                if (confPassInp) confPassInp.value = '';
+
+                setTimeout(function() {
+                    backToForgotStep1();
+                    switchAuthTab('login');
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.className = "w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98 flex items-center justify-center gap-2";
+                        btn.innerHTML = '<span>Xác Nhận & Đổi Mật Khẩu</span> <i data-feather="check-circle" class="w-4 h-4"></i>';
+                    }
+                    if (alertBox) alertBox.classList.add('hidden');
+                }, 1500);
+            } else {
+                showStep2Error(res.error || 'Mã OTP không chính xác hoặc đã hết hạn!');
+            }
+        }
+
+        // Tương thích ngược
+        function performForgotPassword() {
+            handleSendForgotOtp();
         }
 
         function logout() {

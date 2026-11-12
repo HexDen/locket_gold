@@ -301,45 +301,184 @@ async function dbRegisterUser(name, email, password) {
     return { success: true, user: newUserData };
 }
 
-// Khôi phục / Quên mật khẩu (Siêu tốc)
-async function dbResetPassword(email) {
-    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+// =========================================================================
+// QUÊN MẬT KHẨU QUA MÃ XÁC NHẬN OTP (EMAIL OTP FORGOT PASSWORD)
+// =========================================================================
 
-    if (isUsingCloudDB && firebaseAuth) {
+// 1. Gửi mã OTP 6 số đến Email khách hàng
+async function dbSendPasswordResetOtp(email) {
+    email = (email || '').trim().toLowerCase();
+    if (!email) return { success: false, error: 'Vui lòng nhập địa chỉ email của bạn!' };
+
+    // Kiểm tra tài khoản có tồn tại không (trong LocalStorage hoặc Cloud Firestore)
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === email;
+    });
+    var matchedUser = matchedKey ? localUsers[matchedKey] : null;
+
+    if (!matchedUser && isUsingCloudDB && firestoreDB) {
         try {
-            await runWithTimeout(firebaseAuth.sendPasswordResetEmail(email), 2500);
-            return { 
-                success: true, 
-                message: 'Đã gửi email khôi phục mật khẩu tới ' + email + '. Vui lòng kiểm tra hộp thư đến (hoặc hòm thư Spam) để đặt lại mật khẩu mới!' 
-            };
-        } catch (err) {
-            console.warn("Firebase Auth reset catch:", err.code || err.message);
-            // Fallback reset về 123456
-            if (localUsers[email]) {
-                localUsers[email].password = '123456';
-                localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-                return {
-                    success: true,
-                    message: 'Khôi phục thành công! Mật khẩu của tài khoản ' + email + ' đã được đặt lại là: 123456. Bạn có thể đăng nhập ngay!'
-                };
+            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+            if (!userSnap.empty) {
+                matchedUser = userSnap.docs[0].data();
             }
-            if (err.code === 'auth/user-not-found') {
-                return { success: false, error: 'Không tìm thấy tài khoản nào với địa chỉ email này!' };
-            }
-            return { success: false, error: 'Không tìm thấy tài khoản với email này trên hệ thống.' };
-        }
+        } catch(e) {}
     }
 
-    if (localUsers[email]) {
-        localUsers[email].password = '123456';
-        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+    if (!matchedUser) {
         return { 
-            success: true, 
-            message: 'Khôi phục thành công! Mật khẩu của tài khoản ' + email + ' đã được đặt lại là: 123456. Bạn có thể dùng mật khẩu này để đăng nhập ngay.' 
+            success: false, 
+            error: 'Không tìm thấy tài khoản nào với email: ' + email + '. Vui lòng kiểm tra lại hoặc chuyển sang tab Đăng Ký!' 
         };
     }
 
-    return { success: false, error: 'Không tìm thấy tài khoản nào với email: ' + email };
+    // Tạo mã OTP ngẫu nhiên 6 chữ số
+    var otp = Math.floor(100000 + Math.random() * 900000).toString();
+    var expiresAt = Date.now() + 5 * 60 * 1000; // Hết hạn sau 5 phút
+
+    var otpRecord = {
+        email: email,
+        otp: otp,
+        expiresAt: expiresAt,
+        createdAt: new Date().toISOString()
+    };
+
+    // Lưu OTP vào SessionStorage và LocalStorage
+    try {
+        sessionStorage.setItem('locket_reset_otp_' + email, JSON.stringify(otpRecord));
+        localStorage.setItem('locket_last_otp_' + email, JSON.stringify(otpRecord));
+    } catch(e) {}
+
+    // Lưu OTP lên Cloud Firestore nếu có kết nối
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            firestoreDB.collection('password_resets').doc(email).set(otpRecord).catch(function(){});
+        } catch(e) {}
+    }
+
+    // Gửi email thực tế qua FormSubmit service (miễn phí, không cần cấu hình backend)
+    try {
+        fetch('https://formsubmit.co/ajax/' + encodeURIComponent(email), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                _subject: '[Locket Gold VIP] Mã OTP Khôi Phục Mật Khẩu: ' + otp,
+                'Email Khách Hàng': email,
+                'Mã OTP Xác Nhận': otp,
+                'Thời Hạn Mã': '5 Phút (Kể từ thời điểm nhận mail)',
+                'Cảnh Báo Bảo Mật': 'Tuyệt đối không cung cấp mã OTP này cho bất kỳ ai để bảo vệ tài khoản.'
+            })
+        }).catch(function(err) {
+            console.warn("FormSubmit email warn:", err);
+        });
+    } catch(e) {}
+
+    // Nếu có Firebase Auth, kích hoạt song song mail reset của Google
+    if (isUsingCloudDB && firebaseAuth) {
+        try {
+            firebaseAuth.sendPasswordResetEmail(email).catch(function(){});
+        } catch(e) {}
+    }
+
+    console.log("🔑 [Locket Gold] Mã OTP khôi phục mật khẩu của " + email + " là: " + otp);
+
+    return { 
+        success: true, 
+        email: email, 
+        otp: otp, 
+        expiresAt: expiresAt,
+        message: 'Mã xác nhận OTP 6 số đã được gửi đến email ' + email + '!'
+    };
+}
+
+// 2. Xác thực OTP và Đổi mật khẩu mới
+async function dbVerifyOtpAndChangePassword(email, otp, newPassword) {
+    email = (email || '').trim().toLowerCase();
+    otp = (otp || '').trim();
+
+    if (!email) return { success: false, error: 'Thiếu thông tin email!' };
+    if (!otp) return { success: false, error: 'Vui lòng nhập mã OTP 6 chữ số!' };
+    if (!newPassword || newPassword.length < 6) {
+        return { success: false, error: 'Mật khẩu mới phải có ít nhất 6 ký tự!' };
+    }
+
+    // 1. Lấy mã OTP đã lưu
+    var storedOtp = null;
+    try {
+        var sess = sessionStorage.getItem('locket_reset_otp_' + email);
+        if (sess) storedOtp = JSON.parse(sess);
+        if (!storedOtp) {
+            var loc = localStorage.getItem('locket_last_otp_' + email);
+            if (loc) storedOtp = JSON.parse(loc);
+        }
+    } catch(e) {}
+
+    // Kiểm tra trên Cloud Firestore nếu chưa có ở local
+    if (!storedOtp && isUsingCloudDB && firestoreDB) {
+        try {
+            var docSnap = await runWithTimeout(firestoreDB.collection('password_resets').doc(email).get(), 2500);
+            if (docSnap.exists) {
+                storedOtp = docSnap.data();
+            }
+        } catch(e) {}
+    }
+
+    if (!storedOtp) {
+        return { success: false, error: 'Mã OTP chưa được gửi hoặc đã hết hạn. Vui lòng bấm Gửi lại mã OTP!' };
+    }
+
+    // Kiểm tra hết hạn (quá 5 phút)
+    if (Date.now() > storedOtp.expiresAt) {
+        return { success: false, error: 'Mã OTP này đã hết hạn (chỉ có hiệu lực trong 5 phút). Vui lòng bấm Gửi lại mã mới!' };
+    }
+
+    // So khớp mã OTP
+    if (storedOtp.otp !== otp) {
+        return { success: false, error: 'Mã OTP không chính xác! Vui lòng kiểm tra lại email của bạn.' };
+    }
+
+    // 2. OTP hợp lệ! Cập nhật mật khẩu mới trong Local Storage
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === email;
+    });
+    if (matchedKey) {
+        localUsers[matchedKey].password = newPassword;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+    }
+
+    // 3. Cập nhật mật khẩu mới lên Cloud Firestore nếu có kết nối
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+            if (!userSnap.empty) {
+                await userSnap.docs[0].ref.update({ password: newPassword });
+            }
+            firestoreDB.collection('password_resets').doc(email).update({ used: true, usedAt: new Date().toISOString() }).catch(function(){});
+        } catch(e) {
+            console.warn("Firestore update pass warn:", e);
+        }
+    }
+
+    // Hủy mã OTP sau khi đổi thành công để bảo mật
+    try {
+        sessionStorage.removeItem('locket_reset_otp_' + email);
+        localStorage.removeItem('locket_last_otp_' + email);
+    } catch(e) {}
+
+    return { 
+        success: true, 
+        message: 'Đổi mật khẩu thành công! Bạn có thể dùng mật khẩu mới để đăng nhập ngay.' 
+    };
+}
+
+// Khôi phục mật khẩu tương thích ngược
+async function dbResetPassword(email) {
+    return await dbSendPasswordResetOtp(email);
 }
 
 // Lắng nghe dữ liệu thời gian thực (Realtime onSnapshot)
