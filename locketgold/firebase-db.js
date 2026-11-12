@@ -58,12 +58,10 @@ function initFirebase() {
 // 1. TÀI KHOẢN & ĐĂNG NHẬP / ĐĂNG KÝ / QUÊN MẬT KHẨU (USERS & AUTH)
 // =========================================================================
 
-// Danh sách Email mặc định có đặc quyền Quản Trị Viên (Admin)
+// Danh sách Email mặc định có đặc quyền Quản Trị Viên Tối Cao (Master Root Admin)
 var DEFAULT_ADMIN_EMAILS = [
     'tranvannguyen991@gmail.com',
-    'tranvannguyen992z@gmail.com',
-    'admin@locketgold.com',
-    'admin@gmail.com'
+    'admin@locketgold.com'
 ];
 
 // Hàm kiểm tra tài khoản có quyền Quản Trị Viên hay không
@@ -77,10 +75,20 @@ function checkIsAdmin(userOrEmail) {
         email = (userOrEmail.email || '').trim().toLowerCase();
         role = (userOrEmail.role || '').toLowerCase();
     }
+
+    // Nếu tài khoản đã bị hạ quyền tường minh về 'user':
+    // Chỉ bảo vệ duy nhất tài khoản gốc tranvannguyen991@gmail.com không bao giờ bị hạ nhầm
+    if (role === 'user' && email !== 'tranvannguyen991@gmail.com') {
+        return false;
+    }
     if (role === 'admin') return true;
+
+    // Email Quản Trị Viên gốc mặc định
     if (DEFAULT_ADMIN_EMAILS.some(function(adm) { return adm.toLowerCase() === email; })) {
         return true;
     }
+
+    // Kiểm tra danh sách Admin được cấp quyền
     try {
         var custom = JSON.parse(localStorage.getItem('locket_custom_admin_emails') || '[]');
         if (Array.isArray(custom) && custom.map(function(e) { return (e || '').toLowerCase(); }).includes(email)) {
@@ -123,10 +131,12 @@ async function dbLoginUser(email, password) {
     var localUser = matchedKey ? localUsers[matchedKey] : null;
 
     if (localUser && localUser.password && localUser.password === password) {
-        if (checkIsAdmin(localUser) || checkIsAdmin(email)) {
+        if (localUser.role === 'user' && email !== 'tranvannguyen991@gmail.com') {
+            localUser.role = 'user';
+        } else if (localUser.role === 'admin' || checkIsAdmin(localUser)) {
             localUser.role = 'admin';
         } else {
-            localUser.role = localUser.role || 'user';
+            localUser.role = 'user';
         }
         localUsers[matchedKey] = localUser;
         localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
@@ -770,10 +780,12 @@ async function dbAdminGetAllUsers() {
         Object.values(localUsers).forEach(function(u) {
             if (u && u.email) {
                 var k = u.email.toLowerCase();
-                if (checkIsAdmin(u) || checkIsAdmin(k)) {
+                if (u.role === 'user' && k !== 'tranvannguyen991@gmail.com') {
+                    u.role = 'user';
+                } else if (u.role === 'admin' || checkIsAdmin(u)) {
                     u.role = 'admin';
                 } else {
-                    u.role = u.role || 'user';
+                    u.role = 'user';
                 }
                 userMap[k] = u;
             }
@@ -791,10 +803,12 @@ async function dbAdminGetAllUsers() {
                 if (d && d.email) {
                     var k = d.email.toLowerCase();
                     var merged = Object.assign(userMap[k] || {}, d);
-                    if (checkIsAdmin(merged) || checkIsAdmin(k)) {
+                    if (merged.role === 'user' && k !== 'tranvannguyen991@gmail.com') {
+                        merged.role = 'user';
+                    } else if (merged.role === 'admin' || checkIsAdmin(merged)) {
                         merged.role = 'admin';
                     } else {
-                        merged.role = merged.role || 'user';
+                        merged.role = 'user';
                     }
                     userMap[k] = merged;
                 }
@@ -849,7 +863,17 @@ async function dbAdminToggleRole(email, newRole) {
         try {
             var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
             if (!userSnap.empty) {
-                await userSnap.docs[0].ref.update({ role: newRole });
+                for (var i = 0; i < userSnap.docs.length; i++) {
+                    await userSnap.docs[i].ref.update({ role: newRole }).catch(function(){});
+                }
+            } else {
+                var allSnap = await runWithTimeout(firestoreDB.collection('users').get(), 2500);
+                allSnap.forEach(function(doc) {
+                    var data = doc.data();
+                    if (data && (data.email || '').toLowerCase() === email) {
+                        doc.ref.update({ role: newRole }).catch(function(){});
+                    }
+                });
             }
         } catch(e) {
             console.warn("Firestore dbAdminToggleRole warn:", e);

@@ -1679,7 +1679,7 @@
             filtered.forEach(function(u) {
                 var pkgsCount = (u.packages || []).length;
                 var dName = u.name || u.email.split('@')[0];
-                var isUserAdmin = (typeof checkIsAdmin === "function" && checkIsAdmin(u)) || u.role === 'admin';
+                var isUserAdmin = u.role === 'admin' || (u.role !== 'user' && typeof checkIsAdmin === "function" && checkIsAdmin(u));
                 var isRootAdmin = (u.email || '').toLowerCase() === 'tranvannguyen991@gmail.com';
 
                 var roleBadge = isUserAdmin 
@@ -1745,12 +1745,22 @@
 
         // Cấp / Hạ quyền Quản Trị Viên (Admin)
         async function toggleUserRoleAction(email, newRole) {
+            email = (email || '').trim().toLowerCase();
             var roleLabel = newRole === 'admin' ? 'Quản Trị Viên (Admin)' : 'Khách Hàng (User)';
             var confirmMsg = newRole === 'admin' 
                 ? `Xác nhận CẤP QUYỀN ADMIN cho tài khoản:\n${email}?\n\nTài khoản này sẽ có quyền truy cập toàn bộ trang Quản Trị Admin!`
                 : `Xác nhận HẠ QUYỀN tài khoản ${email} về Khách Hàng thông thường?`;
             
             if (!confirm(confirmMsg)) return;
+
+            // Cập nhật ngay trong bộ nhớ để giao diện đổi tức thì 0.001s
+            var inMemUser = adminState.users.find(function(u) {
+                return (u.email || '').toLowerCase() === email;
+            });
+            if (inMemUser) {
+                inMemUser.role = newRole;
+                renderUsersTable();
+            }
 
             if (typeof dbAdminToggleRole === "function") {
                 var res = await dbAdminToggleRole(email, newRole);
