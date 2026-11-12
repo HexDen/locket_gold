@@ -69,7 +69,9 @@ const products = [
   "locket_3600_1y",
   "locket_4900_1m",
   "gold_yearly",
-  "gold_monthly"
+  "gold_monthly",
+  "locket_ai_yearly",
+  "locket_ai_monthly"
 ];
 products.forEach(p => {
   obj.subscriber.subscriptions[p] = subInfo;
@@ -111,7 +113,39 @@ const entitlements = [
   "filters",
   "all",
   "custom_filters",
-  "camera_effects"
+  "camera_effects",
+  // 🚀 MỞ KHÓA BỘ LỌC AI & XEM ẢNH MỜ / PAYWALL AI MOMENTS:
+  "ai",
+  "AI",
+  "ai_filters",
+  "ai_filter",
+  "ai_moments",
+  "ai_moment",
+  "ai_camera",
+  "ai_camera_filter",
+  "ai_styles",
+  "ai_style",
+  "ai_generation",
+  "ai_generations",
+  "locket_ai",
+  "locket_ai_generation",
+  "locket_ai_filters",
+  "unlimited_ai",
+  "unlimited_generations",
+  "unblur",
+  "unblur_photos",
+  "unblur_moments",
+  "view_gold_photos",
+  "view_ai_photos",
+  "view_exclusive_moments",
+  "exclusive_moments",
+  "exclusive_filters",
+  "photo_styles",
+  "lens",
+  "lenses",
+  "gold_moments",
+  "gold_filters",
+  "show_gold_photos"
 ];
 entitlements.forEach(e => {
   obj.subscriber.entitlements[e] = entitlementInfo;

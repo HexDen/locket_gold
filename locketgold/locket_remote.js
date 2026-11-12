@@ -2568,6 +2568,20 @@ const remoteEntries = {
     "ai_filter": "enabled",
     "ai_filters": "enabled",
     "ai_camera_filter": "enabled",
+    "ai_moments": "enabled",
+    "ai_moment": "enabled",
+    "ai_generation": "enabled",
+    "ai_camera_mode": "enabled",
+    "ai_styles": "enabled",
+    "locket_ai": "enabled",
+    "locket_ai_generation": "enabled",
+    "unblur_moments": "enabled",
+    "unblur_photos": "enabled",
+    "view_gold_photos": "enabled",
+    "view_ai_photos": "enabled",
+    "gold_moments_viewing": "enabled",
+    "gold_moments": "enabled",
+    "exclusive_moments": "enabled",
     "app_icon_picker": "enabled",
     "app_icons": "enabled",
     "camera_roll": "enabled",
@@ -2653,7 +2667,79 @@ const remoteEntries = {
   "camera": "{\"gold_max_duration\":60,\"goldMaxDuration\":60,\"max_duration\":60,\"maxDuration\":60,\"ultra_wide\":true,\"ultraWide\":true,\"volume_button\":true,\"volumeButton\":true,\"flash_button\":true,\"telephoto\":true,\"srgb\":true,\"lanczos\":true,\"quality_mbps\":2.5,\"qualityMbps\":2.5}",
   "camera_roll": "{\"gold_max_duration\":60,\"goldMaxDuration\":60,\"video_max_duration\":60,\"videoMaxDuration\":60,\"max_duration\":60,\"maxDuration\":60,\"trim_max_duration\":60,\"trimMaxDuration\":60,\"camera_roll_max_duration\":60,\"quality_mbps\":2.5,\"qualityMbps\":2.5,\"flash_button\":true}",
   "live_photos": "{\"capture\":true,\"viewing\":true,\"catch_up\":true,\"widget_looping_mode\":\"never\"}",
-  "camera_filter_config": "{\"allows_custom_filters\":true,\"show_filter_button\":true,\"sheet_enabled\":true,\"open_sheet_immediately\":false,\"can_use_all_filters\":true,\"all_filters_free\":true,\"is_subscriber\":true,\"unlocked\":true,\"allow_saving_all\":true,\"free_filters\":[\"all\"],\"holiday_filters_enabled\":true,\"holiday_filters_free\":true,\"sheet_filters\":[{\"title\":{\"en\":\"HexDen VIP ✨\",\"vn\":\"HexDen VIP ✨\"},\"filter_ids\":[\"flower_crown\",\"princess\",\"disco_lights\",\"cutesy\",\"looks_maxxing\"]},{\"title\":{\"en\":\"Cute ✨\"},\"filter_ids\":[\"cutesy\",\"sticker_face\",\"flower_crown\",\"love_bug\"]},{\"title\":{\"en\":\"Celebrate 🎉\"},\"filter_ids\":[\"slimed\",\"princess\",\"disco_lights\",\"cash_money\",\"happy_birthday\"]},{\"title\":{\"en\":\"Costumes 🎭\"},\"filter_ids\":[\"wedding\",\"cowboy_cowgirl\",\"giraffe\",\"clown\"]},{\"title\":{\"en\":\"Looks 💇\"},\"filter_ids\":[\"bowling_ball\",\"blonde_bleached\",\"beard\",\"bob_cut\",\"buns\",\"tatted\",\"mohawk\",\"braces\"]},{\"title\":{\"en\":\"Goofy 😂\"},\"filter_ids\":[\"okay_wig\",\"influencer\",\"looks_maxxing\",\"toothless\",\"bye_brows\"]}],\"picker_filters\":[\"flower_crown\",\"princess\",\"disco_lights\",\"cutesy\",\"looks_maxxing\",\"sticker_face\",\"love_bug\",\"slimed\",\"cash_money\",\"happy_birthday\",\"wedding\",\"cowboy_cowgirl\",\"giraffe\",\"clown\",\"bowling_ball\",\"blonde_bleached\",\"beard\",\"bob_cut\",\"buns\",\"tatted\",\"mohawk\",\"braces\",\"okay_wig\",\"influencer\",\"toothless\",\"bye_brows\"]}",
+  "ai_filters_enabled": "true",
+  "ai_filters_free": "true",
+  "ai_moments_enabled": "true",
+  "ai_moments_viewing_enabled": "true",
+  "ai_moments_free_viewing": "true",
+  "ai_viewing_requires_gold": "false",
+  "lock_ai_moments_behind_gold": "false",
+  "show_ai_gold_upsell": "false",
+  "show_gold_upsell_on_view": "false",
+  "unblur_ai_moments": "true",
+  "unblur_gold_moments": "true",
+  "ai_paywall_enabled": "false",
+  "unlock_all_ai_styles": "true",
+  "ai_camera_mode": "true",
+  "ai_generation_daily_limit": "99999",
+  "ai_free_generations_per_day": "99999",
+  "locket_ai_generation_enabled": "true",
+  "gold_moments_enabled": "true",
+  "gold_moments_free_viewing": "true",
+  "exclusive_moments_free": "true",
+  "camera_filter_config": JSON.stringify({
+    "allows_custom_filters": true,
+    "show_filter_button": true,
+    "sheet_enabled": true,
+    "open_sheet_immediately": false,
+    "can_use_all_filters": true,
+    "all_filters_free": true,
+    "is_subscriber": true,
+    "unlocked": true,
+    "allow_saving_all": true,
+    "free_filters": ["all"],
+    "holiday_filters_enabled": true,
+    "holiday_filters_free": true,
+    "sheet_filters": [
+      {
+        "title": { "en": "AI Hot Trend 🔥 (TikTok)", "vn": "AI Hot Trend 🔥 (TikTok)" },
+        "filter_ids": ["ai_anime", "ai_ghibli", "ai_vintage", "ai_cyberpunk", "ai_cartoon", "ai_tiktok_trend", "ai_glamour", "ai_sketch", "ai_y2k", "ai_polaroid", "ai_claymation", "vintage_film", "anime_art", "cyber_hexden"]
+      },
+      {
+        "title": { "en": "HexDen VIP ✨", "vn": "HexDen VIP ✨" },
+        "filter_ids": ["vintage_film", "anime_art", "cyber_hexden", "flower_crown", "princess", "disco_lights", "cutesy", "looks_maxxing"]
+      },
+      {
+        "title": { "en": "Cute ✨" },
+        "filter_ids": ["cutesy", "sticker_face", "flower_crown", "love_bug"]
+      },
+      {
+        "title": { "en": "Celebrate 🎉" },
+        "filter_ids": ["slimed", "princess", "disco_lights", "cash_money", "happy_birthday"]
+      },
+      {
+        "title": { "en": "Costumes 🎭" },
+        "filter_ids": ["wedding", "cowboy_cowgirl", "giraffe", "clown"]
+      },
+      {
+        "title": { "en": "Looks 💇" },
+        "filter_ids": ["bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns", "tatted", "mohawk", "braces"]
+      },
+      {
+        "title": { "en": "Goofy 😂" },
+        "filter_ids": ["okay_wig", "influencer", "looks_maxxing", "toothless", "bye_brows"]
+      }
+    ],
+    "picker_filters": [
+      "ai_anime", "ai_ghibli", "ai_vintage", "ai_cyberpunk", "ai_cartoon", "ai_tiktok_trend", "ai_glamour", "ai_sketch", "ai_y2k", "ai_polaroid", "ai_claymation",
+      "vintage_film", "anime_art", "cyber_hexden",
+      "flower_crown", "princess", "disco_lights", "cutesy", "looks_maxxing",
+      "sticker_face", "love_bug", "slimed", "cash_money", "happy_birthday",
+      "wedding", "cowboy_cowgirl", "giraffe", "clown",
+      "bowling_ball", "blonde_bleached", "beard", "bob_cut", "buns", "tatted", "mohawk", "braces",
+      "okay_wig", "influencer", "toothless", "bye_brows"
+    ]
+  }),
   "camera_roll_preview_enabled": "true",
   "camera_roll_video_enabled": "true",
   "camera_roll_video_upload_enabled": "true",
