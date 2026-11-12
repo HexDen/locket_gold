@@ -198,14 +198,14 @@
                     <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="hover:text-slate-900 transition">Trợ giúp (FB)</a>
                 </nav>
 
-                <!-- Auth Buttons -->
+                                <!-- Auth Buttons -->
                 <div class="flex items-center gap-3">
-                    <button onclick="openLoginModal()" class="text-sm font-bold text-slate-700 hover:text-slate-900 px-3 py-2 transition">
+                    <button onclick="openAuthModal('login')" class="text-sm font-bold text-slate-700 hover:text-slate-900 px-3 py-2 transition">
                         Đăng nhập
                     </button>
-                    <button onclick="openLoginModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-900 font-extrabold text-sm px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
-                        <span>Bắt đầu</span>
-                        <i data-feather="arrow-right" class="w-4 h-4"></i>
+                    <button onclick="openAuthModal('register')" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm px-4 sm:px-5 py-2.5 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
+                        <span>Đăng ký</span>
+                        <i data-feather="user-plus" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
@@ -886,39 +886,144 @@
     <!-- 3. MODALS HỆ THỐNG: ĐĂNG NHẬP, NẠP XU VIETQR, HƯỚNG DẪN CÀI ĐẶT           -->
     <!-- ========================================================================= -->
 
-    <!-- Modal Đăng Nhập -->
-    <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5 relative">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition">
+    <!-- Modal Xác Thực (Đăng Nhập / Đăng Ký / Quên Mật Khẩu) -->
+    <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-4 relative max-h-[95vh] overflow-y-auto">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100 transition z-10">
                 <i data-feather="x" class="w-4 h-4"></i>
             </button>
 
-            <div class="text-center space-y-1">
-                <span class="text-3xl">💛</span>
-                <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Đăng Nhập Locket Gold</h3>
-                <p class="text-xs text-slate-500">Quản lý ví Xu và kích hoạt Locket Gold vĩnh viễn 2099</p>
-            </div>
-
-            <!-- Form -->
-            <div class="space-y-3 pt-1">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Email của bạn</label>
-                    <input id="loginEmailInput" type="email" value="tranvannguyen991@gmail.com" placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu</label>
-                    <input id="loginPassInput" type="password" value="••••••••" placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
-                </div>
-
-                <button onclick="performLogin()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2">
-                    Đăng Nhập Ngay
+            <!-- Tab Switcher (Đăng Nhập / Đăng Ký) -->
+            <div id="authTabHeader" class="flex items-center bg-slate-100 p-1 rounded-2xl">
+                <button id="authTabLogin" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-extrabold rounded-xl transition bg-white text-slate-900 shadow-sm">
+                    Đăng Nhập
+                </button>
+                <button id="authTabRegister" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-extrabold rounded-xl transition text-slate-500 hover:text-slate-900">
+                    Đăng Ký
                 </button>
             </div>
 
-            <div class="pt-2 border-t border-slate-100 text-center">
-                <button onclick="performDemoLogin()" class="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline">
-                    ⚡ Đăng nhập nhanh tài khoản demo (Trần Văn Nguyên)
-                </button>
+            <!-- ================= VIEW 1: ĐĂNG NHẬP ================= -->
+            <div id="authViewLogin" class="space-y-4">
+                <div class="text-center space-y-1">
+                    <span class="text-3xl">💛</span>
+                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Đăng Nhập Locket Gold</h3>
+                    <p class="text-xs text-slate-500">Quản lý ví Xu và kích hoạt Locket Gold vĩnh viễn 2099</p>
+                </div>
+
+                <div class="space-y-3 pt-1">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Email của bạn</label>
+                        <input id="loginEmailInput" type="email" placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-bold text-slate-700">Mật khẩu</label>
+                            <button type="button" onclick="switchAuthTab('forgot')" class="text-[11px] font-bold text-amber-600 hover:text-amber-800 hover:underline">
+                                Quên mật khẩu?
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <input id="loginPassInput" type="password" placeholder="Nhập mật khẩu..." class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                            <button type="button" onclick="togglePassVisibility('loginPassInput', 'eyeLoginIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                                <i id="eyeLoginIcon" data-feather="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onclick="performLogin()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98">
+                        Đăng Nhập Ngay
+                    </button>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100 text-center space-y-2">
+                    <button onclick="performDemoLogin()" class="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline block w-full">
+                        ⚡ Đăng nhập nhanh tài khoản demo (Trần Văn Nguyên)
+                    </button>
+                    <p class="text-xs text-slate-500">
+                        Chưa có tài khoản? 
+                        <button onclick="switchAuthTab('register')" class="font-extrabold text-amber-600 hover:underline">Đăng ký miễn phí</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 2: ĐĂNG KÝ ================= -->
+            <div id="authViewRegister" class="space-y-4 hidden">
+                <div class="text-center space-y-1">
+                    <span class="text-3xl">🚀</span>
+                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Tạo Tài Khoản Mới</h3>
+                    <p class="text-xs text-slate-500">Đăng ký tài khoản Locket Gold VIP chỉ mất 10 giây</p>
+                </div>
+
+                <div class="space-y-3 pt-1">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Họ và tên của bạn</label>
+                        <input id="registerNameInput" type="text" placeholder="Ví dụ: Nguyễn Văn Nguyên" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Email của bạn</label>
+                        <input id="registerEmailInput" type="email" placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Mật khẩu (Tối thiểu 6 ký tự)</label>
+                        <div class="relative">
+                            <input id="registerPassInput" type="password" placeholder="••••••••" class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                            <button type="button" onclick="togglePassVisibility('registerPassInput', 'eyeRegIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                                <i id="eyeRegIcon" data-feather="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Xác nhận mật khẩu</label>
+                        <div class="relative">
+                            <input id="registerConfirmPassInput" type="password" placeholder="Nhập lại mật khẩu..." class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                            <button type="button" onclick="togglePassVisibility('registerConfirmPassInput', 'eyeRegConfirmIcon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+                                <i id="eyeRegConfirmIcon" data-feather="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onclick="performRegister()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98">
+                        Tạo Tài Khoản Ngay
+                    </button>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100 text-center">
+                    <p class="text-xs text-slate-500">
+                        Đã có tài khoản? 
+                        <button onclick="switchAuthTab('login')" class="font-extrabold text-amber-600 hover:underline">Đăng nhập tại đây</button>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 3: QUÊN MẬT KHẨU ================= -->
+            <div id="authViewForgot" class="space-y-4 hidden">
+                <div class="text-center space-y-1">
+                    <span class="text-3xl">🔑</span>
+                    <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Khôi Phục Mật Khẩu</h3>
+                    <p class="text-xs text-slate-500">Nhập email của bạn để nhận liên kết đặt lại mật khẩu</p>
+                </div>
+
+                <div class="space-y-3 pt-1">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Email đăng ký của bạn</label>
+                        <input id="forgotEmailInput" type="email" placeholder="name@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-yellow-400 font-medium">
+                    </div>
+
+                    <!-- Hộp thông báo kết quả -->
+                    <div id="forgotResultBox" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+
+                    <button id="forgotSubmitBtn" onclick="performForgotPassword()" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-extrabold text-sm py-3 rounded-full shadow-yellow-btn transition mt-2 active:scale-98">
+                        Gửi Yêu Cầu Khôi Phục
+                    </button>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100 text-center">
+                    <button onclick="switchAuthTab('login')" class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 transition">
+                        <i data-feather="arrow-left" class="w-3.5 h-3.5"></i>
+                        <span>Quay lại trang Đăng Nhập</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1942,30 +2047,111 @@
             sidebar.classList.toggle('hidden');
         }
 
-        // Auth
+        // ================= AUTHENTICATION MODAL LOGIC =================
+        function switchAuthTab(tab) {
+            var tabHeader = document.getElementById('authTabHeader');
+            var tabLogin = document.getElementById('authTabLogin');
+            var tabRegister = document.getElementById('authTabRegister');
+            
+            var viewLogin = document.getElementById('authViewLogin');
+            var viewRegister = document.getElementById('authViewRegister');
+            var viewForgot = document.getElementById('authViewForgot');
+            var forgotResult = document.getElementById('forgotResultBox');
+            if (forgotResult) forgotResult.classList.add('hidden');
+
+            if (tab === 'login') {
+                if (tabHeader) tabHeader.classList.remove('hidden');
+                if (tabLogin) {
+                    tabLogin.className = "flex-1 py-2 text-xs font-extrabold rounded-xl transition bg-white text-slate-900 shadow-sm";
+                }
+                if (tabRegister) {
+                    tabRegister.className = "flex-1 py-2 text-xs font-extrabold rounded-xl transition text-slate-500 hover:text-slate-900";
+                }
+                if (viewLogin) viewLogin.classList.remove('hidden');
+                if (viewRegister) viewRegister.classList.add('hidden');
+                if (viewForgot) viewForgot.classList.add('hidden');
+            } else if (tab === 'register') {
+                if (tabHeader) tabHeader.classList.remove('hidden');
+                if (tabRegister) {
+                    tabRegister.className = "flex-1 py-2 text-xs font-extrabold rounded-xl transition bg-white text-slate-900 shadow-sm";
+                }
+                if (tabLogin) {
+                    tabLogin.className = "flex-1 py-2 text-xs font-extrabold rounded-xl transition text-slate-500 hover:text-slate-900";
+                }
+                if (viewLogin) viewLogin.classList.add('hidden');
+                if (viewRegister) viewRegister.classList.remove('hidden');
+                if (viewForgot) viewForgot.classList.add('hidden');
+            } else if (tab === 'forgot') {
+                if (tabHeader) tabHeader.classList.add('hidden');
+                if (viewLogin) viewLogin.classList.add('hidden');
+                if (viewRegister) viewRegister.classList.add('hidden');
+                if (viewForgot) viewForgot.classList.remove('hidden');
+                var loginEmail = (document.getElementById('loginEmailInput').value || '').trim();
+                if (loginEmail && document.getElementById('forgotEmailInput')) {
+                    document.getElementById('forgotEmailInput').value = loginEmail;
+                }
+            }
+            if (typeof feather !== "undefined") feather.replace();
+        }
+
+        function openAuthModal(tab) {
+            var modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            switchAuthTab(tab || 'login');
+            if (typeof feather !== "undefined") feather.replace();
+        }
+
         function openLoginModal() {
-            document.getElementById('loginModal').classList.remove('hidden');
-            document.getElementById('loginModal').classList.add('flex');
-            feather.replace();
+            openAuthModal('login');
+        }
+
+        function openRegisterModal() {
+            openAuthModal('register');
         }
 
         function closeLoginModal() {
-            document.getElementById('loginModal').classList.add('hidden');
-            document.getElementById('loginModal').classList.remove('flex');
+            var modal = document.getElementById('loginModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function togglePassVisibility(inputId, iconId) {
+            var inp = document.getElementById(inputId);
+            var icon = document.getElementById(iconId);
+            if (!inp) return;
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                if (icon) icon.setAttribute('data-feather', 'eye-off');
+            } else {
+                inp.type = 'password';
+                if (icon) icon.setAttribute('data-feather', 'eye');
+            }
+            if (typeof feather !== "undefined") feather.replace();
         }
 
         async function performLogin() {
-            var email = document.getElementById('loginEmailInput').value.trim() || 'tranvannguyen991@gmail.com';
-            var pass = document.getElementById('loginPassInput').value || '123456';
-            
-            showToast('Đang đăng nhập vào cơ sở dữ liệu...');
+            var email = document.getElementById('loginEmailInput').value.trim();
+            var pass = document.getElementById('loginPassInput').value;
+
+            if (!email) {
+                showToast('⚠️ Vui lòng nhập địa chỉ email!');
+                return;
+            }
+            if (!pass) {
+                showToast('⚠️ Vui lòng nhập mật khẩu!');
+                return;
+            }
+
+            showToast('Đang đăng nhập vào hệ thống...');
             var res = { success: true, user: { email: email, balance: 0, code: 'gTSxCJPL', packages: [], history: [] } };
-            
+
             if (typeof dbLoginUser === "function") {
                 try {
                     res = await dbLoginUser(email, pass);
                 } catch(e) {
                     console.error("DB Login error:", e);
+                    res = { success: false, error: e.message };
                 }
             }
 
@@ -1974,9 +2160,8 @@
                 appState.user = Object.assign(appState.user, res.user);
                 saveState();
                 closeLoginModal();
-                showToast('Đăng nhập thành công! Chào mừng ' + email);
+                showToast('🎉 Đăng nhập thành công! Chào mừng ' + (res.user.name || email));
 
-                // Subscribe to realtime changes if Cloud DB is active
                 if (isUsingCloudDB && res.user.uid && typeof dbSubscribeUser === "function") {
                     dbSubscribeUser(res.user.uid, function(updatedData) {
                         if (updatedData) {
@@ -1987,8 +2172,111 @@
                     });
                 }
             } else {
-                showToast('⚠️ Lỗi đăng nhập: ' + (res.error || 'Vui lòng thử lại'));
+                showToast('⚠️ ' + (res.error || 'Lỗi đăng nhập!'));
             }
+        }
+
+        async function performRegister() {
+            var name = document.getElementById('registerNameInput').value.trim();
+            var email = document.getElementById('registerEmailInput').value.trim();
+            var pass = document.getElementById('registerPassInput').value;
+            var confirmPass = document.getElementById('registerConfirmPassInput').value;
+
+            if (!email) {
+                showToast('⚠️ Vui lòng nhập địa chỉ email!');
+                return;
+            }
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('⚠️ Địa chỉ email không đúng định dạng!');
+                return;
+            }
+            if (!pass || pass.length < 6) {
+                showToast('⚠️ Mật khẩu phải có ít nhất 6 ký tự!');
+                return;
+            }
+            if (pass !== confirmPass) {
+                showToast('⚠️ Mật khẩu xác nhận không khớp! Vui lòng kiểm tra lại.');
+                return;
+            }
+
+            showToast('Đang tạo tài khoản mới...');
+            var res = { success: false };
+
+            if (typeof dbRegisterUser === "function") {
+                try {
+                    res = await dbRegisterUser(name, email, pass);
+                } catch(e) {
+                    console.error("Register error:", e);
+                    res = { success: false, error: e.message };
+                }
+            } else {
+                res = { success: true, user: { name: name, email: email, balance: 0, code: 'gTSx' + Math.floor(1000 + Math.random() * 9000), packages: [], history: [] } };
+            }
+
+            if (res.success) {
+                appState.isLoggedIn = true;
+                appState.user = Object.assign(appState.user, res.user);
+                saveState();
+                closeLoginModal();
+                showToast('🎉 Đăng ký thành công! Chào mừng ' + (res.user.name || email));
+
+                if (isUsingCloudDB && res.user.uid && typeof dbSubscribeUser === "function") {
+                    dbSubscribeUser(res.user.uid, function(updatedData) {
+                        if (updatedData) {
+                            appState.user = Object.assign(appState.user, updatedData);
+                            saveState();
+                            updateUI();
+                        }
+                    });
+                }
+            } else {
+                showToast('⚠️ ' + (res.error || 'Lỗi đăng ký tài khoản!'));
+            }
+        }
+
+        async function performForgotPassword() {
+            var email = document.getElementById('forgotEmailInput').value.trim();
+            var resultBox = document.getElementById('forgotResultBox');
+            var btn = document.getElementById('forgotSubmitBtn');
+
+            if (!email) {
+                showToast('⚠️ Vui lòng nhập địa chỉ email!');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = 'Đang xử lý...';
+            }
+
+            var res = { success: false };
+            if (typeof dbResetPassword === "function") {
+                try {
+                    res = await dbResetPassword(email);
+                } catch(e) {
+                    res = { success: false, error: e.message };
+                }
+            } else {
+                res = { success: true, message: 'Đã gửi yêu cầu đặt lại mật khẩu cho ' + email };
+            }
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerText = 'Gửi Yêu Cầu Khôi Phục';
+            }
+
+            if (resultBox) {
+                resultBox.classList.remove('hidden');
+                if (res.success) {
+                    resultBox.className = "p-3.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200";
+                    resultBox.innerHTML = "✅ " + (res.message || 'Thao tác thành công!');
+                } else {
+                    resultBox.className = "p-3.5 rounded-xl text-xs font-semibold bg-red-50 text-red-800 border border-red-200";
+                    resultBox.innerHTML = "⚠️ " + (res.error || 'Có lỗi xảy ra, vui lòng thử lại.');
+                }
+            }
+            if (typeof feather !== "undefined") feather.replace();
         }
 
         async function performDemoLogin() {

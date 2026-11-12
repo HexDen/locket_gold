@@ -1576,13 +1576,17 @@
 
             filtered.forEach(function(u) {
                 var pkgsCount = (u.packages || []).length;
+                var dName = u.name || u.email.split('@')[0];
                 html += `
                     <tr class="hover:bg-slate-800/40 transition">
-                        <td class="py-3 px-3 font-semibold text-white flex items-center gap-2">
-                            <span class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-amber-400 text-[11px]">
-                                ${(u.email || 'U').charAt(0).toUpperCase()}
+                        <td class="py-3 px-3 font-semibold text-white flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-full bg-amber-400/10 border border-amber-400/30 flex items-center justify-center font-black text-amber-400 text-xs">
+                                ${(dName || 'U').charAt(0).toUpperCase()}
                             </span>
-                            <span>${u.email}</span>
+                            <div>
+                                <div class="text-white font-bold text-xs">${dName}</div>
+                                <div class="text-[11px] text-slate-400 font-mono">${u.email}</div>
+                            </div>
                         </td>
                         <td class="py-3 px-3 font-mono font-bold text-slate-400">${u.code || '---'}</td>
                         <td class="py-3 px-3 font-mono font-black text-amber-400 text-sm">${u.balance || 0} Xu</td>
