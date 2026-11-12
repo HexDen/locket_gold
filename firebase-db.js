@@ -411,106 +411,141 @@ async function dbAdminGetAllOrders() {
 
 // Duyệt nạp tiền (Cộng Xu cho khách)
 async function dbAdminApproveRecharge(rechargeId, userEmail, xu) {
+    userEmail = (userEmail || '').trim().toLowerCase();
+    
+    // 1. Cập nhật Local Storage
+    var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+    localRecharges.forEach(function(r) {
+        if (r.id === rechargeId) r.status = 'Thành công';
+    });
+    localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
+
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === userEmail;
+    });
+    if (matchedKey) {
+        localUsers[matchedKey].balance = (localUsers[matchedKey].balance || 0) + xu;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+    }
+
+    // 2. Cập nhật Cloud Firestore nếu có kết nối
     if (isUsingCloudDB && firestoreDB) {
         try {
             await firestoreDB.collection('recharges').doc(rechargeId).update({
                 status: 'Thành công'
-            });
+            }).catch(function(){});
             var userSnap = await firestoreDB.collection('users').where('email', '==', userEmail).get();
             if (!userSnap.empty) {
                 var uDoc = userSnap.docs[0];
                 await uDoc.ref.update({
                     balance: firebase.firestore.FieldValue.increment(xu)
-                });
+                }).catch(function(){});
             }
-            return { success: true };
         } catch(e) {
-            return { success: false, error: e.message };
+            console.warn("Firestore dbAdminApproveRecharge warn:", e);
         }
-    } else {
-        var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
-        localRecharges.forEach(function(r) {
-            if (r.id === rechargeId) r.status = 'Thành công';
-        });
-        localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
-
-        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-        if (localUsers[userEmail]) {
-            localUsers[userEmail].balance = (localUsers[userEmail].balance || 0) + xu;
-            localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-        }
-        return { success: true };
     }
+
+    return { success: true };
 }
 
 // Từ chối đơn nạp
 async function dbAdminRejectRecharge(rechargeId) {
+    var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+    localRecharges.forEach(function(r) {
+        if (r.id === rechargeId) r.status = 'Đã từ chối';
+    });
+    localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
+
     if (isUsingCloudDB && firestoreDB) {
         try {
             await firestoreDB.collection('recharges').doc(rechargeId).update({
                 status: 'Đã từ chối'
-            });
-            return { success: true };
+            }).catch(function(){});
         } catch(e) {
-            return { success: false, error: e.message };
+            console.warn("Firestore dbAdminRejectRecharge warn:", e);
         }
-    } else {
-        var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
-        localRecharges.forEach(function(r) {
-            if (r.id === rechargeId) r.status = 'Đã từ chối';
-        });
-        localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
-        return { success: true };
     }
+
+    return { success: true };
 }
 
-// Cộng / Trừ Xu trực tiếp cho người dùng
+// Cộng / Trừ Xu trực tiếp cho người dùng (Hợp nhất Local + Cloud)
 async function dbAdminAdjustBalance(email, amountXu, note) {
+    email = (email || '').trim().toLowerCase();
     var dateStr = new Date().toLocaleString('vi-VN');
+    var adjId = 'ADJ-' + Date.now();
+    var adjHistory = {
+        id: adjId,
+        type: 'admin_adjust',
+        title: 'Admin điều chỉnh: ' + (note || 'Cộng/Trừ Xu'),
+        amount: (amountXu >= 0 ? '+ ' : '') + amountXu + ' Xu',
+        date: dateStr,
+        status: 'Thành công'
+    };
+
+    var foundUser = null;
+
+    // 1. Cập nhật Local Storage
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === email;
+    });
+
+    if (matchedKey) {
+        foundUser = localUsers[matchedKey];
+        foundUser.balance = (foundUser.balance || 0) + amountXu;
+        foundUser.history = foundUser.history || [];
+        foundUser.history.unshift(adjHistory);
+        localUsers[matchedKey] = foundUser;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+    }
+
+    // 2. Cập nhật Cloud Firestore nếu có kết nối
     if (isUsingCloudDB && firestoreDB) {
         try {
-            var userSnap = await firestoreDB.collection('users').where('email', '==', email).get();
-            if (userSnap.empty) {
-                return { success: false, error: 'Không tìm thấy tài khoản với email này!' };
+            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+            if (!userSnap.empty) {
+                var uDoc = userSnap.docs[0];
+                await uDoc.ref.update({
+                    balance: firebase.firestore.FieldValue.increment(amountXu),
+                    history: firebase.firestore.FieldValue.arrayUnion(adjHistory)
+                });
+                foundUser = uDoc.data();
+            } else if (foundUser) {
+                await firestoreDB.collection('users').doc(foundUser.uid).set(foundUser).catch(function(){});
             }
-            var uDoc = userSnap.docs[0];
-            await uDoc.ref.update({
-                balance: firebase.firestore.FieldValue.increment(amountXu),
-                history: firebase.firestore.FieldValue.arrayUnion({
-                    id: 'ADJ-' + Date.now(),
-                    type: 'admin_adjust',
-                    title: 'Admin điều chỉnh: ' + (note || 'Cộng/Trừ Xu'),
-                    amount: (amountXu >= 0 ? '+ ' : '') + amountXu + ' Xu',
-                    date: dateStr,
-                    status: 'Thành công'
-                })
-            });
-            return { success: true };
         } catch(e) {
-            return { success: false, error: e.message };
+            console.warn("Firestore dbAdminAdjustBalance warn:", e);
         }
-    } else {
-        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-        if (!localUsers[email]) {
-            return { success: false, error: 'Không tìm thấy tài khoản!' };
-        }
-        localUsers[email].balance = (localUsers[email].balance || 0) + amountXu;
-        localUsers[email].history = localUsers[email].history || [];
-        localUsers[email].history.unshift({
-            id: 'ADJ-' + Date.now(),
-            type: 'admin_adjust',
-            title: 'Admin điều chỉnh: ' + (note || 'Cộng/Trừ Xu'),
-            amount: (amountXu >= 0 ? '+ ' : '') + amountXu + ' Xu',
-            date: dateStr,
-            status: 'Thành công'
-        });
-        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-        return { success: true };
     }
+
+    // Nếu chưa tồn tại: Tự động khởi tạo user mới với số dư này
+    if (!foundUser) {
+        foundUser = {
+            uid: 'usr_' + Date.now(),
+            name: email.split('@')[0],
+            email: email,
+            balance: amountXu,
+            code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
+            packages: [],
+            history: [adjHistory],
+            createdAt: new Date().toISOString()
+        };
+        localUsers[email] = foundUser;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+        if (isUsingCloudDB && firestoreDB) {
+            firestoreDB.collection('users').doc(foundUser.uid).set(foundUser).catch(function(){});
+        }
+    }
+
+    return { success: true, balance: foundUser.balance };
 }
 
-// Cấp gói Locket Gold trực tiếp cho khách hàng
+// Cấp gói Locket Gold trực tiếp cho khách hàng (Hợp nhất Local + Cloud)
 async function dbAdminGrantPackage(email, pkgType, pkgName) {
+    email = (email || '').trim().toLowerCase();
     var dateStr = new Date().toLocaleDateString('vi-VN');
     var orderDate = new Date().toLocaleString('vi-VN');
     var orderId = 'ADM-' + Math.floor(10000 + Math.random() * 90000);
@@ -521,49 +556,34 @@ async function dbAdminGrantPackage(email, pkgType, pkgName) {
         date: dateStr,
         expires: 'Vĩnh viễn (2099)'
     };
+    var newOrder = {
+        id: orderId,
+        userId: 'usr_' + Date.now(),
+        userEmail: email,
+        pkgType: pkgType,
+        pkgName: pkgName + ' (Admin cấp)',
+        priceXu: 0,
+        date: orderDate,
+        expires: 'Vĩnh viễn (2099)',
+        status: 'Đã kích hoạt'
+    };
 
-    if (isUsingCloudDB && firestoreDB) {
-        try {
-            var userSnap = await firestoreDB.collection('users').where('email', '==', email).get();
-            if (userSnap.empty) {
-                return { success: false, error: 'Không tìm thấy tài khoản khách hàng!' };
-            }
-            var uDoc = userSnap.docs[0];
-            await uDoc.ref.update({
-                packages: firebase.firestore.FieldValue.arrayUnion(newPkg),
-                history: firebase.firestore.FieldValue.arrayUnion({
-                    id: orderId,
-                    type: 'order',
-                    title: 'Được Admin cấp ' + pkgName,
-                    amount: '0 Xu (Miễn phí)',
-                    date: orderDate,
-                    status: 'Đã kích hoạt'
-                })
-            });
-            await firestoreDB.collection('orders').doc(orderId).set({
-                id: orderId,
-                userId: uDoc.id,
-                userEmail: email,
-                pkgType: pkgType,
-                pkgName: pkgName + ' (Admin cấp)',
-                priceXu: 0,
-                date: orderDate,
-                expires: 'Vĩnh viễn (2099)',
-                status: 'Đã kích hoạt'
-            });
-            return { success: true };
-        } catch(e) {
-            return { success: false, error: e.message };
-        }
-    } else {
-        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
-        if (!localUsers[email]) {
-            return { success: false, error: 'Không tìm thấy tài khoản!' };
-        }
-        localUsers[email].packages = localUsers[email].packages || [];
-        localUsers[email].packages.push(newPkg);
-        localUsers[email].history = localUsers[email].history || [];
-        localUsers[email].history.unshift({
+    var foundUser = null;
+
+    // 1. Kiểm tra và cập nhật Local Storage
+    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+    var localOrders = JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+
+    var matchedKey = Object.keys(localUsers).find(function(k) {
+        return k.toLowerCase() === email;
+    });
+
+    if (matchedKey) {
+        foundUser = localUsers[matchedKey];
+        foundUser.packages = foundUser.packages || [];
+        foundUser.packages.push(newPkg);
+        foundUser.history = foundUser.history || [];
+        foundUser.history.unshift({
             id: orderId,
             type: 'order',
             title: 'Được Admin cấp ' + pkgName,
@@ -571,26 +591,74 @@ async function dbAdminGrantPackage(email, pkgType, pkgName) {
             date: orderDate,
             status: 'Đã kích hoạt'
         });
+        newOrder.userId = foundUser.uid || newOrder.userId;
+        localUsers[matchedKey] = foundUser;
         localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
-
-        var localOrders = JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
-        localOrders.unshift({
-            id: orderId,
-            userId: localUsers[email].uid,
-            userEmail: email,
-            pkgType: pkgType,
-            pkgName: pkgName + ' (Admin cấp)',
-            priceXu: 0,
-            date: orderDate,
-            expires: 'Vĩnh viễn (2099)',
-            status: 'Đã kích hoạt'
-        });
-        localStorage.setItem('locket_gold_orders_db', JSON.stringify(localOrders));
-        return { success: true };
     }
+
+    localOrders.unshift(newOrder);
+    localStorage.setItem('locket_gold_orders_db', JSON.stringify(localOrders));
+
+    // 2. Đồng bộ lên Cloud Firestore nếu có kết nối
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var userSnap = await runWithTimeout(firestoreDB.collection('users').where('email', '==', email).get(), 2500);
+            if (!userSnap.empty) {
+                var uDoc = userSnap.docs[0];
+                newOrder.userId = uDoc.id;
+                await uDoc.ref.update({
+                    packages: firebase.firestore.FieldValue.arrayUnion(newPkg),
+                    history: firebase.firestore.FieldValue.arrayUnion({
+                        id: orderId,
+                        type: 'order',
+                        title: 'Được Admin cấp ' + pkgName,
+                        amount: '0 Xu (Miễn phí)',
+                        date: orderDate,
+                        status: 'Đã kích hoạt'
+                    })
+                });
+                foundUser = uDoc.data();
+            } else if (foundUser) {
+                // Tải user lên Firestore nếu chưa có
+                await firestoreDB.collection('users').doc(foundUser.uid).set(foundUser).catch(function(){});
+            }
+            // Lưu order lên Firestore
+            await firestoreDB.collection('orders').doc(orderId).set(newOrder).catch(function(){});
+        } catch(e) {
+            console.warn("Firestore dbAdminGrantPackage warn:", e);
+        }
+    }
+
+    // Nếu không tìm thấy ở cả 2 nơi: Tự động khởi tạo user mới và cấp gói luôn!
+    if (!foundUser) {
+        foundUser = {
+            uid: 'usr_' + Date.now(),
+            name: email.split('@')[0],
+            email: email,
+            balance: 0,
+            code: 'gTSx' + Math.floor(1000 + Math.random() * 9000),
+            packages: [newPkg],
+            history: [{
+                id: orderId,
+                type: 'order',
+                title: 'Được Admin cấp ' + pkgName,
+                amount: '0 Xu (Miễn phí)',
+                date: orderDate,
+                status: 'Đã kích hoạt'
+            }],
+            createdAt: new Date().toISOString()
+        };
+        localUsers[email] = foundUser;
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+        if (isUsingCloudDB && firestoreDB) {
+            firestoreDB.collection('users').doc(foundUser.uid).set(foundUser).catch(function(){});
+            firestoreDB.collection('orders').doc(orderId).set(newOrder).catch(function(){});
+        }
+    }
+
+    return { success: true, user: foundUser };
 }
 
-// Lấy toàn bộ khách hàng (Hợp nhất Cloud Firestore + Local Storage)
 async function dbAdminGetAllUsers() {
     var userMap = {};
 

@@ -296,6 +296,14 @@
             showAdminToast('Đã sao chép vào bộ nhớ tạm!');
         }
 
+    
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
     </script>
     <script>
         tailwind.config = {
@@ -314,18 +322,66 @@
                 }
             }
         }
+    
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
     </script>
 
     <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://unpkg.com/feather-icons">
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
+    </script>
 
     <!-- Firebase SDK Compat v10 -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js">
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js">
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js">
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
+    </script>
 
     <!-- Firebase DB Adapter -->
-    <script src="./firebase-db.js"></script>
+    <script src="./firebase-db.js">
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
+    </script>
 
     <style>
         body {
@@ -1715,14 +1771,6 @@
                     showAdminToast(`🎉 Đã cấp thành công ${pkgName} cho ${email}!`);
                     closeModalManualGrant();
                     loadAllAdminData();
-        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
-                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
-                loadAllAdminData();
-            }
-        });
-
                 } else {
                     alert('Lỗi: ' + res.error);
                 }
@@ -1790,6 +1838,14 @@
                 toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
             }, 3000);
         }
+    
+        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
+                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
+                loadAllAdminData();
+            }
+        });
     </script>
 </body>
 </html>
