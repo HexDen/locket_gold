@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-900 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trung Tâm Quản Trị - Locket Gold VIP 💛</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        locket: {
+                            yellow: '#facc15',
+                            hover: '#eab308',
+                            light: '#fef9c3',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Firebase SDK Compat v10 -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase DB Adapter -->
+    <script src="./firebase-db.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background-color: #0b1329;
+            color: #f1f5f9;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b1329; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    </style>
+</head>
+<body class="h-full flex flex-col antialiased selection:bg-amber-400 selection:text-slate-950">
+
+    <!-- ========================================================================= -->
+    <!-- 1. MÀN HÌNH KHÓA BẢO MẬT ADMIN (PIN AUTH GATE) -->
+    <!-- ========================================================================= -->
+    <div id="adminLockScreen" class="fixed inset-0 z-50 bg-[#070d1e] flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-[#0f172a] border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6 relative overflow-hidden">
+            <!-- Glow background -->
+            <div class="absolute -top-20 -right-20 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="space-y-2">
+                <div class="w-16 h-16 rounded-3xl bg-amber-400/20 text-amber-400 border border-amber-400/40 flex items-center justify-center text-3xl mx-auto shadow-lg shadow-amber-500/20">
+                    👑
+                </div>
+                <h1 class="text-2xl font-black text-white tracking-tight">Trung Tâm Quản Trị</h1>
+                <p class="text-xs text-slate-400">Dành riêng cho Quản trị viên Trần Văn Nguyên</p>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-[11px] font-mono text-amber-300">
+                    <span>STK: 6012072005 (MB Bank)</span>
+                </div>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1.5">Mã PIN hoặc Mật Khẩu Admin:</label>
+                    <div class="relative">
+                        <input id="adminPinInput" type="password" placeholder="Nhập mã PIN (Mặc định: 888888 hoặc admin123)" required
+                            class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition pr-10">
+                        <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-3.5 text-slate-500 hover:text-slate-300">
+                            <i id="pinEyeIcon" data-feather="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="text-[11px] text-slate-500 mt-1.5">
+                        💡 Gợi ý: Nhập mã PIN <strong>888888</strong> hoặc <strong>admin123</strong> để vào quản trị.
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black py-3.5 px-4 rounded-2xl text-sm shadow-lg shadow-amber-500/25 transition flex items-center justify-center gap-2 active:scale-95">
+                    <i data-feather="unlock" class="w-4 h-4"></i>
+                    <span>Mở Khóa Quản Trị</span>
+                </button>
+            </form>
+
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+                <a href="./index.html" class="hover:text-amber-400 transition flex items-center gap-1">
+                    <i data-feather="arrow-left" class="w-3.5 h-3.5"></i>
+                    <span>Về Web Bán Hàng</span>
+                </a>
+                <span>Locket Gold v2.0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 2. GIAO DIỆN CHÍNH ADMIN DASHBOARD -->
+    <!-- ========================================================================= -->
+    <div id="adminMainPortal" class="flex-1 flex overflow-hidden hidden">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-[#070d1e] border-r border-slate-800 flex flex-col justify-between shrink-0 hidden md:flex">
+            <!-- Brand -->
+            <div class="p-5 space-y-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl font-black shadow-md shadow-amber-500/20">
+                        💛
+                    </div>
+                    <div>
+                        <div class="font-black text-white text-base tracking-tight flex items-center gap-1.5">
+                            <span>Locket Gold</span>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">ADMIN</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400">Trần Văn Nguyên</div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="space-y-1.5">
+                    <button onclick="switchTab('overview')" id="nav-overview" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-white bg-amber-400/10 text-amber-300 border border-amber-400/30 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-feather="pie-chart" class="w-4 h-4 text-amber-400"></i>
+                            <span>Tổng Quan</span>
+                        </div>
+                    </button>
+
+                    <button onclick="switchTab('recharges')" id="nav-recharges" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-feather="credit-card" class="w-4 h-4"></i>
+                            <span>Duyệt Nạp Tiền</span>
+                        </div>
+                        <span id="pendingBadgeCount" class="text-[10px] font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">0</span>
+                    </button>
+
+                    <button onclick="switchTab('orders')" id="nav-orders" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-feather="shopping-bag" class="w-4 h-4"></i>
+                            <span>Đơn Mua Gói</span>
+                        </div>
+                        <span id="ordersCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+                    </button>
+
+                    <button onclick="switchTab('users')" id="nav-users" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-feather="users" class="w-4 h-4"></i>
+                            <span>Khách Hàng</span>
+                        </div>
+                        <span id="usersCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0</span>
+                    </button>
+
+                    <button onclick="switchTab('settings')" id="nav-settings" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-feather="settings" class="w-4 h-4"></i>
+                            <span>Cài Đặt & CSDL</span>
+                        </div>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Footer info -->
+            <div class="p-4 border-t border-slate-800/80 space-y-2">
+                <a href="./index.html" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs font-bold text-slate-200 transition">
+                    <i data-feather="external-link" class="w-3.5 h-3.5"></i>
+                    <span>Về Web Bán Hàng</span>
+                </a>
+                <button onclick="lockAdminSession()" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl hover:bg-rose-500/10 text-xs font-bold text-rose-400 hover:text-rose-300 transition">
+                    <i data-feather="lock" class="w-3.5 h-3.5"></i>
+                    <span>Khóa Quản Trị</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <!-- HEADER -->
+            <header class="h-16 bg-[#070d1e]/90 backdrop-blur-md border-b border-slate-800 px-4 sm:px-8 flex items-center justify-between shrink-0 z-20">
+                <div class="flex items-center gap-3">
+                    <h2 id="viewHeaderTitle" class="text-base sm:text-lg font-black text-white">Thống Kê Tổng Quan</h2>
+                    <div id="adminDbPill" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="adminDbPillText">CSDL: Sẵn Sàng</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="openManualTopupModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95">
+                        <i data-feather="plus-circle" class="w-3.5 h-3.5"></i>
+                        <span>Cộng Xu Khách</span>
+                    </button>
+                    <button onclick="openManualGrantModal()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition">
+                        <i data-feather="gift" class="w-3.5 h-3.5"></i>
+                        <span>Cấp Gói VIP</span>
+                    </button>
+                    <button onclick="loadAllAdminData(true)" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition" title="Làm mới dữ liệu">
+                        <i data-feather="refresh-cw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- SCROLLABLE TAB CONTAINER -->
+            <main class="flex-1 p-4 sm:p-8 overflow-y-auto space-y-6">
+                
+                <!-- ========================================================================= -->
+                <!-- TAB 1: TỔNG QUAN (DASHBOARD) -->
+                <!-- ========================================================================= -->
+                <div id="tab-overview" class="space-y-6">
+                    
+                    <!-- 4 STAT CARDS -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Stat 1: Doanh Thu -->
+                        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 space-y-2 relative overflow-hidden">
+                            <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+                                <span>TỔNG DOANH THU</span>
+                                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
+                                    💰
+                                </div>
+                            </div>
+                            <div id="statTotalVnd" class="text-2xl sm:text-3xl font-black text-white font-mono">0 đ</div>
+                            <div class="text-[11px] text-emerald-400 flex items-center gap-1">
+                                <span>Thực nhận qua MB Bank 6012072005</span>
+                            </div>
+                        </div>
+
+                        <!-- Stat 2: Xu Lưu Thông -->
+                        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 space-y-2 relative overflow-hidden">
+                            <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+                                <span>TỔNG XU ĐÃ NẠP</span>
+                                <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
+                                    🪙
+                                </div>
+                            </div>
+                            <div id="statTotalXu" class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">0 Xu</div>
+                            <div class="text-[11px] text-slate-400">1 Xu = 1.000 VNĐ</div>
+                        </div>
+
+                        <!-- Stat 3: Tổng Đơn Hàng -->
+                        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 space-y-2 relative overflow-hidden">
+                            <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+                                <span>ĐƠN MUA GÓI</span>
+                                <div class="w-8 h-8 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center">
+                                    📦
+                                </div>
+                            </div>
+                            <div id="statTotalOrders" class="text-2xl sm:text-3xl font-black text-white font-mono">0 Đơn</div>
+                            <div class="text-[11px] text-slate-400">Gói 1 (29 Xu) & Gói 2 VIP (49 Xu)</div>
+                        </div>
+
+                        <!-- Stat 4: Tổng Khách Hàng -->
+                        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 space-y-2 relative overflow-hidden">
+                            <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+                                <span>TỔNG KHÁCH HÀNG</span>
+                                <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center">
+                                    👥
+                                </div>
+                            </div>
+                            <div id="statTotalUsers" class="text-2xl sm:text-3xl font-black text-white font-mono">0 Users</div>
+                            <div class="text-[11px] text-slate-400">Tài khoản đã đăng ký</div>
+                        </div>
+                    </div>
+
+                    <!-- GIAO DỊCH NẠP CHỜ DUYỆT -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">⚡</span>
+                                <div>
+                                    <h3 class="text-base font-black text-white">Yêu Cầu Nạp Tiền Chờ Phê Duyệt</h3>
+                                    <p class="text-xs text-slate-400">Khách chuyển khoản VietQR MB Bank bấm xác nhận</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('recharges')" class="text-xs text-amber-400 hover:underline font-bold">
+                                Xem tất cả ➔
+                            </button>
+                        </div>
+
+                        <div id="overviewPendingContainer" class="overflow-x-auto">
+                            <!-- Render dynamic pending recharges -->
+                        </div>
+                    </div>
+
+                    <!-- ĐƠN HÀNG MỚI NHẤT -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">🛍️</span>
+                                <div>
+                                    <h3 class="text-base font-black text-white">Đơn Hàng Mua Gói Mới Nhất</h3>
+                                    <p class="text-xs text-slate-400">Lịch sử khách kích hoạt gói vĩnh viễn 2099</p>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('orders')" class="text-xs text-amber-400 hover:underline font-bold">
+                                Xem tất cả ➔
+                            </button>
+                        </div>
+
+                        <div id="overviewOrdersContainer" class="overflow-x-auto">
+                            <!-- Render dynamic recent orders -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- TAB 2: QUẢN LÝ NẠP TIỀN (RECHARGES) -->
+                <!-- ========================================================================= -->
+                <div id="tab-recharges" class="hidden space-y-6">
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-lg font-black text-white">Danh Sách Lịch Sử Nạp Tiền VietQR</h3>
+                                <p class="text-xs text-slate-400">Kiểm tra mã giao dịch MB Bank và duyệt nạp Xu cho khách hàng</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input id="searchRechargesInput" oninput="renderRechargesTable()" type="text" placeholder="Tìm theo Email / Mã nạp..."
+                                    class="bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
+                            </div>
+                        </div>
+
+                        <div id="fullRechargesContainer" class="overflow-x-auto">
+                            <!-- Full recharges table -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- TAB 3: QUẢN LÝ ĐƠN MUA GÓI (ORDERS) -->
+                <!-- ========================================================================= -->
+                <div id="tab-orders" class="hidden space-y-6">
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-lg font-black text-white">Danh Sách Đơn Mua Gói Locket Gold</h3>
+                                <p class="text-xs text-slate-400">Toàn bộ đơn hàng Gói 1 (Shadowrocket) và Gói 2 VIP (Siêu Tốc)</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select id="filterOrderType" onchange="renderOrdersTable()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+                                    <option value="ALL">Tất Cả Gói</option>
+                                    <option value="g1_shadowrocket">Gói 1: Shadowrocket (29 Xu)</option>
+                                    <option value="g2_direct_vip">Gói 2: VIP Siêu Tốc (49 Xu)</option>
+                                </select>
+                                <input id="searchOrdersInput" oninput="renderOrdersTable()" type="text" placeholder="Tìm theo Email / Mã đơn..."
+                                    class="bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
+                            </div>
+                        </div>
+
+                        <div id="fullOrdersContainer" class="overflow-x-auto">
+                            <!-- Full orders table -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- TAB 4: QUẢN LÝ KHÁCH HÀNG (USERS) -->
+                <!-- ========================================================================= -->
+                <div id="tab-users" class="hidden space-y-6">
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <h3 class="text-lg font-black text-white">Danh Sách Khách Hàng / Thành Viên</h3>
+                                <p class="text-xs text-slate-400">Quản lý số dư Xu, lịch sử giao dịch và cấp gói VIP cho từng khách</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input id="searchUsersInput" oninput="renderUsersTable()" type="text" placeholder="Tìm Email khách hàng..."
+                                    class="bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
+                            </div>
+                        </div>
+
+                        <div id="fullUsersContainer" class="overflow-x-auto">
+                            <!-- Full users table -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- TAB 5: CÀI ĐẶT HỆ THỐNG & CSDL (SETTINGS) -->
+                <!-- ========================================================================= -->
+                <div id="tab-settings" class="hidden space-y-6">
+                    
+                    <!-- THÔNG TIN NGÂN HÀNG MB BANK -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🏦</span>
+                            <div>
+                                <h3 class="text-base font-black text-white">Tài Khoản Ngân Hàng Nhận Tiền VietQR</h3>
+                                <p class="text-xs text-slate-400">Tài khoản hiển thị khi khách hàng nạp Xu</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
+                                <div class="text-[11px] font-bold text-slate-400">NGÂN HÀNG</div>
+                                <div class="text-sm font-black text-white">MB Bank (Ngân Hàng Quân Đội)</div>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
+                                <div class="text-[11px] font-bold text-slate-400">SỐ TÀI KHOẢN</div>
+                                <div class="text-base font-black text-amber-400 font-mono">6012072005</div>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
+                                <div class="text-[11px] font-bold text-slate-400">CHỦ TÀI KHOẢN</div>
+                                <div class="text-sm font-black text-white uppercase">TRẦN VĂN NGUYÊN</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- THIẾT LẬP GIÁ GÓI VĨNH VIỄN -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🏷️</span>
+                            <div>
+                                <h3 class="text-base font-black text-white">Bảng Giá Dịch Vụ Locket Gold 2099</h3>
+                                <p class="text-xs text-slate-400">2 gói kích hoạt vĩnh viễn</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                                <div>
+                                    <div class="text-sm font-black text-white">Gói 1: Locket Gold (Shadowrocket)</div>
+                                    <div class="text-xs text-slate-400">Hạn dùng vĩnh viễn (2099) • Cài qua Shadowrocket</div>
+                                </div>
+                                <div class="text-lg font-black text-amber-400 font-mono">29 Xu</div>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 bg-amber-500/5 flex items-center justify-between">
+                                <div>
+                                    <div class="text-sm font-black text-white">Gói 2: Locket Gold VIP [Siêu Tốc]</div>
+                                    <div class="text-xs text-amber-300/80">Hạn dùng vĩnh viễn (2099) • Cài trực tiếp Safari không cần app</div>
+                                </div>
+                                <div class="text-lg font-black text-amber-400 font-mono">49 Xu</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CẤU HÌNH CƠ SỞ DỮ LIỆU FIREBASE -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🔥</span>
+                                <div>
+                                    <h3 class="text-base font-black text-white">Cơ Sở Dữ Liệu Google Cloud Firestore</h3>
+                                    <p class="text-xs text-slate-400">Đồng bộ trực tiếp Cloud Firestore: users, recharges, orders</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-400">Mã Cấu Hình Firebase Config (JSON / JS):</label>
+                            <textarea id="adminFirebaseConfigText" rows="5" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-xs font-mono text-slate-300 focus:outline-none focus:border-amber-400" placeholder="const firebaseConfig = { ... }"></textarea>
+                        </div>
+
+                        <div class="flex items-center justify-end gap-3">
+                            <button onclick="saveAdminFirebaseConfig()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-5 py-2.5 rounded-xl transition">
+                                Lưu & Áp Dụng Cấu Hình
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SAO LƯU & XUẤT DỮ LIỆU -->
+                    <div class="bg-[#0f172a] border border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">💾</span>
+                            <div>
+                                <h3 class="text-base font-black text-white">Sao Lưu & Xuất Dữ Liệu (Backup)</h3>
+                                <p class="text-xs text-slate-400">Tải xuống toàn bộ danh sách khách hàng, đơn nạp và đơn mua gói dạng JSON</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="exportAllDataJson()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl border border-slate-700 flex items-center gap-2 transition">
+                                <i data-feather="download" class="w-4 h-4"></i>
+                                <span>Xuất Dữ Liệu Ra File JSON</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 3. CÁC MODAL THAO TÁC ADMIN (CỘNG XU, CẤP GÓI) -->
+    <!-- ========================================================================= -->
+
+    <!-- MODAL 1: CỘNG / TRỪ XU THỦ CÔNG -->
+    <div id="modalManualTopup" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+            <button onclick="closeModalManualTopup()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-xl font-bold">
+                    🪙
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-white">Cộng / Trừ Xu Khách Hàng</h3>
+                    <p class="text-xs text-slate-400">Thao tác nạp bù hoặc điều chỉnh số dư</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleManualTopupSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Email Khách Hàng:</label>
+                    <input id="topupUserEmail" type="email" placeholder="example@gmail.com" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Số Xu Điều Chỉnh (Nhập âm nếu muốn trừ):</label>
+                    <div class="flex items-center gap-2">
+                        <input id="topupAmountXu" type="number" placeholder="Ví dụ: 49 hoặc -10" required
+                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono font-bold focus:outline-none focus:border-amber-400">
+                        <div class="flex items-center gap-1">
+                            <button type="button" onclick="document.getElementById('topupAmountXu').value = 29" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold">+29</button>
+                            <button type="button" onclick="document.getElementById('topupAmountXu').value = 49" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold">+49</button>
+                            <button type="button" onclick="document.getElementById('topupAmountXu').value = 100" class="px-2.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-bold">+100</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Lý Do / Ghi Chú:</label>
+                    <input id="topupNote" type="text" placeholder="Khách nạp MB Bank / Hỗ trợ tặng thưởng..." value="Nạp tiền thủ công qua MB Bank"
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3 rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i data-feather="check-circle" class="w-4 h-4"></i>
+                        <span>Xác Nhận Điều Chỉnh Xu</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CẤP GÓI LOCKET GOLD TRỰC TIẾP -->
+    <div id="modalManualGrant" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+            <button onclick="closeModalManualGrant()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-xl font-bold">
+                    🎁
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-white">Cấp Gói VIP Trực Tiếp</h3>
+                    <p class="text-xs text-slate-400">Kích hoạt quyền lợi vĩnh viễn (2099) cho khách</p>
+                </div>
+            </div>
+
+            <form onsubmit="handleManualGrantSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Email Khách Hàng:</label>
+                    <input id="grantUserEmail" type="email" placeholder="example@gmail.com" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Chọn Gói Cần Cấp:</label>
+                    <select id="grantPkgType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-amber-400">
+                        <option value="g2_direct_vip">Gói 2: Locket Gold VIP [Siêu Tốc] (Khuyên dùng - Cài trực tiếp Safari)</option>
+                        <option value="g1_shadowrocket">Gói 1: Locket Gold (Shadowrocket)</option>
+                    </select>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-[11px] text-slate-400 space-y-1">
+                    <div>• <strong>Thời hạn:</strong> Vĩnh viễn (2099)</div>
+                    <div>• <strong>Chi phí:</strong> 0 Xu (Admin cấp đặc cách)</div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3 rounded-xl transition flex items-center justify-center gap-1.5">
+                        <i data-feather="check-circle" class="w-4 h-4"></i>
+                        <span>Cấp Gói Ngay Cho Khách</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="adminToast" class="fixed bottom-6 right-6 z-50 transform transition-all duration-300 opacity-0 translate-y-3 pointer-events-none">
+        <div class="bg-amber-400 text-slate-950 font-black px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs">
+            <span class="text-base">💛</span>
+            <span id="adminToastMsg">Thông báo thành công</span>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 4. JAVASCRIPT CONTROLLERS -->
+    <!-- ========================================================================= -->
+    <script>
+        // State variables
+        var adminState = {
+            authenticated: false,
+            currentTab: 'overview',
+            users: [],
+            recharges: [],
+            orders: []
+        };
+
+        // Master PINs
+        var VALID_PINS = ['888888', 'admin123', 'tranvannguyen', '6012072005'];
+
+        // Init on load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (typeof initFirebase === "function") {
+                initFirebase();
+            }
+            feather.replace();
+            checkAdminSession();
+            
+            // Sync custom firebase config text
+            var savedConfig = localStorage.getItem('custom_firebase_config');
+            if (savedConfig) {
+                var el = document.getElementById('adminFirebaseConfigText');
+                if (el) el.value = savedConfig;
+            }
+        });
+
+        // 1. Session & Auth Gate
+        function checkAdminSession() {
+            var isAuth = sessionStorage.getItem('locket_admin_authenticated');
+            if (isAuth === 'true') {
+                unlockAdminPortal();
+            } else {
+                document.getElementById('adminLockScreen').classList.remove('hidden');
+                document.getElementById('adminMainPortal').classList.add('hidden');
+            }
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            var pinInput = document.getElementById('adminPinInput');
+            var pin = pinInput.value.trim();
+
+            if (VALID_PINS.includes(pin)) {
+                sessionStorage.setItem('locket_admin_authenticated', 'true');
+                showAdminToast('🎉 Mở khóa quyền Quản Trị thành công!');
+                unlockAdminPortal();
+            } else {
+                showAdminToast('⚠️ Mã PIN không đúng. Vui lòng thử 888888 hoặc admin123!');
+                pinInput.focus();
+            }
+        }
+
+        function unlockAdminPortal() {
+            adminState.authenticated = true;
+            document.getElementById('adminLockScreen').classList.add('hidden');
+            document.getElementById('adminMainPortal').classList.remove('hidden');
+            feather.replace();
+            loadAllAdminData();
+        }
+
+        function lockAdminSession() {
+            sessionStorage.removeItem('locket_admin_authenticated');
+            location.reload();
+        }
+
+        function togglePinVisibility() {
+            var pinInput = document.getElementById('adminPinInput');
+            if (pinInput.type === 'password') {
+                pinInput.type = 'text';
+            } else {
+                pinInput.type = 'password';
+            }
+        }
+
+        // 2. Tab Navigation
+        function switchTab(tabId) {
+            adminState.currentTab = tabId;
+            var tabs = ['overview', 'recharges', 'orders', 'users', 'settings'];
+            
+            tabs.forEach(function(t) {
+                var tabEl = document.getElementById('tab-' + t);
+                var btnEl = document.getElementById('nav-' + t);
+                if (tabEl) tabEl.classList.add('hidden');
+                if (btnEl) {
+                    btnEl.className = 'admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition';
+                }
+            });
+
+            var activeTabEl = document.getElementById('tab-' + tabId);
+            var activeBtnEl = document.getElementById('nav-' + tabId);
+            if (activeTabEl) activeTabEl.classList.remove('hidden');
+            if (activeBtnEl) {
+                activeBtnEl.className = 'admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-white bg-amber-400/10 text-amber-300 border border-amber-400/30 transition';
+            }
+
+            var titles = {
+                overview: 'Thống Kê Tổng Quan',
+                recharges: 'Quản Lý Nạp Tiền (VietQR MB Bank)',
+                orders: 'Quản Lý Đơn Hàng Mua Gói',
+                users: 'Quản Lý Khách Hàng / Thành Viên',
+                settings: 'Cài Đặt Hệ Thống & CSDL'
+            };
+            document.getElementById('viewHeaderTitle').textContent = titles[tabId] || 'Quản Trị';
+            feather.replace();
+        }
+
+        // 3. Load all data from Firestore / LocalStorage
+        async function loadAllAdminData(isManualRefresh) {
+            var pillText = document.getElementById('adminDbPillText');
+            if (typeof isUsingCloudDB !== "undefined" && isUsingCloudDB) {
+                pillText.textContent = 'Cloud Firestore: Kết Nối';
+            } else {
+                pillText.textContent = 'CSDL: Local Storage';
+            }
+
+            try {
+                // Load users
+                if (typeof dbAdminGetAllUsers === "function") {
+                    adminState.users = await dbAdminGetAllUsers();
+                } else {
+                    var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+                    adminState.users = Object.values(localUsers);
+                }
+
+                // Load recharges
+                if (typeof dbAdminGetAllRecharges === "function") {
+                    adminState.recharges = await dbAdminGetAllRecharges();
+                } else {
+                    adminState.recharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+                }
+
+                // Load orders
+                if (typeof dbAdminGetAllOrders === "function") {
+                    adminState.orders = await dbAdminGetAllOrders();
+                } else {
+                    adminState.orders = JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+                }
+
+                // Update UI
+                renderOverviewMetrics();
+                renderOverviewTables();
+                renderRechargesTable();
+                renderOrdersTable();
+                renderUsersTable();
+
+                if (isManualRefresh) {
+                    showAdminToast('✅ Đã làm mới toàn bộ dữ liệu mới nhất!');
+                }
+            } catch(e) {
+                console.error("Lỗi nạp admin data:", e);
+            }
+        }
+
+        // 4. Render Overview Metrics
+        function renderOverviewMetrics() {
+            // Total VND from successful recharges
+            var totalVnd = 0;
+            var totalXu = 0;
+            var pendingCount = 0;
+
+            adminState.recharges.forEach(function(r) {
+                if (r.status === 'Thành công') {
+                    totalVnd += (r.amountVnd || (r.xu * 1000) || 0);
+                    totalXu += (r.xu || 0);
+                } else if (r.status === 'Chờ duyệt' || !r.status) {
+                    pendingCount++;
+                }
+            });
+
+            document.getElementById('statTotalVnd').textContent = totalVnd.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('statTotalXu').textContent = totalXu.toLocaleString('vi-VN') + ' Xu';
+            document.getElementById('statTotalOrders').textContent = adminState.orders.length + ' Đơn';
+            document.getElementById('statTotalUsers').textContent = adminState.users.length + ' Khách';
+
+            // Badges
+            document.getElementById('pendingBadgeCount').textContent = pendingCount;
+            document.getElementById('ordersCountBadge').textContent = adminState.orders.length;
+            document.getElementById('usersCountBadge').textContent = adminState.users.length;
+        }
+
+        // 5. Render Overview Tables
+        function renderOverviewTables() {
+            // Pending Recharges
+            var pendingContainer = document.getElementById('overviewPendingContainer');
+            var pendingList = adminState.recharges.filter(r => r.status === 'Chờ duyệt' || !r.status);
+
+            if (pendingList.length === 0) {
+                pendingContainer.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">Không có yêu cầu nạp tiền nào đang chờ duyệt.</div>';
+            } else {
+                var html = `
+                    <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
+                                <th class="py-2.5 px-3">Mã Nạp</th>
+                                <th class="py-2.5 px-3">Khách Hàng</th>
+                                <th class="py-2.5 px-3">Số Tiền (VNĐ)</th>
+                                <th class="py-2.5 px-3">Quy Đổi (Xu)</th>
+                                <th class="py-2.5 px-3">Thời Gian</th>
+                                <th class="py-2.5 px-3 text-right">Phê Duyệt</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80 font-sans">
+                `;
+                pendingList.slice(0, 5).forEach(function(r) {
+                    html += `
+                        <tr class="hover:bg-slate-800/40 transition">
+                            <td class="py-3 px-3 font-mono font-bold text-amber-400">${r.id}</td>
+                            <td class="py-3 px-3 font-semibold text-white">${r.userEmail || 'Chưa rõ'}</td>
+                            <td class="py-3 px-3 font-mono font-bold text-emerald-400">${(r.amountVnd || r.xu*1000).toLocaleString('vi-VN')} đ</td>
+                            <td class="py-3 px-3 font-mono font-bold text-amber-300">+${r.xu} Xu</td>
+                            <td class="py-3 px-3 text-slate-400 text-[11px]">${r.date}</td>
+                            <td class="py-3 px-3 text-right space-x-1.5">
+                                <button onclick="approveRechargeAction('${r.id}', '${r.userEmail}', ${r.xu})" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">
+                                    Duyệt (+${r.xu} Xu)
+                                </button>
+                                <button onclick="rejectRechargeAction('${r.id}')" class="bg-slate-800 hover:bg-rose-500/20 text-rose-400 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">
+                                    Từ chối
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                html += `</tbody></table>`;
+                pendingContainer.innerHTML = html;
+            }
+
+            // Recent Orders
+            var ordersContainer = document.getElementById('overviewOrdersContainer');
+            if (adminState.orders.length === 0) {
+                ordersContainer.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">Chưa có đơn mua gói nào.</div>';
+            } else {
+                var htmlOrders = `
+                    <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
+                                <th class="py-2.5 px-3">Mã Đơn</th>
+                                <th class="py-2.5 px-3">Khách Hàng</th>
+                                <th class="py-2.5 px-3">Gói Kích Hoạt</th>
+                                <th class="py-2.5 px-3">Giá Xu</th>
+                                <th class="py-2.5 px-3">Thời Hạn</th>
+                                <th class="py-2.5 px-3">Thời Gian</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80 font-sans">
+                `;
+                adminState.orders.slice(0, 5).forEach(function(o) {
+                    htmlOrders += `
+                        <tr class="hover:bg-slate-800/40 transition">
+                            <td class="py-3 px-3 font-mono font-bold text-sky-400">${o.id}</td>
+                            <td class="py-3 px-3 font-semibold text-white">${o.userEmail || 'Chưa rõ'}</td>
+                            <td class="py-3 px-3">
+                                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${o.pkgType === 'g2_direct_vip' ? 'bg-amber-400/20 text-amber-300' : 'bg-sky-400/20 text-sky-300'}">
+                                    ${o.pkgName}
+                                </span>
+                            </td>
+                            <td class="py-3 px-3 font-mono font-bold text-slate-300">${o.priceXu} Xu</td>
+                            <td class="py-3 px-3 font-mono text-[11px] text-emerald-400">Vĩnh viễn (2099)</td>
+                            <td class="py-3 px-3 text-slate-400 text-[11px]">${o.date}</td>
+                        </tr>
+                    `;
+                });
+                htmlOrders += `</tbody></table>`;
+                ordersContainer.innerHTML = htmlOrders;
+            }
+        }
+
+        // 6. Render Full Recharges Table
+        function renderRechargesTable() {
+            var container = document.getElementById('fullRechargesContainer');
+            var search = (document.getElementById('searchRechargesInput').value || '').toLowerCase();
+
+            var filtered = adminState.recharges.filter(function(r) {
+                var email = (r.userEmail || '').toLowerCase();
+                var id = (r.id || '').toLowerCase();
+                return email.includes(search) || id.includes(search);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">Không tìm thấy đơn nạp tiền nào phù hợp.</div>';
+                return;
+            }
+
+            var html = `
+                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
+                            <th class="py-3 px-3">Mã Nạp</th>
+                            <th class="py-3 px-3">Khách Hàng (Email)</th>
+                            <th class="py-3 px-3">Số Tiền (VNĐ)</th>
+                            <th class="py-3 px-3">Xu Nhận</th>
+                            <th class="py-3 px-3">Thời Gian</th>
+                            <th class="py-3 px-3">Trạng Thái</th>
+                            <th class="py-3 px-3 text-right">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/80 font-sans">
+            `;
+
+            filtered.forEach(function(r) {
+                var statusBadge = '';
+                if (r.status === 'Thành công') {
+                    statusBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Thành công</span>';
+                } else if (r.status === 'Đã từ chối') {
+                    statusBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-500/20 text-rose-400 border border-rose-500/30">Đã từ chối</span>';
+                } else {
+                    statusBadge = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/30">Chờ duyệt</span>';
+                }
+
+                html += `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-3 px-3 font-mono font-bold text-amber-400">${r.id}</td>
+                        <td class="py-3 px-3 font-semibold text-white">${r.userEmail || 'Chưa rõ'}</td>
+                        <td class="py-3 px-3 font-mono font-bold text-emerald-400">${(r.amountVnd || r.xu*1000).toLocaleString('vi-VN')} đ</td>
+                        <td class="py-3 px-3 font-mono font-bold text-amber-300">+${r.xu} Xu</td>
+                        <td class="py-3 px-3 text-slate-400 text-[11px]">${r.date}</td>
+                        <td class="py-3 px-3">${statusBadge}</td>
+                        <td class="py-3 px-3 text-right space-x-1.5">
+                            ${r.status !== 'Thành công' ? `
+                                <button onclick="approveRechargeAction('${r.id}', '${r.userEmail}', ${r.xu})" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">
+                                    Duyệt (+${r.xu} Xu)
+                                </button>
+                            ` : ''}
+                            ${r.status !== 'Đã từ chối' ? `
+                                <button onclick="rejectRechargeAction('${r.id}')" class="bg-slate-800 hover:bg-rose-500/20 text-rose-400 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">
+                                    Từ chối
+                                </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        // 7. Render Full Orders Table
+        function renderOrdersTable() {
+            var container = document.getElementById('fullOrdersContainer');
+            var filterType = document.getElementById('filterOrderType').value;
+            var search = (document.getElementById('searchOrdersInput').value || '').toLowerCase();
+
+            var filtered = adminState.orders.filter(function(o) {
+                var email = (o.userEmail || '').toLowerCase();
+                var id = (o.id || '').toLowerCase();
+                var matchSearch = email.includes(search) || id.includes(search);
+                var matchType = (filterType === 'ALL') || (o.pkgType === filterType);
+                return matchSearch && matchType;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">Không tìm thấy đơn hàng nào phù hợp.</div>';
+                return;
+            }
+
+            var html = `
+                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
+                            <th class="py-3 px-3">Mã Đơn</th>
+                            <th class="py-3 px-3">Khách Hàng (Email)</th>
+                            <th class="py-3 px-3">Gói Locket Gold</th>
+                            <th class="py-3 px-3">Số Xu</th>
+                            <th class="py-3 px-3">Thời Hạn</th>
+                            <th class="py-3 px-3">Ngày Kích Hoạt</th>
+                            <th class="py-3 px-3">Trạng Thái</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/80 font-sans">
+            `;
+
+            filtered.forEach(function(o) {
+                html += `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-3 px-3 font-mono font-bold text-sky-400">${o.id}</td>
+                        <td class="py-3 px-3 font-semibold text-white">${o.userEmail || 'Chưa rõ'}</td>
+                        <td class="py-3 px-3">
+                            <span class="px-2.5 py-0.5 rounded text-[11px] font-bold ${o.pkgType === 'g2_direct_vip' ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30' : 'bg-sky-400/20 text-sky-300 border border-sky-400/30'}">
+                                ${o.pkgName}
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 font-mono font-bold text-slate-200">${o.priceXu} Xu</td>
+                        <td class="py-3 px-3 font-mono text-[11px] text-emerald-400">Vĩnh viễn (2099)</td>
+                        <td class="py-3 px-3 text-slate-400 text-[11px]">${o.date}</td>
+                        <td class="py-3 px-3">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Đã kích hoạt</span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        // 8. Render Full Users Table
+        function renderUsersTable() {
+            var container = document.getElementById('fullUsersContainer');
+            var search = (document.getElementById('searchUsersInput').value || '').toLowerCase();
+
+            var filtered = adminState.users.filter(function(u) {
+                var email = (u.email || '').toLowerCase();
+                var code = (u.code || '').toLowerCase();
+                return email.includes(search) || code.includes(search);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">Không tìm thấy khách hàng nào.</div>';
+                return;
+            }
+
+            var html = `
+                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
+                            <th class="py-3 px-3">Khách Hàng (Email)</th>
+                            <th class="py-3 px-3">Mã Giới Thiệu</th>
+                            <th class="py-3 px-3">Số Dư Xu</th>
+                            <th class="py-3 px-3">Gói Sở Hữu</th>
+                            <th class="py-3 px-3">Ngày Tham Gia</th>
+                            <th class="py-3 px-3 text-right">Thao Tác Nhanh</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/80 font-sans">
+            `;
+
+            filtered.forEach(function(u) {
+                var pkgsCount = (u.packages || []).length;
+                html += `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-3 px-3 font-semibold text-white flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-amber-400 text-[11px]">
+                                ${(u.email || 'U').charAt(0).toUpperCase()}
+                            </span>
+                            <span>${u.email}</span>
+                        </td>
+                        <td class="py-3 px-3 font-mono font-bold text-slate-400">${u.code || '---'}</td>
+                        <td class="py-3 px-3 font-mono font-black text-amber-400 text-sm">${u.balance || 0} Xu</td>
+                        <td class="py-3 px-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${pkgsCount > 0 ? 'bg-amber-400/20 text-amber-300' : 'bg-slate-800 text-slate-400'}">
+                                ${pkgsCount} gói VIP
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 text-slate-400 text-[11px]">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('vi-VN') : 'Mới'}</td>
+                        <td class="py-3 px-3 text-right space-x-1.5">
+                            <button onclick="openManualTopupModal('${u.email}')" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 px-2.5 py-1 rounded-lg text-[11px] font-bold transition">
+                                + Nạp Xu
+                            </button>
+                            <button onclick="openManualGrantModal('${u.email}')" class="bg-amber-400 hover:bg-amber-300 text-slate-950 px-2.5 py-1 rounded-lg text-[11px] font-black transition">
+                                + Cấp VIP
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        // 9. Actions: Approve & Reject Recharges
+        async function approveRechargeAction(rechargeId, email, xu) {
+            if (!confirm(`Xác nhận duyệt nạp +${xu} Xu cho tài khoản ${email}?`)) return;
+
+            if (typeof dbAdminApproveRecharge === "function") {
+                var res = await dbAdminApproveRecharge(rechargeId, email, xu);
+                if (res.success) {
+                    showAdminToast(`🎉 Đã duyệt nạp thành công +${xu} Xu cho ${email}!`);
+                    loadAllAdminData();
+                } else {
+                    showAdminToast('⚠️ Lỗi: ' + res.error);
+                }
+            }
+        }
+
+        async function rejectRechargeAction(rechargeId) {
+            if (!confirm(`Xác nhận từ chối đơn nạp ${rechargeId}?`)) return;
+
+            if (typeof dbAdminRejectRecharge === "function") {
+                var res = await dbAdminRejectRecharge(rechargeId);
+                if (res.success) {
+                    showAdminToast(`Đã từ chối đơn nạp ${rechargeId}!`);
+                    loadAllAdminData();
+                } else {
+                    showAdminToast('⚠️ Lỗi: ' + res.error);
+                }
+            }
+        }
+
+        // 10. Manual Topup Modal Handlers
+        function openManualTopupModal(email) {
+            var modal = document.getElementById('modalManualTopup');
+            if (email) {
+                document.getElementById('topupUserEmail').value = email;
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            feather.replace();
+        }
+
+        function closeModalManualTopup() {
+            var modal = document.getElementById('modalManualTopup');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function handleManualTopupSubmit(e) {
+            e.preventDefault();
+            var email = document.getElementById('topupUserEmail').value.trim();
+            var amount = parseInt(document.getElementById('topupAmountXu').value, 10);
+            var note = document.getElementById('topupNote').value.trim();
+
+            if (!email || isNaN(amount)) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+
+            if (typeof dbAdminAdjustBalance === "function") {
+                var res = await dbAdminAdjustBalance(email, amount, note);
+                if (res.success) {
+                    showAdminToast(`🎉 Đã điều chỉnh ${amount >= 0 ? '+' : ''}${amount} Xu cho ${email}!`);
+                    closeModalManualTopup();
+                    loadAllAdminData();
+                } else {
+                    alert('Lỗi: ' + res.error);
+                }
+            }
+        }
+
+        // 11. Manual Grant Modal Handlers
+        function openManualGrantModal(email) {
+            var modal = document.getElementById('modalManualGrant');
+            if (email) {
+                document.getElementById('grantUserEmail').value = email;
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            feather.replace();
+        }
+
+        function closeModalManualGrant() {
+            var modal = document.getElementById('modalManualGrant');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function handleManualGrantSubmit(e) {
+            e.preventDefault();
+            var email = document.getElementById('grantUserEmail').value.trim();
+            var pkgType = document.getElementById('grantPkgType').value;
+            var pkgName = pkgType === 'g2_direct_vip' ? 'Locket Gold VIP [Siêu Tốc]' : 'Locket Gold (Shadowrocket)';
+
+            if (!email) {
+                alert('Vui lòng nhập email khách hàng!');
+                return;
+            }
+
+            if (typeof dbAdminGrantPackage === "function") {
+                var res = await dbAdminGrantPackage(email, pkgType, pkgName);
+                if (res.success) {
+                    showAdminToast(`🎉 Đã cấp thành công ${pkgName} cho ${email}!`);
+                    closeModalManualGrant();
+                    loadAllAdminData();
+                } else {
+                    alert('Lỗi: ' + res.error);
+                }
+            }
+        }
+
+        // 12. Settings & Firebase Config
+        function saveAdminFirebaseConfig() {
+            var raw = document.getElementById('adminFirebaseConfigText').value.trim();
+            if (!raw) {
+                alert('Vui lòng dán cấu hình Firebase!');
+                return;
+            }
+
+            // Regex extraction
+            var apiKeyMatch = raw.match(/apiKey\s*:\s*["']([^"']+)["']/);
+            var projectIdMatch = raw.match(/projectId\s*:\s*["']([^"']+)["']/);
+            var authDomainMatch = raw.match(/authDomain\s*:\s*["']([^"']+)["']/);
+            var appIdMatch = raw.match(/appId\s*:\s*["']([^"']+)["']/);
+
+            if (apiKeyMatch && projectIdMatch) {
+                var config = {
+                    apiKey: apiKeyMatch[1],
+                    projectId: projectIdMatch[1],
+                    authDomain: authDomainMatch ? authDomainMatch[1] : projectIdMatch[1] + ".firebaseapp.com",
+                    appId: appIdMatch ? appIdMatch[1] : ""
+                };
+                localStorage.setItem('custom_firebase_config', JSON.stringify(config));
+                showAdminToast('✅ Đã lưu cấu hình Firebase Cloud! Đang tải lại...');
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+            } else {
+                alert('Không thể trích xuất apiKey hoặc projectId từ văn bản bạn dán.');
+            }
+        }
+
+        // 13. Export Data JSON
+        function exportAllDataJson() {
+            var data = {
+                exportDate: new Date().toISOString(),
+                users: adminState.users,
+                recharges: adminState.recharges,
+                orders: adminState.orders
+            };
+            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'locket_gold_backup_' + Date.now() + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showAdminToast('💾 Đã tải xuống file sao lưu JSON thành công!');
+        }
+
+        // Toast
+        function showAdminToast(msg) {
+            var toast = document.getElementById('adminToast');
+            var msgEl = document.getElementById('adminToastMsg');
+            msgEl.textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(function() {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

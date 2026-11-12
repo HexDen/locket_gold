@@ -219,6 +219,222 @@ async function dbCreateOrder(orderData) {
 // 4. DANH SÁCH DÀNH CHO ADMIN / QUẢN TRỊ VIÊN
 // =========================================================================
 
+
+// Lấy toàn bộ đơn nạp tiền
+async function dbAdminGetAllRecharges() {
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var snapshot = await firestoreDB.collection('recharges').get();
+            var list = [];
+            snapshot.forEach(doc => list.push(doc.data()));
+            return list.reverse();
+        } catch(e) {
+            console.error("Firestore dbAdminGetAllRecharges error:", e);
+            return JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+        }
+    } else {
+        return JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+    }
+}
+
+// Lấy toàn bộ đơn mua gói
+async function dbAdminGetAllOrders() {
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var snapshot = await firestoreDB.collection('orders').get();
+            var list = [];
+            snapshot.forEach(doc => list.push(doc.data()));
+            return list.reverse();
+        } catch(e) {
+            console.error("Firestore dbAdminGetAllOrders error:", e);
+            return JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+        }
+    } else {
+        return JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+    }
+}
+
+// Duyệt nạp tiền (Cộng Xu cho khách)
+async function dbAdminApproveRecharge(rechargeId, userEmail, xu) {
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            await firestoreDB.collection('recharges').doc(rechargeId).update({
+                status: 'Thành công'
+            });
+            var userSnap = await firestoreDB.collection('users').where('email', '==', userEmail).get();
+            if (!userSnap.empty) {
+                var uDoc = userSnap.docs[0];
+                await uDoc.ref.update({
+                    balance: firebase.firestore.FieldValue.increment(xu)
+                });
+            }
+            return { success: true };
+        } catch(e) {
+            return { success: false, error: e.message };
+        }
+    } else {
+        var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+        localRecharges.forEach(function(r) {
+            if (r.id === rechargeId) r.status = 'Thành công';
+        });
+        localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
+
+        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+        if (localUsers[userEmail]) {
+            localUsers[userEmail].balance = (localUsers[userEmail].balance || 0) + xu;
+            localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+        }
+        return { success: true };
+    }
+}
+
+// Từ chối đơn nạp
+async function dbAdminRejectRecharge(rechargeId) {
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            await firestoreDB.collection('recharges').doc(rechargeId).update({
+                status: 'Đã từ chối'
+            });
+            return { success: true };
+        } catch(e) {
+            return { success: false, error: e.message };
+        }
+    } else {
+        var localRecharges = JSON.parse(localStorage.getItem('locket_gold_recharges_db') || '[]');
+        localRecharges.forEach(function(r) {
+            if (r.id === rechargeId) r.status = 'Đã từ chối';
+        });
+        localStorage.setItem('locket_gold_recharges_db', JSON.stringify(localRecharges));
+        return { success: true };
+    }
+}
+
+// Cộng / Trừ Xu trực tiếp cho người dùng
+async function dbAdminAdjustBalance(email, amountXu, note) {
+    var dateStr = new Date().toLocaleString('vi-VN');
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var userSnap = await firestoreDB.collection('users').where('email', '==', email).get();
+            if (userSnap.empty) {
+                return { success: false, error: 'Không tìm thấy tài khoản với email này!' };
+            }
+            var uDoc = userSnap.docs[0];
+            await uDoc.ref.update({
+                balance: firebase.firestore.FieldValue.increment(amountXu),
+                history: firebase.firestore.FieldValue.arrayUnion({
+                    id: 'ADJ-' + Date.now(),
+                    type: 'admin_adjust',
+                    title: 'Admin điều chỉnh: ' + (note || 'Cộng/Trừ Xu'),
+                    amount: (amountXu >= 0 ? '+ ' : '') + amountXu + ' Xu',
+                    date: dateStr,
+                    status: 'Thành công'
+                })
+            });
+            return { success: true };
+        } catch(e) {
+            return { success: false, error: e.message };
+        }
+    } else {
+        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+        if (!localUsers[email]) {
+            return { success: false, error: 'Không tìm thấy tài khoản!' };
+        }
+        localUsers[email].balance = (localUsers[email].balance || 0) + amountXu;
+        localUsers[email].history = localUsers[email].history || [];
+        localUsers[email].history.unshift({
+            id: 'ADJ-' + Date.now(),
+            type: 'admin_adjust',
+            title: 'Admin điều chỉnh: ' + (note || 'Cộng/Trừ Xu'),
+            amount: (amountXu >= 0 ? '+ ' : '') + amountXu + ' Xu',
+            date: dateStr,
+            status: 'Thành công'
+        });
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+        return { success: true };
+    }
+}
+
+// Cấp gói Locket Gold trực tiếp cho khách hàng
+async function dbAdminGrantPackage(email, pkgType, pkgName) {
+    var dateStr = new Date().toLocaleDateString('vi-VN');
+    var orderDate = new Date().toLocaleString('vi-VN');
+    var orderId = 'ADM-' + Math.floor(10000 + Math.random() * 90000);
+    var newPkg = {
+        id: 'PKG-' + Math.floor(10000 + Math.random() * 90000),
+        type: pkgType,
+        name: pkgName,
+        date: dateStr,
+        expires: 'Vĩnh viễn (2099)'
+    };
+
+    if (isUsingCloudDB && firestoreDB) {
+        try {
+            var userSnap = await firestoreDB.collection('users').where('email', '==', email).get();
+            if (userSnap.empty) {
+                return { success: false, error: 'Không tìm thấy tài khoản khách hàng!' };
+            }
+            var uDoc = userSnap.docs[0];
+            await uDoc.ref.update({
+                packages: firebase.firestore.FieldValue.arrayUnion(newPkg),
+                history: firebase.firestore.FieldValue.arrayUnion({
+                    id: orderId,
+                    type: 'order',
+                    title: 'Được Admin cấp ' + pkgName,
+                    amount: '0 Xu (Miễn phí)',
+                    date: orderDate,
+                    status: 'Đã kích hoạt'
+                })
+            });
+            await firestoreDB.collection('orders').doc(orderId).set({
+                id: orderId,
+                userId: uDoc.id,
+                userEmail: email,
+                pkgType: pkgType,
+                pkgName: pkgName + ' (Admin cấp)',
+                priceXu: 0,
+                date: orderDate,
+                expires: 'Vĩnh viễn (2099)',
+                status: 'Đã kích hoạt'
+            });
+            return { success: true };
+        } catch(e) {
+            return { success: false, error: e.message };
+        }
+    } else {
+        var localUsers = JSON.parse(localStorage.getItem('locket_gold_users_db') || '{}');
+        if (!localUsers[email]) {
+            return { success: false, error: 'Không tìm thấy tài khoản!' };
+        }
+        localUsers[email].packages = localUsers[email].packages || [];
+        localUsers[email].packages.push(newPkg);
+        localUsers[email].history = localUsers[email].history || [];
+        localUsers[email].history.unshift({
+            id: orderId,
+            type: 'order',
+            title: 'Được Admin cấp ' + pkgName,
+            amount: '0 Xu (Miễn phí)',
+            date: orderDate,
+            status: 'Đã kích hoạt'
+        });
+        localStorage.setItem('locket_gold_users_db', JSON.stringify(localUsers));
+
+        var localOrders = JSON.parse(localStorage.getItem('locket_gold_orders_db') || '[]');
+        localOrders.unshift({
+            id: orderId,
+            userId: localUsers[email].uid,
+            userEmail: email,
+            pkgType: pkgType,
+            pkgName: pkgName + ' (Admin cấp)',
+            priceXu: 0,
+            date: orderDate,
+            expires: 'Vĩnh viễn (2099)',
+            status: 'Đã kích hoạt'
+        });
+        localStorage.setItem('locket_gold_orders_db', JSON.stringify(localOrders));
+        return { success: true };
+    }
+}
+
 async function dbAdminGetAllUsers() {
     if (isUsingCloudDB && firestoreDB) {
         try {

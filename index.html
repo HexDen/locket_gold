@@ -196,6 +196,7 @@
                     <a href="#pricing-section" class="hover:text-slate-900 transition">Mua Locket Gold</a>
                     <a href="#pricing-section" class="hover:text-slate-900 transition">Bảng giá 2099</a>
                     <a href="https://www.facebook.com/van.nguyen.407297" target="_blank" class="hover:text-slate-900 transition">Trợ giúp (FB)</a>
+                    <a href="./admin.html" class="text-amber-700 hover:text-amber-800 font-bold transition flex items-center gap-1"><span>👑</span> Quản Trị</a>
                 </nav>
 
                 <!-- Auth Buttons -->
@@ -530,6 +531,13 @@
                             </div>
                             <span id="sidebarDbDot" class="w-2 h-2 rounded-full bg-amber-400" title="Trạng thái kết nối CSDL"></span>
                         </button>
+                        <a href="./admin.html" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-amber-900 bg-amber-50 hover:bg-amber-100 font-black transition border border-amber-200/80 shadow-sm mt-2">
+                            <div class="flex items-center gap-2.5">
+                                <span class="text-base">👑</span>
+                                <span>Trang Quản Trị Admin</span>
+                            </div>
+                            <i data-feather="external-link" class="w-3.5 h-3.5 text-amber-700"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -584,7 +592,11 @@
                 </div>
 
                 <!-- Header Actions (Theo đúng ảnh 1: + Nạp Xu, Chuông, Số dư) -->
-                <div class="flex items-center gap-3 sm:gap-4">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <a href="./admin.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold text-xs shadow-sm transition" title="Mở trang quản trị Admin">
+                        <span>👑</span>
+                        <span>Admin</span>
+                    </a>
                     <!-- + Nạp Xu Button -->
                     <button onclick="openRechargeModal()" class="bg-locket-yellow hover:bg-locket-hover text-slate-950 font-black text-xs sm:text-sm px-4 py-2 rounded-full shadow-yellow-btn flex items-center gap-1.5 transition active:scale-95">
                         <i data-feather="plus-circle" class="w-4 h-4"></i>
