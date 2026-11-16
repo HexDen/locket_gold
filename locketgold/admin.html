@@ -11,10 +11,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com">
-        // -------------------------------------------------------------
-        // FRIEND GENERATOR CONTROLLER
-        // -------------------------------------------------------------
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        locket: {
+                            yellow: '#facc15',
+                            hover: '#eab308',
+                            light: '#fef9c3',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Firebase SDK Compat v10 -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase DB Adapter -->
+    <script src="./firebase-db.js"></script>
+
+    <!-- FRIEND GENERATOR CONTROLLER -->
+    <script>
         function updateFriendGenerator() {
             var inputEl = document.getElementById('friendUsernameInput');
             if (!inputEl) return;
@@ -228,7 +257,7 @@
             }
 
             var html = `
-                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                <table class="w-full min-w-[680px] text-left text-xs text-slate-300 border-collapse">
                     <thead>
                         <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                             <th class="py-2.5 px-3">Mã Đơn</th>
@@ -296,84 +325,6 @@
             showAdminToast('Đã sao chép vào bộ nhớ tạm!');
         }
 
-    
-        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
-                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
-                loadAllAdminData();
-            }
-        });
-    </script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-                    },
-                    colors: {
-                        locket: {
-                            yellow: '#facc15',
-                            hover: '#eab308',
-                            light: '#fef9c3',
-                        }
-                    }
-                }
-            }
-        }
-    
-        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
-                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
-                loadAllAdminData();
-            }
-        });
-    </script>
-
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons">
-        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
-                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
-                loadAllAdminData();
-            }
-        });
-    </script>
-
-    <!-- Firebase SDK Compat v10 -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js">
-        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
-                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
-                loadAllAdminData();
-            }
-        });
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js">
-        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
-                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
-                loadAllAdminData();
-            }
-        });
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js">
-        // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
-                console.log("⚡ Phát hiện dữ liệu mới từ tab khách hàng, đang tự động đồng bộ Admin...");
-                loadAllAdminData();
-            }
-        });
-    </script>
-
-    <!-- Firebase DB Adapter -->
-    <script src="./firebase-db.js">
         // Lắng nghe sự kiện lưu trữ giữa các Tab (Tự động cập nhật số liệu khi có khách đăng ký/nạp tiền ở tab khác)
         window.addEventListener('storage', function(e) {
             if (e.key === 'locket_gold_users_db' || e.key === 'locket_gold_recharges_db' || e.key === 'locket_gold_orders_db') {
@@ -474,26 +425,35 @@
     <!-- ========================================================================= -->
     <!-- 2. GIAO DIỆN CHÍNH ADMIN DASHBOARD -->
     <!-- ========================================================================= -->
-    <div id="adminMainPortal" class="flex-1 flex overflow-hidden hidden">
+    <div id="adminMainPortal" class="flex-1 flex overflow-hidden hidden relative">
         
-        <!-- SIDEBAR -->
-        <aside class="w-64 bg-[#070d1e] border-r border-slate-800 flex flex-col justify-between shrink-0 hidden md:flex">
-            <!-- Brand -->
-            <div class="p-5 space-y-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl font-black shadow-md shadow-amber-500/20">
-                        💛
-                    </div>
-                    <div>
-                        <div class="font-black text-white text-base tracking-tight flex items-center gap-1.5">
-                            <span>Locket Gold</span>
-                            <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">ADMIN</span>
+        <!-- BACKDROP CHO SIDEBAR MOBILE (DRAWER) -->
+        <div id="mobileSidebarBackdrop" onclick="closeMobileSidebar()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
+        <!-- SIDEBAR (HỖ TRỢ CẢ DESKTOP & MOBILE DRAWER) -->
+        <aside id="adminSidebar" class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-[#070d1e] border-r border-slate-800 flex flex-col justify-between shrink-0 transition-transform duration-300 -translate-x-full md:translate-x-0 md:static md:w-64 md:z-0 shadow-2xl md:shadow-none overflow-y-auto hide-scrollbar">
+            <!-- Brand & User Profile -->
+            <div class="p-4 sm:p-5 space-y-5">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl font-black shadow-md shadow-amber-500/20 shrink-0">
+                            💛
                         </div>
-                        <div id="adminProfileName" class="text-[11px] text-slate-400">Trần Văn Nguyên</div>
+                        <div class="min-w-0">
+                            <div class="font-black text-white text-base tracking-tight flex items-center gap-1.5">
+                                <span>Locket Gold</span>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">ADMIN</span>
+                            </div>
+                            <div id="adminProfileName" class="text-[11px] text-slate-400 truncate max-w-[140px]" title="Trần Văn Nguyên">Trần Văn Nguyên</div>
+                        </div>
                     </div>
+                    <!-- Nút đóng Sidebar trên màn hình di động -->
+                    <button type="button" onclick="closeMobileSidebar()" class="md:hidden w-8 h-8 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition active:scale-95" title="Đóng menu">
+                        <i data-feather="x" class="w-4 h-4"></i>
+                    </button>
                 </div>
 
-                <!-- Navigation -->
+                <!-- Navigation List -->
                 <nav class="space-y-1.5">
                     <button onclick="switchTab('overview')" id="nav-overview" class="admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-white bg-amber-400/10 text-amber-300 border border-amber-400/30 transition">
                         <div class="flex items-center gap-3">
@@ -551,7 +511,7 @@
                 </nav>
             </div>
 
-            <!-- Footer info -->
+            <!-- Footer Quick Actions -->
             <div class="p-4 border-t border-slate-800/80 space-y-2">
                 <a href="./index.html" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs font-bold text-slate-200 transition">
                     <i data-feather="external-link" class="w-3.5 h-3.5"></i>
@@ -567,37 +527,45 @@
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
             
-            <!-- HEADER -->
-            <header class="h-16 bg-[#070d1e]/90 backdrop-blur-md border-b border-slate-800 px-4 sm:px-8 flex items-center justify-between shrink-0 z-20">
-                <div class="flex items-center gap-3">
-                    <h2 id="viewHeaderTitle" class="text-base sm:text-lg font-black text-white">Thống Kê Tổng Quan</h2>
-                    <div id="adminDbPill" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span id="adminDbPillText">CSDL: Sẵn Sàng</span>
+            <!-- HEADER (RESPONSIVE CHO CẢ PC & ĐIỆN THOẠI) -->
+            <header class="h-16 bg-[#070d1e]/90 backdrop-blur-md border-b border-slate-800 px-3 sm:px-6 lg:px-8 flex items-center justify-between shrink-0 z-20">
+                <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                    <!-- Nút mở Menu Drawer trên điện thoại -->
+                    <button type="button" onclick="toggleMobileSidebar()" class="md:hidden w-9 h-9 rounded-xl bg-slate-800/90 text-amber-400 flex items-center justify-center hover:bg-slate-700 transition active:scale-95 shrink-0" title="Mở danh mục">
+                        <i data-feather="menu" class="w-5 h-5"></i>
+                    </button>
+
+                    <div class="min-w-0">
+                        <h2 id="viewHeaderTitle" class="text-sm sm:text-base lg:text-lg font-black text-white truncate max-w-[140px] xs:max-w-[180px] sm:max-w-xs md:max-w-none">Thống Kê Tổng Quan</h2>
+                        <div id="adminDbPill" class="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 inline-flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span id="adminDbPillText">CSDL: Sẵn Sàng</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 sm:gap-3">
-                    <button onclick="switchTab('products')" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95">
-                        <i data-feather="zap" class="w-3.5 h-3.5"></i>
-                        <span>Nâng VIP Bạn Bè</span>
+                <!-- Action Buttons: Thích ứng màn hình nhỏ -->
+                <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                    <button onclick="switchTab('products')" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs px-2.5 sm:px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95" title="Nâng VIP Bạn Bè">
+                        <i data-feather="zap" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span class="hidden sm:inline">Nâng VIP Bạn Bè</span>
                     </button>
-                    <button onclick="openManualTopupModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95">
-                        <i data-feather="plus-circle" class="w-3.5 h-3.5"></i>
-                        <span>Cộng Xu Khách</span>
+                    <button onclick="openManualTopupModal()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-2.5 sm:px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm active:scale-95" title="Cộng Xu Khách">
+                        <i data-feather="plus-circle" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span class="hidden md:inline">Cộng Xu</span>
                     </button>
-                    <button onclick="openManualGrantModal()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition">
-                        <i data-feather="gift" class="w-3.5 h-3.5"></i>
-                        <span>Cấp Gói VIP</span>
+                    <button onclick="openManualGrantModal()" class="hidden sm:flex bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/30 font-bold text-xs px-3 py-2 rounded-xl items-center gap-1.5 transition active:scale-95" title="Cấp Gói VIP">
+                        <i data-feather="gift" class="w-3.5 h-3.5 shrink-0"></i>
+                        <span class="hidden md:inline">Cấp Gói VIP</span>
                     </button>
-                    <button onclick="loadAllAdminData(true)" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition" title="Làm mới dữ liệu">
+                    <button onclick="loadAllAdminData(true)" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition active:scale-95 shrink-0" title="Làm mới dữ liệu">
                         <i data-feather="refresh-cw" class="w-4 h-4"></i>
                     </button>
                 </div>
             </header>
 
-            <!-- SCROLLABLE TAB CONTAINER -->
-            <main class="flex-1 p-4 sm:p-8 overflow-y-auto space-y-6">
+            <!-- SCROLLABLE TAB CONTAINER (THÊM PADDING DƯỚI CHO MOBILE NAV) -->
+            <main class="flex-1 p-3.5 sm:p-6 lg:p-8 overflow-y-auto space-y-5 sm:space-y-6 pb-24 md:pb-8">
                 
                 <!-- ========================================================================= -->
                 <!-- TAB 1: TỔNG QUAN (DASHBOARD) -->
@@ -1136,6 +1104,31 @@
                 </div>
 
             </main>
+
+            <!-- 📱 THANH ĐIỀU HƯỚNG DƯỚI ĐÁY CHO ĐIỆN THOẠI (BOTTOM BAR) -->
+            <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#070d1e]/95 backdrop-blur-xl border-t border-slate-800 px-1 py-1.5 flex items-center justify-around text-[10px] font-bold shadow-2xl safe-area-bottom">
+                <button onclick="switchTab('overview')" id="mobile-nav-overview" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-amber-400 font-bold transition active:scale-95">
+                    <i data-feather="pie-chart" class="w-4 h-4"></i>
+                    <span>Tổng Quan</span>
+                </button>
+                <button onclick="switchTab('recharges')" id="mobile-nav-recharges" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 hover:text-white transition relative active:scale-95">
+                    <i data-feather="credit-card" class="w-4 h-4"></i>
+                    <span>Duyệt Nạp</span>
+                    <span id="mobilePendingBadge" class="absolute top-0.5 right-2 w-2 h-2 rounded-full bg-amber-400 hidden"></span>
+                </button>
+                <button onclick="switchTab('orders')" id="mobile-nav-orders" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 hover:text-white transition active:scale-95">
+                    <i data-feather="shopping-bag" class="w-4 h-4"></i>
+                    <span>Đơn Hàng</span>
+                </button>
+                <button onclick="switchTab('vouchers')" id="mobile-nav-vouchers" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 hover:text-white transition active:scale-95">
+                    <i data-feather="tag" class="w-4 h-4"></i>
+                    <span>Voucher</span>
+                </button>
+                <button onclick="toggleMobileSidebar()" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 hover:text-white transition active:scale-95">
+                    <i data-feather="menu" class="w-4 h-4"></i>
+                    <span>Menu</span>
+                </button>
+            </nav>
         </div>
     </div>
 
@@ -1144,8 +1137,8 @@
     <!-- ========================================================================= -->
 
     <!-- MODAL 1: CỘNG / TRỪ XU THỦ CÔNG -->
-    <div id="modalManualTopup" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+    <div id="modalManualTopup" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto hide-scrollbar">
             <button onclick="closeModalManualTopup()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full">
                 <i data-feather="x" class="w-4 h-4"></i>
             </button>
@@ -1199,8 +1192,8 @@
 
 
     <!-- MODAL 2: CẤP GÓI LOCKET GOLD TRỰC TIẾP -->
-    <div id="modalManualGrant" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+    <div id="modalManualGrant" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+        <div class="bg-[#0f172a] border border-slate-800 rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto hide-scrollbar">
             <button onclick="closeModalManualGrant()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-full">
                 <i data-feather="x" class="w-4 h-4"></i>
             </button>
@@ -1236,7 +1229,7 @@
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3 rounded-xl transition flex items-center justify-center gap-1.5">
+                    <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3 rounded-xl transition flex items-center justify-center gap-1.5 active:scale-95">
                         <i data-feather="check-circle" class="w-4 h-4"></i>
                         <span>Cấp Gói Ngay Cho Khách</span>
                     </button>
@@ -1248,8 +1241,8 @@
 
 
     <!-- MODAL TẠO VOUCHER MỚI -->
-    <div id="modalCreateVoucher" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="relative w-full max-w-md bg-[#0b1329] border border-slate-700 rounded-3xl p-6 shadow-2xl space-y-5">
+    <div id="modalCreateVoucher" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+        <div class="relative w-full max-w-md bg-[#0b1329] border border-slate-700 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-4 sm:space-y-5 max-h-[90vh] overflow-y-auto hide-scrollbar">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-xl font-bold">
@@ -1477,8 +1470,35 @@
             }
         }
 
+        // -------------------------------------------------------------
+        // MOBILE SIDEBAR DRAWER CONTROLLER
+        // -------------------------------------------------------------
+        function toggleMobileSidebar() {
+            var sidebar = document.getElementById('adminSidebar');
+            var backdrop = document.getElementById('mobileSidebarBackdrop');
+            if (!sidebar || !backdrop) return;
+            var isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            } else {
+                closeMobileSidebar();
+            }
+            if (typeof feather !== 'undefined') feather.replace();
+        }
+
+        function closeMobileSidebar() {
+            var sidebar = document.getElementById('adminSidebar');
+            var backdrop = document.getElementById('mobileSidebarBackdrop');
+            if (sidebar) sidebar.classList.add('-translate-x-full');
+            if (backdrop) backdrop.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
         // 2. Tab Navigation
         function switchTab(tabId) {
+            closeMobileSidebar();
             adminState.currentTab = tabId;
             var tabs = ['overview', 'products', 'recharges', 'orders', 'users', 'vouchers', 'settings'];
             
@@ -1497,6 +1517,19 @@
             if (activeBtnEl) {
                 activeBtnEl.className = 'admin-nav-btn w-full flex items-center justify-between px-3.5 py-3 rounded-2xl text-xs font-bold text-white bg-amber-400/10 text-amber-300 border border-amber-400/30 transition';
             }
+
+            // Đồng bộ trạng thái thanh điều hướng dưới đáy điện thoại (Mobile Bottom Nav)
+            var mobileTabs = ['overview', 'recharges', 'orders', 'vouchers'];
+            mobileTabs.forEach(function(t) {
+                var mBtn = document.getElementById('mobile-nav-' + t);
+                if (mBtn) {
+                    if (t === tabId) {
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-amber-400 font-bold transition active:scale-95';
+                    } else {
+                        mBtn.className = 'flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 hover:text-white transition active:scale-95';
+                    }
+                }
+            });
 
             var titles = {
                 overview: 'Thống Kê Tổng Quan',
@@ -1593,6 +1626,11 @@
             document.getElementById('usersCountBadge').textContent = adminState.users.length;
             var vBadge = document.getElementById('vouchersCountBadge');
             if (vBadge) vBadge.textContent = adminState.vouchers ? adminState.vouchers.length : 0;
+            var mPending = document.getElementById('mobilePendingBadge');
+            if (mPending) {
+                if (pendingCount > 0) mPending.classList.remove('hidden');
+                else mPending.classList.add('hidden');
+            }
         }
 
         // 5. Render Overview Tables
@@ -1605,7 +1643,7 @@
                 pendingContainer.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">Không có yêu cầu nạp tiền nào đang chờ duyệt.</div>';
             } else {
                 var html = `
-                    <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                    <table class="w-full min-w-[620px] text-left text-xs text-slate-300 border-collapse">
                         <thead>
                             <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                                 <th class="py-2.5 px-3">Mã Nạp</th>
@@ -1647,7 +1685,7 @@
                 ordersContainer.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">Chưa có đơn mua gói nào.</div>';
             } else {
                 var htmlOrders = `
-                    <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                    <table class="w-full min-w-[620px] text-left text-xs text-slate-300 border-collapse">
                         <thead>
                             <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                                 <th class="py-2.5 px-3">Mã Đơn</th>
@@ -1698,7 +1736,7 @@
             }
 
             var html = `
-                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                <table class="w-full min-w-[680px] text-left text-xs text-slate-300 border-collapse">
                     <thead>
                         <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                             <th class="py-3 px-3">Mã Nạp</th>
@@ -1777,7 +1815,7 @@
             }
 
             var html = `
-                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                <table class="w-full min-w-[680px] text-left text-xs text-slate-300 border-collapse">
                     <thead>
                         <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                             <th class="py-3 px-3">Mã Đơn</th>
@@ -1833,7 +1871,7 @@
             }
 
             var html = `
-                <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                <table class="w-full min-w-[680px] text-left text-xs text-slate-300 border-collapse">
                     <thead>
                         <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                             <th class="py-3 px-3">Khách Hàng (Email)</th>
@@ -2350,7 +2388,7 @@
             }).join('');
 
             container.innerHTML = `
-                <table class="w-full text-left border-collapse">
+                <table class="w-full min-w-[650px] text-left border-collapse text-xs">
                     <thead>
                         <tr class="border-b border-slate-800 text-slate-500 text-[11px] font-mono uppercase">
                             <th class="py-3 px-3">Mã Voucher</th>
