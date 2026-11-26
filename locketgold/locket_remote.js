@@ -60,6 +60,7 @@ const overlayDynamicCaptions = [
   "hexden_web",      // Nút 2: Website / Kênh (Trước đây là DaLyMMo.COM)
   "hexden_gold",     // Nút 3: Locket Gold (Trước đây là LocketLAM)
   "hexden_quote",    // Nút 4: Slogan / Quote (Bug là tính năng)
+  "photobooth_vip",  // Nút 5: Photobooth 4-Cut Hàn Quốc VIP
   "standard",
   "poll",
   "color_palette",
@@ -197,6 +198,34 @@ const overlayItems = [
             "vn": "Bug là tính năng"
           },
           "text_color": "#64FFDA",
+          "type": "static_content"
+        }
+      },
+      // -----------------------------------------------------------------------
+      // 📸 NÚT 5: PHOTOBOOTH 4-CUT HÀN QUỐC VIP
+      // -----------------------------------------------------------------------
+      {
+        "overlay_id": "caption:photobooth_vip",
+        "source": "remote",
+        "caption": {
+          "background": {
+            "colors": [
+              "#1e1e24",
+              "#2b2b36",
+              "#3d3d4e"
+            ]
+          },
+          "icon": {
+            "data": "📸",
+            "type": "emoji"
+          },
+          "max_lines": 1,
+          "text": "PHOTOBOOTH 🎞️",
+          "localized_text": {
+            "en": "PHOTOBOOTH 🎞️",
+            "vn": "PHOTOBOOTH 🎞️"
+          },
+          "text_color": "#FFDF00",
           "type": "static_content"
         }
       }
@@ -2702,6 +2731,10 @@ const remoteEntries = {
     "holiday_filters_free": true,
     "sheet_filters": [
       {
+        "title": { "en": "Photobooth 📸 (4-Cut Hàn Quốc)", "vn": "Photobooth 📸 (4-Cut Hàn Quốc)" },
+        "filter_ids": ["photobooth", "photo_booth_4cut", "korean_photobooth", "photobooth_bw", "photobooth_retro", "vintage_photobooth", "life4cuts"]
+      },
+      {
         "title": { "en": "AI Hot Trend 🔥 (TikTok)", "vn": "AI Hot Trend 🔥 (TikTok)" },
         "filter_ids": ["ai_anime", "ai_ghibli", "ai_vintage", "ai_cyberpunk", "ai_cartoon", "ai_tiktok_trend", "ai_glamour", "ai_sketch", "ai_y2k", "ai_polaroid", "ai_claymation", "vintage_film", "anime_art", "cyber_hexden"]
       },
@@ -2731,6 +2764,7 @@ const remoteEntries = {
       }
     ],
     "picker_filters": [
+      "photobooth", "photo_booth_4cut", "korean_photobooth", "photobooth_bw", "photobooth_retro", "vintage_photobooth", "life4cuts",
       "ai_anime", "ai_ghibli", "ai_vintage", "ai_cyberpunk", "ai_cartoon", "ai_tiktok_trend", "ai_glamour", "ai_sketch", "ai_y2k", "ai_polaroid", "ai_claymation",
       "vintage_film", "anime_art", "cyber_hexden",
       "flower_crown", "princess", "disco_lights", "cutesy", "looks_maxxing",
